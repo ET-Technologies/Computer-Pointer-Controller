@@ -9,6 +9,7 @@ import cv2
 import argparse
 import sys
 from openvino.inference_engine import IENetwork, IECore
+import input_feeder
 
 class Model_X:
     '''
@@ -69,28 +70,67 @@ class Model_X:
     '''
         return outputs
 
+    def videofile(self, video):
+        if video =='video':
+            input_type = 'video'
+        else:
+            input_type ='cam'
+
+        return input_type
+
 def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default=None)
+    parser.add_argument('--video', default=None)
 
     return parser
+
 
 def main():
     args = build_argparser().parse_args()
     model_name = args.model
     device = args.device
     extension = args.extension
+    video = args.video
 
     # Load class Model_X
     inference = Model_X(model_name, device, extensions)
+
+    # Handles videofile LATER
+    #input_type = inference.videofile(video)
     # Loads the model
     inference.load_model()
     # Gets output to load in the next model
     output = inference.predict()
 
+    # Get the input video stream
+    cap = cv2.VideoCapture(video)
+    # Capture information about the input video stream
+    initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
 
+    # Define output video
+    out_video = cv2.VideoWriter(os.path.join(output_path, 'output_video3.mp4'), cv2.VideoWriter_fourcc(*'avc1'), fps, (initial_w, initial_h), True)
+
+    try:
+        while cap.isOpened():
+            retsult, frame = cap.read()
+            if not result:
+                break
+
+            image = inference.predict(frame, initial_w, initial_h)
+            out_video.write(image)
+    except Exception as e:
+        print("Could not run Inference: ", e)
+
+        cap.release()
+        cv2.destroyAllWindows()
+
+        
 
 
 if __name__ == '__main__':
