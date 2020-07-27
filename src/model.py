@@ -7,6 +7,7 @@ class Model_X:
     '''
     Class for the Face Detection Model.
     '''
+    Test
     def __init__(self, model_name, device='CPU', extensions=None):
         '''
         TODO: Use this to set your instance variables.
