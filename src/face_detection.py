@@ -15,7 +15,6 @@ class Model_X:
     '''
     Class for the Face Detection Model.
     '''
-    Test
     def __init__(self, model_name, device='CPU', extensions=None):
         '''
         TODO: Use this to set your instance variables.
@@ -64,10 +63,13 @@ class Model_X:
 
     def preprocess_output(self, outputs):
 
+
     '''
     Before feeding the output of this model to the next model,
     you might have to preprocess the output. This function is where you can do that.
     '''
+
+
         return outputs
 
     def videofile(self, video):
@@ -129,9 +131,6 @@ def main():
 
         cap.release()
         cv2.destroyAllWindows()
-
-        
-
 
 if __name__ == '__main__':
     main()
