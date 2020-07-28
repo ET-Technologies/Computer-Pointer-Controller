@@ -2,6 +2,15 @@
 This is a sample class for a model. You may choose to use it as-is or make any changes to it.
 This has been provided just to give you an idea of how to structure your model class.
 '''
+# model landmarks-regression-retail-0009
+import numpy as np
+import time
+import os
+import cv2
+import argparse
+import sys
+from openvino.inference_engine import IENetwork, IECore
+import input_feeder
 
 class Model_X:
     '''
@@ -31,7 +40,6 @@ class Model_X:
         This method is for loading the model to the device specified by the user.
         If your model requires any Plugins, this is where you can load them.
         '''
-        raise NotImplementedError
 
     def predict(self, image):
         '''
@@ -59,8 +67,8 @@ class Model_X:
         # Her we get the outputs from the facial landmarks model.
         # The information comes from https://docs.openvinotoolkit.org/latest/omz_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html
 
-        outputs[]
-        outputs2[]
+        outputs = []
+        outputs2 = []
         outputs.append(outputs['angle_y_fc'].tolist()[0][0])
         outputs2.append(outputs2['angle_y_fc'][0][0])
 
