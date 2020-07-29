@@ -29,7 +29,7 @@ class InputFeeder:
         else:
             self.cap=cv2.imread(self.input_file)
 
-    def next_batch(self):
+    def next_batch(self, image):
         '''
         Returns the next image from either a video file or webcam.
         If input_type is 'image', then it returns the same image.
