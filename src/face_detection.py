@@ -1,7 +1,3 @@
-'''
-This is a sample class for a model. You may choose to use it as-is or make any changes to it.
-This has been provided just to give you an idea of how to structure your model class.
-'''
 # source /opt/intel/openvino/bin/setupvars.sh
 # cd /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src
 # python3 face_detection.py --model /home/thomas/PycharmProjects/models/face-detection-retail-0004 --video demo.mp4
@@ -31,10 +27,12 @@ class Model_X:
         self.device = device
         self.extensions = extensions
         self.threshold = threshold
+        print("--------")
         print("model_weights: " + str(self.model_weights))
         print("model_structure: " + str(self.model_structure))
         print("device: " + str(self.device))
         print("extensions: " + str(self.extensions))
+        print("--------")
 
 
 
@@ -45,11 +43,12 @@ class Model_X:
         If your model requires any Plugins, this is where you can load them.
         '''
 
+        # Initialise the network and save it in the self.model variables
         try:
             self.model = IENetwork(model=self.model_structure, weights=self.model_weights)
             #self.model = IECore.read_network(self.model_structure, self.model_weights)
         except Exception as e:
-            raise ValueError ("Could not dot it")
+            raise ValueError ("Could not initialise the network")
 
         print("--------")
         print("Model is loaded as self.model: " + str(self.model))
@@ -82,6 +81,7 @@ class Model_X:
         requestid = 0
         preprocessed_image = self.preprocess_input(frame)
         # Starts synchronous inference
+        print("Start syncro inference")
         outputs = self.exec_network.infer({self.input_name: preprocessed_image})
         print("Output of the inference request: " + str(outputs))
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
@@ -129,13 +129,33 @@ class Model_X:
                 #coords.append([obj[3], obj[4], obj[5], obj[6]])
                 cv2.rectangle(frame, (obj[3], obj[4]), (obj[5], obj[6]), (0, 55, 255), 1)
                 print("Bounding box output coordinates of frame: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
+                self.xmin = int(obj[3])
+                self.ymin = int(obj[4])
+                self.xmax = int(obj[5])
+                self.ymax = int(obj[6])
+
         print("End: boundingbox")
         print("--------")
+        frame_cropped = frame.copy()
+        #frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
+        cv2.imwrite("cropped image.png", frame_cropped)
+        self.preprocess_output(frame)
+
+        #frame = self.cropimage(frame)
 
         return frame
 
-
-    def preprocess_output(self, outputs):
+    def preprocess_output(self, frame):
+        # crop image to fit the next model
+        print("--------")
+        print("Start: preprocess_output")
+        print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(
+            self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
+        frame_cropped = None
+        frame_cropped = frame[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
+        cv2.imwrite("cropped_image.png", frame_cropped)
+        print("--------")
+        print("End: preprocess_output")
         return
 
 
@@ -182,9 +202,6 @@ def main():
     print("Load class Model_X = OK")
     print("--------")
 
-
-    # Handles videofile LATER
-    #input_type = inference.videofile(video)
     # Loads the model
     inference.load_model()
     print("Load Model = OK")
@@ -216,13 +233,10 @@ def main():
     print("fps: " + str(fps))
     print("--------")
 
-    #out_video = cv2.VideoWriter(os.path.join(output_path, 'output_video3.mp4'), cv2.VideoWriter_fourcc(*'avc1'), fps,
-    #                            (initial_w, initial_h), True)
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    #out = cv2.VideoWriter(filename, fourcc, 20, (width, height))
-    out_video = cv2.VideoWriter('output_video3.mp4', fourcc, fps, (initial_w, initial_h))
     # Define output video
-    #out_video = cv2.VideoWriter(os.path.join(output_path, 'output_video3.mp4'), cv2.VideoWriter_fourcc(*'avc1'), fps, (initial_w, initial_h), True)
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out_video = cv2.VideoWriter('output_video3.mp4', fourcc, fps, (initial_w, initial_h))
 
     try:
         while cap.isOpened():
