@@ -3,7 +3,11 @@
 # python3 head_pose_estimation.py --model /home/thomas/PycharmProjects/models/head-pose-estimation-adas-0001 --video demo.mp4
 
 #intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
-#intel/text-recognition-0012/FP16/text-recognition-0012.xml
+
+# Udacity Workspace
+# cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
+# Model Downloader python3 downloader.py --name head-pose-estimation-adas-0001 --precisions FP32 -o /home/workspace
+# python3 head_pose_estimation.py --model models/head-pose-estimation-adas-0001 --video demo.mp4
 
 import numpy as np
 import time
@@ -13,6 +17,7 @@ import argparse
 import sys
 from openvino.inference_engine import IENetwork, IECore
 #import input_feeder
+import logging as log
 
 class Model_X:
 
@@ -36,8 +41,8 @@ class Model_X:
     def load_model(self):
 
         # Initialise the network and save it in the self.model variables
-
         try:
+            log.info("Reading model ...")
             self.model = IENetwork(self.model_structure, self.model_weights)
             # self.model = core.read_network(self.model_structure, self.model_weights) # new openvino version
         except Exception as e:
@@ -85,8 +90,10 @@ class Model_X:
         self.core = IECore()
 
         # Adds Extension
-        #self.core.add_extension(self.extensions, self.device)
-        #self.exec_network = self.core.load_network(network=model, device_name=self.device, num_requests=1)
+        CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+        if "CPU" in self.device:
+            log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
+            self.core.add_extension(CPU_EXTENSION, self.device)
 
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
@@ -279,4 +286,6 @@ def main():
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
+    log.basicConfig(filename="logging_head_pose.txt", level=log.INFO)
+    log.info("Start logging")
     main()

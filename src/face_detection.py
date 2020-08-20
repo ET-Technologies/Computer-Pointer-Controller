@@ -4,6 +4,10 @@
 # --model /home/thomas/PycharmProjects/models/face-detection-retail-0004
 # --video demo.mp4
 
+# Udacity Workspace
+# Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
+# python3 face_detection.py --model models/face-detection-retail-0004 --video demo.mp4
+
 import numpy as np
 import time
 import os
@@ -13,6 +17,7 @@ import sys
 from os import path
 from openvino.inference_engine import IENetwork, IECore
 import input_feeder
+import logging as log
 
 class Model_X:
     '''
@@ -36,7 +41,7 @@ class Model_X:
 
 
 
-    def load_model(self):
+    def load_model(self, device, extension):
         '''
         TODO: You will need to complete this method.
         This method is for loading the model to the device specified by the user.
@@ -45,6 +50,7 @@ class Model_X:
 
         # Initialise the network and save it in the self.model variables
         try:
+            log.info("Reading model ...")
             self.model = IENetwork(model=self.model_structure, weights=self.model_weights)
             #self.model = IECore.read_network(self.model_structure, self.model_weights)
         except Exception as e:
@@ -52,6 +58,7 @@ class Model_X:
 
         print("--------")
         print("Model is loaded as self.model: " + str(self.model))
+        
         self.input_name = next(iter(self.model.inputs))
         self.input_shape = self.model.inputs[self.input_name].shape
         self.output_name = next(iter(self.model.outputs))
@@ -64,9 +71,25 @@ class Model_X:
         print("output_shape: " + str(self.output_shape))
         print("--------")
         self.core = IECore()
-        #self.core.add_extension(self.extensions, self.device)
+
+        # Add extension
+        CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+        if "CPU" in device:
+            log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
+            self.core.add_extension(CPU_EXTENSION, device)
+        
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
         print("Exec_network is loaded as:" + str(self.exec_network))
+        
+        ### TODO: Check for supported layers ###
+    #    if "CPU" in device:
+     #       supported_layers = self.core.query_network(self.exec_network, "CPU")
+      #      print("supported_layers: " + str(supported_layers)) 
+       #     not_supported_layers = [l for l in self.net.layers.keys() if l not in supported_layers]
+        #    print("not_supported_layers: " + str(not_supported_layers)) 
+         #   if len(not_supported_layers) != 0:
+          #      sys.exit(1)
+        
         print("--------")
 
     def predict(self, frame, initial_w, initial_h):
@@ -82,6 +105,7 @@ class Model_X:
         preprocessed_image = self.preprocess_input(frame)
         # Starts synchronous inference
         print("Start syncro inference")
+        log.info("Start syncro inference")
         outputs = self.exec_network.infer({self.input_name: preprocessed_image})
         print("Output of the inference request: " + str(outputs))
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
@@ -98,11 +122,12 @@ class Model_X:
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
+        log.info("Start: preprocess image")
         n, c, h, w = (self.core, self.input_shape)[1]
         image = cv2.resize(frame, (w, h))
         image = image.transpose((2, 0, 1))
         image = image.reshape((n, c, h, w))
-        print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
+        print("Original image size is W= ({}) x H= ({})".format(str(self.width),str(self.height)))
         print("Image is now [BxCxHxW]: " + str(image.shape))
         print("End: preprocess image")
         print("--------")
@@ -203,7 +228,7 @@ def main():
     print("--------")
 
     # Loads the model
-    inference.load_model()
+    inference.load_model(device,extension)
     print("Load Model = OK")
     print("--------")
     cap = cv2.VideoCapture(video)
@@ -253,4 +278,6 @@ def main():
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
+    log.basicConfig(filename="logging.txt", level=log.INFO)
+    log.info("Start logging")
     main()

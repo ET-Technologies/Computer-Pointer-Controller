@@ -4,6 +4,12 @@
 # images/sitting-on-car.jpg
 # images/car.png
 # demo.mp4
+
+# Udacity Workspace
+# cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
+# Model Downloader python3 downloader.py --name landmarks-regression-retail-0009 --precisions FP32 -o /home/workspace
+# python3 facial_landmarks_detection.py --model models/landmarks-regression-retail-0009 --video demo.mp4
+
 import numpy as np
 import time
 import os
@@ -13,6 +19,7 @@ import sys
 from openvino.inference_engine import IENetwork, IECore
 from input_feeder import InputFeeder
 import face_detection as fd
+import logging as log
 
 class Model_X:
     '''
@@ -35,10 +42,11 @@ class Model_X:
         print("--------")
 
     # Loads the model
-    def load_model(self):
+    def load_model(self, device, extension):
 
         # Initialise the network and save it in the self.model variables
         try:
+            log.info("Reading model ...")
             self.model = IENetwork(self.model_structure, self.model_weights)
             # self.model = core.read_network(self.model_structure, self.model_weights) # new openvino version
         except Exception as e:
@@ -85,9 +93,10 @@ class Model_X:
 
         self.core = IECore()
         # Adds Extension
-        #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
-
-        #self.core.add_extension(CPU_EXTENSION, self.device)
+        CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+        if "CPU" in device:
+            log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
+            self.core.add_extension(CPU_EXTENSION, device)
 
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
@@ -167,13 +176,29 @@ class Model_X:
         self.right_mouth_coordinates_y = int(coords[9] * self.height)
         print("left_eye_coordinates_x: " + str(self.left_eye_coordinates_x))
         print("left_eye_coordinates_y: " + str(self.left_eye_coordinates_y))
-
+        
+        self.left_eye_x_min = self.left_eye_coordinates_x-30
+        self.left_eye_x_max = self.left_eye_coordinates_x+30
+        self.left_eye_y_min = self.left_eye_coordinates_y-30
+        self.left_eye_y_max = self.left_eye_coordinates_y+30
+        
+        self.right_eye_x_min = self.right_eye_coordinates_x-30
+        self.right_eye_x_max = self.right_eye_coordinates_x+30
+        self.right_eye_y_min = self.right_eye_coordinates_y-30
+        self.right_eye_y_max = self.right_eye_coordinates_y+30
+        
+        print("Rectangle coordinates: ({}) + ({}) + ({}) + ({})".format(str(self.left_eye_x_min),str(self.left_eye_x_max), str(self.left_eye_y_min), str(self.left_eye_y_max)))
+        #log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
         self.draw_landmarks(frame)
         return
 
     def draw_landmarks(self, frame):
         print("--------")
         print("Start: draw_landmarks")
+        
+        self.frame_original = frame.copy()
+        left_eye_image = frame.copy()
+        right_eye_image = frame.copy()
 
         center_left_eye = (self.left_eye_coordinates_x, self.left_eye_coordinates_y)
         center_right_eye = (self.right_eye_coordinates_x, self.right_eye_coordinates_y)
@@ -185,10 +210,42 @@ class Model_X:
         image = cv2.circle(frame, center_nose, 10, (255, 0, 0), 2)
         image = cv2.circle(frame, left_mouth_coordinates, 10, (255, 0, 0), 2)
         image = cv2.circle(frame, right_mouth_coordinates, 10, (255, 0, 0), 2)
-
-        cv2.imwrite("landmark_image.png", image)
+        self.image_path = ("landmark_image.png")
+        cv2.imwrite(self.image_path, image)
+        
+        #Draw rectangle
+        
+        #image_rectangle = cv2.rectangle(frame_rectangle, start_point, end_point, color, thickness)
+        #image_rectangle = cv2.rectangle(frame_rectangle, start_point, end_point, color, thickness)
+        left_eye = cv2.rectangle(left_eye_image, (self.left_eye_x_min, self.left_eye_y_min), (self.left_eye_x_max, self.left_eye_y_max), (255,0,0), 2)
+        right_eye = cv2.rectangle(right_eye_image, (self.right_eye_x_min, self.right_eye_y_min), (self.right_eye_x_max, self.right_eye_y_max), (255,0,0), 2)
+        self.left_eye_image_rectangle_path = ("left_eye_image.png")
+        self.right_eye_image_rectangle_path = ("right_eye_image.png")
+        cv2.imwrite(self.left_eye_image_rectangle_path, left_eye)
+        cv2.imwrite(self.right_eye_image_rectangle_path, right_eye)
+        
+        eyes_cropped_image = self.preprocess_output(self.frame_original)
+        
         print("End: draw_landmarks")
         print("--------")
+        return
+    
+    def preprocess_output(self, frame):
+        # crop image to fit the next model
+        print("--------")
+        print("Start: preprocess_output")
+        print("Coordinates for cropped left eye are xmin x ymin x xmax x ymax: " + str(
+            self.left_eye_x_min) + " x " + str(self.left_eye_y_min) + " x " + str(self.left_eye_x_max) + " x " + str(self.left_eye_y_max))
+        print("Coordinates for cropped right eye are xmin x ymin x xmax x ymax: " + str(
+            self.right_eye_x_min) + " x " + str(self.right_eye_y_min) + " x " + str(self.right_eye_x_max) + " x " + str(self.right_eye_y_max))
+        left_eye_frame_cropped = None
+        right_eye_frame_cropped = None
+        left_eye_frame_cropped = frame[self.left_eye_y_min:(self.left_eye_y_max + 1), self.left_eye_x_min:(self.left_eye_x_max + 1)]
+        right_eye_frame_cropped = frame[self.right_eye_y_min:(self.right_eye_y_max + 1), self.right_eye_x_min:(self.right_eye_x_max + 1)]
+        cv2.imwrite("left_eye_frame_cropped.png", left_eye_frame_cropped)
+        cv2.imwrite("right_eye_frame_cropped.png", right_eye_frame_cropped)
+        print("--------")
+        print("End: preprocess_output")
         return
     
 # Collect all the necessary input values
@@ -222,7 +279,7 @@ def main():
     print("--------")
 
     # Loads the model
-    inference.load_model()
+    inference.load_model(device,extension)
     total_model_load_time = time.time() - start_model_load_time  # Time model needed to load
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
@@ -273,7 +330,7 @@ def main():
             if not result:
                 break
             image = inference.predict(frame, initial_w, initial_h)
-            print("The video is writen to the output path")
+            print("The video is writen to the output path: landmark_image.png")
             #out_video.write(image)
     except Exception as e:
         print("Could not run Inference: ", e)
@@ -315,4 +372,6 @@ def main():
 
 # Start sequence
 if __name__ == '__main__':
+    log.basicConfig(filename="logging_landmarks.txt", level=log.INFO)
+    log.info("Start logging")
     main()

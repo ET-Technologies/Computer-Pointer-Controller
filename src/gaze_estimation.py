@@ -56,8 +56,13 @@ class Model_X:
         self.input_name_all = [i for i in self.model.inputs.keys()]
         self.input_name_all_02 = self.model.inputs.keys()  # gets all output_names
         self.input_name_first_entry = self.input_name_all[0]
-
+        self.input_names_total_entries = len(self.input_name_all)
+        
+        
         self.input_shape = self.model.inputs[self.input_name].shape
+        #self.input_shape = self.model.inputs['right_eye_image'].shape
+        #'right_eye_image', 'head_pose_angles', 'left_eye_image'
+        
 
         self.output_name = next(iter(self.model.outputs))
         self.output_name_type = self.model.outputs[self.output_name]
@@ -65,6 +70,8 @@ class Model_X:
         self.output_names_total_entries = len(self.output_names)
 
         self.output_shape = self.model.outputs[self.output_name].shape
+        self.output_shape = [i for i in self.model.outputs.keys()]
+        
         self.output_shape_second_entry = self.model.outputs[self.output_name].shape[1]
 
         print("--------")
@@ -72,6 +79,7 @@ class Model_X:
         print("input_name_all: " + str(self.input_name_all))
         print("input_name_all_total: " + str(self.input_name_all_02))
         print("input_name_first_entry: " + str(self.input_name_first_entry))
+        print("input_names_total_entries: " + str(self.input_names_total_entries))
         print("--------")
 
         print("input_shape: " + str(self.input_shape))
@@ -101,70 +109,73 @@ class Model_X:
         print("--------")
 
     # Start inference and prediction
-    def predict(self, frame, initial_w, initial_h):
+    def predict(self, left_eye, right_eye, initial_w, initial_h):
 
         print("--------")
         print("Start predictions")
         self.width = initial_w
         self.height = initial_h
         requestid = 0
-
-        preprocessed_image = self.preprocess_input(frame)
+        left_eye_preprocess_image, right_eye_image = self.preprocess_input(left_eye, right_eye)
 
         # Starts synchronous inference
-        outputs = self.exec_network.infer({self.input_name:preprocessed_image})
+        #outputs = self.exec_network.infer({self.input_name: preprocessed_image})
+        outputs = self.exec_network.infer({'left_eye_image': left_eye_preprocess_image, 'head_pose_angles': [2,5,10], 'right_eye_image': right_eye_preprocess_image})
+        #outputs = self.exec_network.infer({'head_pose_angles':[2,5,10]})
+        # (['left_eye_image', 'head_pose_angles', 'right_eye_image'])
         print("Output of the inference request: " + str(outputs))
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
-        head_pose_results = self.head_pose_detection(outputs, frame)
+        head_pose_results = self.gaze_estimation(outputs, frame)
         #head_pose_results = self.preprocess_output(outputs)
 
         print("End predictions")
         print("--------")
-
-
+        
         return head_pose_results
 
     def check_model(self):
         raise NotImplementedError
 
-    def preprocess_input(self, frame):
+    def preprocess_input(self, left_eye, right_eye):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
         n, c, h, w = (self.core, self.input_shape)[1]
-        preprocessed_image = cv2.resize(frame, (w, h))
-        preprocessed_image = preprocessed_image.transpose((2, 0, 1))
-        preprocessed_image = preprocessed_image.reshape((n, c, h, w))
+        left_eye_preprocess_image = cv2.resize(left_eye, (w, h))
+        left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
+        left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
+        
+        right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
+        right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
+        right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
+        
         print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
-        print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
+        print("Image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
         print("End: preprocess image")
         print("--------")
         
-        return preprocessed_image
+        return left_eye_preprocess_image, right_eye_preprocess_image
 
-    def head_pose_detection(self, outputs,frame):
+    def gaze_estimation(self, outputs,frame):
         print("--------")
-        print("Start: head_pose_estimation")
+        print("Start: gaze_estimation")
         result_len = len(outputs)
         print("total number of entries: " + str(result_len))
-        angles =[]
-        angle_p_fc = self.exec_network.requests[0].outputs['angle_p_fc']
-        angle_r_fc = self.exec_network.requests[0].outputs['angle_r_fc']
-        angle_y_fc = self.exec_network.requests[0].outputs['angle_y_fc']
-        print("Output of the inference request (self.output_name): " + str(angle_p_fc))
-        angle_p_fc = int(angle_p_fc)
-        angle_r_fc = int(angle_r_fc)
-        angle_y_fc = int(angle_y_fc)
-        print("angle_p_fc pitch in degrees: " + str(angle_p_fc))
-        print("angle_r_fc roll in degrees: " + str(angle_r_fc))
-        print("angle_y_fc yaw in degrees: " + str(angle_y_fc))
-        angles.append([angle_p_fc, angle_r_fc, angle_y_fc])
+        #output_name: gaze_vector
+        gazes =[]
+        gaze_vector = self.exec_network.requests[0].outputs['gaze_vector']
+        #angle_r_fc = self.exec_network.requests[0].outputs['angle_r_fc']
+        #angle_y_fc = self.exec_network.requests[0].outputs['angle_y_fc']
+        print("Output of the inference request (self.gaze_vector): " + str(gaze_vector))
+        #gaze_vector = int(gaze_vector)
+        print("gaze_vector: " + str(gaze_vector))
+        #gazes.append([gaze_vector])
 
-        print("angles: " + str(angles))
-        print("End: head_pose_detection")
+        #print("gaze_vector: " + str(gazes))
+        print("End: gaze_estimation")
         print("--------")
-        return angles
+        return gazes
 
 
 
@@ -221,7 +232,11 @@ def main():
     device = args.device
     extension = args.extension
     video = args.video
-    video = ("cropped_image.png")
+    #video = ("cropped_image.png")
+    left_eye = ("left_eye_frame_cropped.png")
+    right_eye = ("right_eye_frame_cropped.png")
+    #video = ("left_eye_frame_cropped.png")
+    
     output_path=args.output_path
     #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
 
@@ -241,15 +256,17 @@ def main():
     print("--------")
 
     # Get the input frame
-    cap = cv2.VideoCapture(video)
+    #cap = cv2.VideoCapture(video)
     try:
-        print("Reading video file name:", video)
-        cap = cv2.VideoCapture(video)
-        cap.open(video)
-        if not path.exists(video):
-            print("Cannot find video file: " + video)
+        print("Reading video file name:", left_eye)
+        cap = cv2.VideoCapture(left_eye)
+        right_cap = cv2.VideoCapture(right_eye)
+        cap.open(left_eye)
+        right_cap.open(right_eye)
+        if not path.exists(left_eye):
+            print("Cannot find video file: " + left_eye)
     except FileNotFoundError:
-        print("Cannot find video file: " + video)
+        print("Cannot find video file: " + left_eye)
     except Exception as e:
         print("Something else went wrong with the video file: ", e)
 
@@ -274,10 +291,11 @@ def main():
     try:
         while cap.isOpened():
             result, frame = cap.read()
+            result02, frame_right = right_cap.read()
             if not result:
                 break
 
-            image = inference.predict(frame, initial_w, initial_h)
+            image = inference.predict(frame, frame_right, initial_w, initial_h)
             #out_video.write(image)
     except Exception as e:
         print("Could not run Inference: ", e)
