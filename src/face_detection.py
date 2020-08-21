@@ -16,38 +16,38 @@ import argparse
 import sys
 from os import path
 from openvino.inference_engine import IENetwork, IECore
-import input_feeder
+from input_feeder import InputFeeder
 import logging as log
 
-class Model_X:
+class Facedetection:
     '''
     Class for the Face Detection Model.
     '''
-    def __init__(self, model_name, threshold, device='CPU', extensions=None):
+    def __init__(self, model_name, threshold, device='CPU'):
         '''
         TODO: Use this to set your instance variables.
         '''
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
-        self.extensions = extensions
+        self.extensions = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
         self.threshold = threshold
         print("--------")
         print("model_weights: " + str(self.model_weights))
         print("model_structure: " + str(self.model_structure))
         print("device: " + str(self.device))
         print("extensions: " + str(self.extensions))
+        print("threshold: " + str(self.threshold))
         print("--------")
 
 
 
-    def load_model(self, device, extension):
+    def load_model(self):
         '''
         TODO: You will need to complete this method.
         This method is for loading the model to the device specified by the user.
         If your model requires any Plugins, this is where you can load them.
         '''
-
         # Initialise the network and save it in the self.model variables
         try:
             log.info("Reading model ...")
@@ -73,10 +73,9 @@ class Model_X:
         self.core = IECore()
 
         # Add extension
-        CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
-        if "CPU" in device:
-            log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
-            self.core.add_extension(CPU_EXTENSION, device)
+        if "CPU" in self.device:
+            log.info("Add extension: ({})".format(str(self.extensions)))
+            self.core.add_extension(self.extensions, self.device)
         
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
         print("Exec_network is loaded as:" + str(self.exec_network))
@@ -183,15 +182,6 @@ class Model_X:
         print("End: preprocess_output")
         return
 
-
-    '''
-    Before feeding the output of this model to the next model,
-    you might have to preprocess the output. This function is where you can do that.
-    '''
-
-
-
-
     def videofile(self, video):
         if video =='video':
             input_type = 'video'
@@ -199,85 +189,3 @@ class Model_X:
             input_type ='cam'
 
         return input_type
-
-def build_argparser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model', required=True)
-    parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default=None)
-    parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default='/results')
-    parser.add_argument('--threshold', default=0.60)
-
-    return parser
-
-
-def main():
-    args = build_argparser().parse_args()
-    model_name = args.model
-    device = args.device
-    extension = args.extension
-    video = args.video
-    output_path = args.output_path
-    threshold = args.threshold
-
-
-    # Load class Model_X
-    inference = Model_X(model_name, threshold, device, extension)
-    print("Load class Model_X = OK")
-    print("--------")
-
-    # Loads the model
-    inference.load_model(device,extension)
-    print("Load Model = OK")
-    print("--------")
-    cap = cv2.VideoCapture(video)
-
-    # Get the input video stream
-    try:
-        print("Reading video file", video)
-        cap = cv2.VideoCapture(video)
-        cap.open(video)
-        if not path.exists(video):
-            print("Cannot find video file: " + video)
-    except FileNotFoundError:
-        print("Cannot find video file: " + video)
-    except Exception as e:
-        print("Something else went wrong with the video file: ", e)
-
-    # Capture information about the input video stream
-    initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-    print("--------")
-    print("Input video Data")
-    print("initial_w: " + str(initial_w))
-    print("initial_h: " + str(initial_h))
-    print("video_len: " + str(video_len))
-    print("fps: " + str(fps))
-    print("--------")
-
-    # Define output video
-
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter('output_video3.mp4', fourcc, fps, (initial_w, initial_h))
-
-    try:
-        while cap.isOpened():
-            result, frame = cap.read()
-            if not result:
-                break
-            image = inference.predict(frame, initial_w, initial_h)
-            print("The video is writen to the output path")
-            out_video.write(image)
-    except Exception as e:
-        print("Could not run Inference: ", e)
-
-        cap.release()
-        cv2.destroyAllWindows()
-
-if __name__ == '__main__':
-    log.basicConfig(filename="logging.txt", level=log.INFO)
-    log.info("Start logging")
-    main()
