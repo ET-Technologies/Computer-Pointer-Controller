@@ -6,7 +6,13 @@
 
 # Udacity Workspace
 # Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
-# python3 face_detection.py --model models/face-detection-retail-0004 --video demo.mp4
+# python3 face_detection.py --model models/face-detection-retail-0004 --device MYRIAD --extension None --video demo.mp4
+'''
+Raspberry Pi
+python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 --device MYRIAD --extension None --video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 --output_path /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4
+'''
+#/home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001.xml
+
 
 import numpy as np
 import time
@@ -16,7 +22,7 @@ import argparse
 import sys
 from os import path
 from openvino.inference_engine import IENetwork, IECore
-from input_feeder import InputFeeder
+#from input_feeder import InputFeeder
 import logging as log
 
 class Facedetection:
@@ -216,7 +222,8 @@ def build_argparser():
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default=None)
+    parser.add_argument('--output_path', default='demo_output.mp4')
+    parser.add_argument('--output_path', default='/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4')
     parser.add_argument('--threshold', default=0.60)
 
     return parser    
@@ -227,8 +234,68 @@ def main():
     device = args.device
     extension = args.extension
     video = args.video
+    output_path = args.output_path
+    #output_path = ("/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4")
     
+    threshold = args.threshold
+
+
+    # Load class Facedetection
+    inference = Facedetection(model_name, threshold, device, extension)
+    print("Load class Facedetection = OK")
+    print("--------")
+
+    # Loads the model
+    inference.load_model()
+    print("Load Model = OK")
+    print("--------")
+    cap = cv2.VideoCapture(video)
+
+    # Get the input video stream
+    try:
+        print("Reading video file", video)
+        cap = cv2.VideoCapture(video)
+        cap.open(video)
+        if not path.exists(video):
+            print("Cannot find video file: " + video)
+    except FileNotFoundError:
+        print("Cannot find video file: " + video)
+    except Exception as e:
+        print("Something else went wrong with the video file: ", e)
+
+    # Capture information about the input video stream
+    initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    print("--------")
+    print("Input video Data")
+    print("initial_w: " + str(initial_w))
+    print("initial_h: " + str(initial_h))
+    print("video_len: " + str(video_len))
+    print("fps: " + str(fps))
+    print("--------")
+
+    # Define output video
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
+
+    try:
+        while cap.isOpened():
+            result, frame = cap.read()
+            if not result:
+                break
+            image = inference.predict(frame, initial_w, initial_h)
+            print("The video is writen to the output path")
+            out_video.write(image)
+    except Exception as e:
+        print("Could not run Inference: ", e)
+
+        cap.release()
+        cv2.destroyAllWindows()
+
 if __name__ == '__main__':
-    log.basicConfig(filename="logging_gaze.txt", level=log.INFO)
+    log.basicConfig(filename="logging.txt", level=log.INFO)
     log.info("Start logging")
     main()
