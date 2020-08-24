@@ -19,22 +19,21 @@ from openvino.inference_engine import IENetwork, IECore
 #import input_feeder
 import logging as log
 
-class Model_X:
+class Head_Pose_Estimation:
 
     # Load all relevant variables into the class
-    def __init__(self, model_name, device='CPU', extensions=None):
+    def __init__(self, model_name, device, extension):
 
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
-        #self.extensions = extensions
-        #self.threshold = threshold
+        self.extension = extension
         print("--------")
-        print("START")
+        print("START Head_Pose_Estimation")
         print("model_weights: " + str(self.model_weights))
         print("model_structure: " + str(self.model_structure))
         print("device: " + str(self.device))
-        #print("extensions: " + str(self.extensions))
+        print("extension: " + str(self.extension))
         print("--------")
 
     # Loads the model
@@ -90,10 +89,9 @@ class Model_X:
         self.core = IECore()
 
         # Adds Extension
-        CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
         if "CPU" in self.device:
-            log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
-            self.core.add_extension(CPU_EXTENSION, self.device)
+            log.info("Add extension: ({})".format(str(self.extension)))
+            self.core.add_extension(self.extension, self.device)
 
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
@@ -209,7 +207,7 @@ def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default=None)
+    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default=None)
 
@@ -228,8 +226,8 @@ def main():
     start_model_load_time = time.time()  # Time to load the model (Start)
 
 
-    # Load class Model_X
-    inference = Model_X(model_name, device, extension)
+    # Load class Head_Pose_Estimation
+    inference = Head_Pose_Estimation(model_name, device, extension)
     print("Load Model = OK")
     print("--------")
 

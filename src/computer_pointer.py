@@ -8,20 +8,57 @@ import argparse
 import cv2
 import logging as log
 
+import openvino
+
 from face_detection import Facedetection
+from facial_landmarks_detection import Facial_Landmarks
+from head_pose_estimation import Head_Pose_Estimation
+from gaze_estimation import Gaze_Estimation
+
 from input_feeder import InputFeeder
 
 def main():
+    
+    # loads argparser
     args = build_argparser().parse_args()
     
+    # Get Openvinoversion
+    openvino_version = (openvino.__file__)
+    print ("Openvino version: "+ str(openvino_version))
+    
     # Load face_detection
-    facedetection = Facedetection(model_name=args.fd_model, threshold=args.threshold, device=args.device)
+    facedetection = Facedetection(model_name=args.fd_model, threshold=args.threshold, device=args.device, extension=args.extension)
     print("Load class Facedetection = OK")
     print("--------")
     facedetection.load_model()
-    print("Load model facedetection = OK")
+    print("Load model facedetection = Finished")
     print("--------")
     
+    # Load facial landmark
+    faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension)
+    print("Load class Facial_Landmarks = OK")
+    print("--------")
+    faciallandmarks.load_model()
+    print("Load model Facial_Landmarks = Finished")
+    print("--------")
+    
+    # Load head_pose_estimation
+    headposeestimation = Head_Pose_Estimation(model_name=args.hp_model, device=args.device, extension=args.extension)
+    print("Load class head_pose_estimation = OK")
+    print("--------")
+    headposeestimation.load_model()
+    print("Load model head_pose_estimation = Finished")
+    print("--------")
+    
+    # Load gaze_estimation
+    gazeestimation = Gaze_Estimation(model_name=args.ga_model, device=args.device, extension=args.extension)
+    print("Load class gaze_estimation = OK")
+    print("--------")
+    gazeestimation.load_model()
+    print("Load model gaze_estimation = Finished")
+    print("--------")
+
+def getinputstream(self):
     # Get the input video stream
     print("Get input from input_feeder")
     input_stream = InputFeeder(input_type='video', input_file= args.video)
@@ -67,11 +104,14 @@ def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default=None)
+    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='/results')
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument("-fd_model", default='models/face-detection-retail-0004', required=False)
+    parser.add_argument("-fl_model", default='models/landmarks-regression-retail-0009', required=False)
+    parser.add_argument("-hp_model", default='models/head-pose-estimation-adas-0001', required=False)
+    parser.add_argument("-ga_model", default='models/gaze-estimation-adas-0002', required=False)
 
     return parser
 

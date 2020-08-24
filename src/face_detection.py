@@ -20,34 +20,27 @@ from input_feeder import InputFeeder
 import logging as log
 
 class Facedetection:
-    '''
-    Class for the Face Detection Model.
-    '''
-    def __init__(self, model_name, threshold, device='CPU'):
-        '''
-        TODO: Use this to set your instance variables.
-        '''
+    
+    # Load all relevant variables into the class
+    def __init__(self, model_name, threshold, device, extension):
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
-        self.extensions = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+        self.extension = extension
         self.threshold = threshold
+        
         print("--------")
+        print("START Facedetection")
         print("model_weights: " + str(self.model_weights))
         print("model_structure: " + str(self.model_structure))
         print("device: " + str(self.device))
-        print("extensions: " + str(self.extensions))
+        print("extension: " + str(self.extension))
         print("threshold: " + str(self.threshold))
         print("--------")
-
-
-
+    
+    # Loads the model
     def load_model(self):
-        '''
-        TODO: You will need to complete this method.
-        This method is for loading the model to the device specified by the user.
-        If your model requires any Plugins, this is where you can load them.
-        '''
+
         # Initialise the network and save it in the self.model variables
         try:
             log.info("Reading model ...")
@@ -55,30 +48,57 @@ class Facedetection:
             #self.model = IECore.read_network(self.model_structure, self.model_weights)
         except Exception as e:
             raise ValueError ("Could not initialise the network")
-
         print("--------")
         print("Model is loaded as self.model: " + str(self.model))
         
+        
+        # Get the input layer
         self.input_name = next(iter(self.model.inputs))
+        # Gets all input_names
+        self.input_name_all = [i for i in self.model.inputs.keys()]
+        self.input_name_all_02 = self.model.inputs.keys()
+        self.input_name_first_entry = self.input_name_all[0]
+        
         self.input_shape = self.model.inputs[self.input_name].shape
+        
         self.output_name = next(iter(self.model.outputs))
+        self.output_name_type = self.model.outputs[self.output_name]
+        self.output_names = [i for i in self.model.outputs.keys()]  # gets all output_names
+        self.output_names_total_entries = len(self.output_names)
+
         self.output_shape = self.model.outputs[self.output_name].shape
-        self.exec_network = None
+        self.output_shape_second_entry = self.model.outputs[self.output_name].shape[1]
 
-        print("input_name: " + str(self.input_name))
-        print("input_shape: " + str(self.input_shape))
-        print("output_name: " + str(self.output_name))
-        print("output_shape: " + str(self.output_shape))
         print("--------")
-        self.core = IECore()
+        print("input_name: " + str(self.input_name))
+        print("input_name_all: " + str(self.input_name_all))
+        print("input_name_all_total: " + str(self.input_name_all_02))
+        print("input_name_first_entry: " + str(self.input_name_first_entry))
+        print("--------")
 
+        print("input_shape: " + str(self.input_shape))
+        print("--------")
+
+        print("output_name: " + str(self.output_name))
+        print("output_name type: " + str(self.output_name_type))
+        print("output_names: " + str(self.output_names))
+        print("output_names_total_entries: " + str(self.output_names_total_entries))
+        print("--------")
+
+        print("output_shape: " + str(self.output_shape))
+        print("output_shape_second_entry: " + str(self.output_shape_second_entry))
+        print("--------")
+        
+        self.core = IECore()
         # Add extension
         if "CPU" in self.device:
-            log.info("Add extension: ({})".format(str(self.extensions)))
-            self.core.add_extension(self.extensions, self.device)
+            log.info("Add extension: ({})".format(str(self.extension)))
+            self.core.add_extension(self.extension, self.device)
         
+        # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
         print("Exec_network is loaded as:" + str(self.exec_network))
+        print("--------")
         
         ### TODO: Check for supported layers ###
     #    if "CPU" in device:
@@ -89,8 +109,8 @@ class Facedetection:
          #   if len(not_supported_layers) != 0:
           #      sys.exit(1)
         
-        print("--------")
-
+    
+    # Start inference and prediction
     def predict(self, frame, initial_w, initial_h):
         '''
         TODO: You will need to complete this method.
@@ -189,3 +209,26 @@ class Facedetection:
             input_type ='cam'
 
         return input_type
+    
+def build_argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', required=True)
+    parser.add_argument('--device', default='CPU')
+    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
+    parser.add_argument('--video', default=None)
+    parser.add_argument('--output_path', default=None)
+    parser.add_argument('--threshold', default=0.60)
+
+    return parser    
+    
+def main():
+    args = build_argparser().parse_args()
+    model_name = args.model
+    device = args.device
+    extension = args.extension
+    video = args.video
+    
+if __name__ == '__main__':
+    log.basicConfig(filename="logging_gaze.txt", level=log.INFO)
+    log.info("Start logging")
+    main()

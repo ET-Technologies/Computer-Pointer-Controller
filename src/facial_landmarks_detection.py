@@ -21,28 +21,26 @@ from input_feeder import InputFeeder
 import face_detection as fd
 import logging as log
 
-class Model_X:
-    '''
-    Class with all relevant tools to do object detection
-    '''
+class Facial_Landmarks:
 
     # Load all relevant variables into the class
-    def __init__(self, model_name, device, threshold, extension):
+    def __init__(self, model_name, threshold, device, extension):
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
-        #self.extensions = extensions
+        self.extension = extension
         self.device = device
         self.threshold = threshold
+        
         print("--------")
-        print("START")
+        print("START Facial_Landmarks")
         print("model_weights: " + str(self.model_weights))
         print("model_structure: " + str(self.model_structure))
         print("device: " + str(self.device))
-        #print("extensions: " + str(self.extensions))
+        print("extension: " + str(self.extension))
         print("--------")
 
     # Loads the model
-    def load_model(self, device, extension):
+    def load_model(self):
 
         # Initialise the network and save it in the self.model variables
         try:
@@ -58,7 +56,7 @@ class Model_X:
         self.input_name = next(iter(self.model.inputs))
         # Gets all input_names
         self.input_name_all = [i for i in self.model.inputs.keys()]
-        self.input_name_all_02 = self.model.inputs.keys()  # gets all output_names
+        self.input_name_all_02 = self.model.inputs.keys()
         self.input_name_first_entry = self.input_name_all[0]
 
         self.input_shape = self.model.inputs[self.input_name].shape
@@ -93,10 +91,9 @@ class Model_X:
 
         self.core = IECore()
         # Adds Extension
-        CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
-        if "CPU" in device:
-            log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
-            self.core.add_extension(CPU_EXTENSION, device)
+        if "CPU" in self.device:
+            log.info("Add extension: ({})".format(str(self.extension)))
+            self.core.add_extension(self.extension, self.device)
 
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
@@ -273,8 +270,8 @@ def main():
     #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
     start_model_load_time = time.time()  # Time to load the model (Start)
 
-    # Load class Model_X
-    inference = Model_X(model_name, device,threshold, extension)
+    # Load class Facial_Landmarks
+    inference = Facial_Landmarks(model_name, device,threshold, extension)
     print("Load Model = OK")
     print("--------")
 
