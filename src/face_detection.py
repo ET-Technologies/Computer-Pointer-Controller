@@ -9,7 +9,7 @@
 # python3 face_detection.py --model models/face-detection-retail-0004 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
 '''
 Raspberry Pi
-python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 --device MYRIAD --extension None --video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 --output_path /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4
+python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 --device MYRIAD --extension None --video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 --output_path /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4 --inputtype cam
 '''
 #/home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001.xml
 
@@ -111,17 +111,14 @@ class Facedetection:
         print("--------")
         self.check_model()
         
-    
     # Start inference and prediction
-    def predict(self, frame, initial_w, initial_h):
-        '''
-        TODO: You will need to complete this method.
-        This method is meant for running predictions on the input image.
-        '''
+    def predict(self, frame):
+
+        
         print("--")
         print("Start predictions")
-        self.width = initial_w
-        self.height = initial_h
+        #self.width = initial_w
+        #self.height = initial_h
         requestid = 0
         preprocessed_image = self.preprocess_input(frame)
         # Starts synchronous inference
@@ -160,7 +157,7 @@ class Facedetection:
         image = cv2.resize(frame, (w, h))
         image = image.transpose((2, 0, 1))
         image = image.reshape((n, c, h, w))
-        print("Original image size is W= ({}) x H= ({})".format(str(self.width),str(self.height)))
+        #print("Original image size is W= ({}) x H= ({})".format(str(self.width),str(self.height)))
         print("Image is now [BxCxHxW]: " + str(image.shape))
         print("End: preprocess image")
         print("--------")
@@ -177,13 +174,13 @@ class Facedetection:
         print("Start: boundingbox")
         print("Bounding box input: " + str(outputs))
         #print("Coords: " + str(coords))
-        print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
+        print("Original image size is (W x H): " + str(self.initial_w) + "x" + str(self.initial_h))
         for obj in outputs[0][0]:
             if obj[2] > self.threshold:
-                obj[3] = int(obj[3] * self.width)
-                obj[4] = int(obj[4] * self.height)
-                obj[5] = int(obj[5] * self.width)
-                obj[6] = int(obj[6] * self.height)
+                obj[3] = int(obj[3] * self.initial_w)
+                obj[4] = int(obj[4] * self.initial_h)
+                obj[5] = int(obj[5] * self.initial_w)
+                obj[6] = int(obj[6] * self.initial_h)
                 #coords.append([obj[3], obj[4], obj[5], obj[6]])
                 cv2.rectangle(frame, (obj[3], obj[4]), (obj[5], obj[6]), (0, 55, 255), 1)
                 print("Bounding box output coordinates of frame: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
@@ -215,6 +212,57 @@ class Facedetection:
         print("--------")
         print("End: preprocess_output")
         return
+    
+    def getinputstream(self, inputtype, video, output_path):
+        # gets the inputtype
+        try:
+            if inputtype == 'video':
+                print("Reading video file:", video)
+                cap = cv2.VideoCapture(video)
+            elif inputtype =='cam':
+                print("Reading webcam")
+                cap = cv2.VideoCapture(0)
+            else:
+                print("Reading image:", video)
+                cap = cv2.imread(video)    
+        except FileNotFoundError:
+            print("Cannot find video file: " + video)
+        except Exception as e:
+            print("Something else went wrong with the video file: ", e)
+            
+        # Capture information about the input video stream
+        self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+        print("--------")
+        print("Input video Data")
+        print("initial_w: " + str(self.initial_w))
+        print("initial_h: " + str(self.initial_h))
+        print("video_len: " + str(self.video_len))
+        print("fps: " + str(self.fps))
+        print("--------")
+        
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
+
+        try:
+            while cap.isOpened():
+                result, frame = cap.read()
+                if not result:
+                    break
+                #image = inference.predict(frame, initial_w, initial_h)
+                image = self.predict(frame)
+                print("The video is writen to the output path")
+                out_video.write(image)
+        except Exception as e:
+            print("Could not run Inference: ", e)
+
+            cap.release()
+            cv2.destroyAllWindows()
+            
+        return
+        
     
 def build_argparser():
     parser = argparse.ArgumentParser()
@@ -252,52 +300,7 @@ def main():
     print("--------")
     
     # Get the input video stream
-    try:
-        if inputtype == 'video':
-            print("Reading video file:", video)
-            cap = cv2.VideoCapture(video)
-        elif inputtype =='cam':
-            print("Reading webcam")
-            cap = cv2.VideoCapture(0)
-        else:
-            print("Reading image:", video)
-            cap = cv2.imread(video)    
-    except FileNotFoundError:
-        print("Cannot find video file: " + video)
-    except Exception as e:
-        print("Something else went wrong with the video file: ", e)
-        
-    # Capture information about the input video stream
-    initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-    print("--------")
-    print("Input video Data")
-    print("initial_w: " + str(initial_w))
-    print("initial_h: " + str(initial_h))
-    print("video_len: " + str(video_len))
-    print("fps: " + str(fps))
-    print("--------")
-
-    # Define output video
-
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
-
-    try:
-        while cap.isOpened():
-            result, frame = cap.read()
-            if not result:
-                break
-            image = inference.predict(frame, initial_w, initial_h)
-            print("The video is writen to the output path")
-            out_video.write(image)
-    except Exception as e:
-        print("Could not run Inference: ", e)
-
-        cap.release()
-        cv2.destroyAllWindows()
+    inference.getinputstream(inputtype, video, output_path)
 
 if __name__ == '__main__':
     log.basicConfig(filename="logging.txt", level=log.INFO)
