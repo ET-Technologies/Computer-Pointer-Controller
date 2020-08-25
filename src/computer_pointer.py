@@ -17,6 +17,10 @@ from gaze_estimation import Gaze_Estimation
 
 from input_feeder import InputFeeder
 
+from mouse_controller import MouseController
+
+#import mouse_controller_original
+
 def main():
     
     # loads argparser
@@ -29,7 +33,8 @@ def main():
     print ("Openvino version: "+ str(openvino_version))
     
     # Text Mouse Controller
-    
+    mousecontroller = MouseController('high', 'fast')
+    mousecontroller.move(10,100)
     
     # Load face_detection
     facedetection = Facedetection(model_name=args.fd_model, threshold=args.threshold, device=args.device, extension=args.extension)
@@ -73,7 +78,7 @@ def getinputstream(input_type, input_file):
     print("input_stream: " + str(input_stream))
     print("Reading video file: ", input_file)
     if not (input_stream.cap.isOpened()):
-        print("Cannot find video file: " + video)
+        print("Cannot find video file: " + input_file)
         
     # Capture information about the input video stream
     initial_w = int(input_stream.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -112,7 +117,7 @@ def test():
     
 def build_argparser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', required=True)
+    parser.add_argument('--model', required=False)
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
