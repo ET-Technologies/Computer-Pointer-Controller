@@ -6,7 +6,7 @@
 
 # Udacity Workspace
 # Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
-# python3 face_detection.py --model models/face-detection-retail-0004 --device CPU --video demo.mp4 --output_path demo_output.mp4
+# python3 face_detection.py --model models/face-detection-retail-0004 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
 '''
 Raspberry Pi
 python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 --device MYRIAD --extension None --video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 --output_path /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4
@@ -22,7 +22,7 @@ import argparse
 import sys
 from os import path
 from openvino.inference_engine import IENetwork, IECore
-#from input_feeder import InputFeeder
+from input_feeder import InputFeeder
 import logging as log
 
 class Facedetection:
@@ -99,6 +99,7 @@ class Facedetection:
             print("--------")
         
         self.core = IECore()
+        
         # Add extension
         if "CPU" in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
@@ -149,7 +150,6 @@ class Facedetection:
             print("--------")
             if len(not_supported_layers) != 0:
                 sys.exit(1)
-            sys.exit(1)
 
     def preprocess_input(self, frame):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
@@ -215,14 +215,6 @@ class Facedetection:
         print("--------")
         print("End: preprocess_output")
         return
-
-    def videofile(self, video):
-        if video =='video':
-            input_type = 'video'
-        else:
-            input_type ='cam'
-
-        return input_type
     
 def build_argparser():
     parser = argparse.ArgumentParser()
@@ -234,8 +226,9 @@ def build_argparser():
     parser.add_argument('--output_path', default='demo_output.mp4')
     #parser.add_argument('--output_path', default='/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4')
     parser.add_argument('--threshold', default=0.60)
+    parser.add_argument('--inputtype', default='video')
 
-    return parser    
+    return parser
     
 def main():
     args = build_argparser().parse_args()
@@ -246,7 +239,7 @@ def main():
     output_path = args.output_path
     #output_path = ("/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4")
     threshold = args.threshold
-    print (extension)
+    inputtype = args.inputtype
 
     # Load class Facedetection
     inference = Facedetection(model_name, threshold, device, extension)
@@ -257,20 +250,23 @@ def main():
     inference.load_model()
     print("Load Model = OK")
     print("--------")
-    cap = cv2.VideoCapture(video)
-
+    
     # Get the input video stream
     try:
-        print("Reading video file", video)
-        cap = cv2.VideoCapture(video)
-        cap.open(video)
-        if not path.exists(video):
-            print("Cannot find video file: " + video)
+        if inputtype == 'video':
+            print("Reading video file:", video)
+            cap = cv2.VideoCapture(video)
+        elif inputtype =='cam':
+            print("Reading webcam")
+            cap = cv2.VideoCapture(0)
+        else:
+            print("Reading image:", video)
+            cap = cv2.imread(video)    
     except FileNotFoundError:
         print("Cannot find video file: " + video)
     except Exception as e:
         print("Something else went wrong with the video file: ", e)
-
+        
     # Capture information about the input video stream
     initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))

@@ -1,7 +1,7 @@
 # Udacity Workspace
 # Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
 
-# python3 computer_pointer.py --model models/face-detection-retail-0004 --video demo.mp4
+# python3 computer_pointer.py --model models/face-detection-retail-0004 --video demo.mp4 --input_type video
 
 import time
 import argparse
@@ -21,10 +21,15 @@ def main():
     
     # loads argparser
     args = build_argparser().parse_args()
+    input_type = args.input_type
+    input_file = args.video
     
     # Get Openvinoversion
     openvino_version = (openvino.__file__)
     print ("Openvino version: "+ str(openvino_version))
+    
+    # Text Mouse Controller
+    
     
     # Load face_detection
     facedetection = Facedetection(model_name=args.fd_model, threshold=args.threshold, device=args.device, extension=args.extension)
@@ -33,6 +38,8 @@ def main():
     facedetection.load_model()
     print("Load model facedetection = Finished")
     print("--------")
+    initial_w, initial_h = getinputstream(input_type, input_file)
+    facedetection.predict(input_file, initial_w, initial_h)
     
     # Load facial landmark
     faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension)
@@ -57,14 +64,14 @@ def main():
     gazeestimation.load_model()
     print("Load model gaze_estimation = Finished")
     print("--------")
-
-def getinputstream(self):
+    
+def getinputstream(input_type, input_file):
     # Get the input video stream
     print("Get input from input_feeder")
-    input_stream = InputFeeder(input_type='video', input_file= args.video)
+    input_stream = InputFeeder(input_type, input_file)
     input_stream.load_data()
     print("input_stream: " + str(input_stream))
-    print("Reading video file: ", args.video)
+    print("Reading video file: ", input_file)
     if not (input_stream.cap.isOpened()):
         print("Cannot find video file: " + video)
         
@@ -81,6 +88,9 @@ def getinputstream(self):
     print("fps: " + str(fps))
     print("--------")
     
+    return initial_w, initial_h
+
+def test():
     # Define output video
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -112,6 +122,7 @@ def build_argparser():
     parser.add_argument("-fl_model", default='models/landmarks-regression-retail-0009', required=False)
     parser.add_argument("-hp_model", default='models/head-pose-estimation-adas-0001', required=False)
     parser.add_argument("-ga_model", default='models/gaze-estimation-adas-0002', required=False)
+    parser.add_argument('--input_type', default='video', required=False)
 
     return parser
 
