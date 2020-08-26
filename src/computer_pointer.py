@@ -1,7 +1,8 @@
-# Udacity Workspace
-# Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
-
-# python3 computer_pointer.py --model models/face-detection-retail-0004 --video demo.mp4 --input_type video
+'''
+Udacity Workspace
+Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
+python3 computer_pointer.py --video demo.mp4 --input_type video
+'''
 
 import time
 import argparse
@@ -17,7 +18,7 @@ from gaze_estimation import Gaze_Estimation
 
 from input_feeder import InputFeeder
 
-from mouse_controller import MouseController
+#from mouse_controller import MouseController
 
 #import mouse_controller_original
 
@@ -31,20 +32,15 @@ def main():
     # Get Openvinoversion
     openvino_version = (openvino.__file__)
     print ("Openvino version: "+ str(openvino_version))
-    
-    # Text Mouse Controller
-    mousecontroller = MouseController('high', 'fast')
-    mousecontroller.move(10,100)
-    
-    # Load face_detection
+        
+    # Load class Facedetection
     facedetection = Facedetection(model_name=args.fd_model, threshold=args.threshold, device=args.device, extension=args.extension)
     print("Load class Facedetection = OK")
     print("--------")
+    # Load model Facedetection
     facedetection.load_model()
     print("Load model facedetection = Finished")
     print("--------")
-    initial_w, initial_h = getinputstream(input_type, input_file)
-    facedetection.predict(input_file, initial_w, initial_h)
     
     # Load facial landmark
     faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension)
@@ -70,6 +66,64 @@ def main():
     print("Load model gaze_estimation = Finished")
     print("--------")
     
+    ##############
+    feed=InputFeeder(input_type, input_file)
+    cap = feed.load_data()
+    initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    facedetection.get_initial_w_h (initial_w, initial_h)
+    faciallandmarks.get_initial_w_h (initial_w, initial_h)
+    headposeestimation.get_initial_w_h (initial_w, initial_h)
+    
+    try:
+        while cap.isOpened():
+            result, frame = cap.read()
+            if not result:
+                break
+                #image = inference.predict(frame, initial_w, initial_h)
+            print("Hello Frame!")
+            image = facedetection.predict(frame)
+            faciallandmarks.predict(image)
+            headposeestimation.predict(image)
+            #left_eye, right_eye = gazeestimation.load_model()
+           #out_video.write(image)
+    except Exception as e:
+        print("Could not run Inference: ", e)
+        
+        cap.release()
+        cv2.destroyAllWindows()
+        
+    
+    '''
+    for batch in feed.next_batch():
+        #print (batch)
+        self.initial_w = int(input_file.get(cv2.CAP_PROP_FRAME_WIDTH))
+        print("initial_w: " + str(self.initial_w))
+        #do_something(batch)
+    feed.close()
+    
+    
+    self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+    print("--------")
+    print("Input video Data")
+    print("initial_w: " + str(self.initial_w))
+    print("initial_h: " + str(self.initial_h))
+    print("video_len: " + str(self.video_len))
+    print("fps: " + str(self.fps))
+    print("--------")
+    
+    
+    for batch in feed.next_batch():
+        do_something(batch)
+    feed.close()
+    ##############
+        # Text Mouse Controller
+    #mousecontroller = MouseController('high', 'fast')
+    #mousecontroller.move(10,100)
+    '''
 def getinputstream(input_type, input_file):
     # Get the input video stream
     print("Get input from input_feeder")

@@ -127,7 +127,7 @@ class Facial_Landmarks:
     def predict(self, frame):
 
         print("--------")
-        print("Start predictions")
+        print("Start predictions Facial_Landmarks")
         #self.width = initial_w
         #self.height = initial_h
         requestid = 0
@@ -314,6 +314,12 @@ class Facial_Landmarks:
             cv2.destroyAllWindows()
             
         return
+    
+    def get_initial_w_h (self, initial_w, initial_h):
+        self.initial_w = initial_w
+        self.initial_h = initial_h
+        print("initial_w: " + str(initial_w))
+        print("initial_h: " + str(initial_h))
     
 # Collect all the necessary input values
 def build_argparser():

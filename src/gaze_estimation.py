@@ -4,11 +4,12 @@
 
 #intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
 
+'''
 # Udacity Workspace
 # cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
 # Model Downloader python3 downloader.py --name gaze-estimation-adas-0002 --precisions FP32 -o /home/workspace
 # python3 gaze_estimation.py --model models/gaze-estimation-adas-0002 --video demo.mp4
-
+'''
 import numpy as np
 import time
 import os

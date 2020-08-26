@@ -122,7 +122,7 @@ class Head_Pose_Estimation:
     def predict(self, frame):
 
         print("--------")
-        print("Start predictions")
+        print("Start predictions head_pose_estimation")
         #self.width = initial_w
         #self.height = initial_h
         requestid = 0
@@ -261,6 +261,12 @@ class Head_Pose_Estimation:
             cv2.destroyAllWindows()
             
         return
+    
+    def get_initial_w_h (self, initial_w, initial_h):
+        self.initial_w = initial_w
+        self.initial_h = initial_h
+        print("initial_w: " + str(initial_w))
+        print("initial_h: " + str(initial_h))
         
 def build_argparser():
     parser = argparse.ArgumentParser()
