@@ -3,10 +3,12 @@
 # python3 face_detection.py --model /home/thomas/PycharmProjects/models/face-detection-retail-0004 --video demo.mp4
 # --model /home/thomas/PycharmProjects/models/face-detection-retail-0004
 # --video demo.mp4
+'''
+Udacity Workspace
+Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
+python3 face_detection.py --model models/face-detection-retail-0004 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
+'''
 
-# Udacity Workspace
-# Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
-# python3 face_detection.py --model models/face-detection-retail-0004 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
 '''
 Raspberry Pi
 python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 --device MYRIAD --extension None --video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 --output_path /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4 --inputtype cam
@@ -51,7 +53,7 @@ class Facedetection:
         try:
             log.info("Reading model ...")
             self.network = IENetwork(model=self.model_structure, weights=self.model_weights)
-            #self.network = IECore.read_network(self.model_structure, self.model_weights) #new version
+            #self.network = IECore.read_network(self.model_structure, self.model_weights) #new openvino version
             modelisloaded = True
         except Exception as e:
             modelisloaded = False
@@ -65,7 +67,7 @@ class Facedetection:
             self.input_name = next(iter(self.network .inputs))
             # Gets all input_names
             self.input_name_all = [i for i in self.network .inputs.keys()]
-            self.input_name_all_02 = self.network .inputs.keys()
+            self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
             self.input_name_first_entry = self.input_name_all[0]
         
             self.input_shape = self.network .inputs[self.input_name].shape
@@ -110,28 +112,6 @@ class Facedetection:
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
         self.check_model()
-        
-    # Start inference and prediction
-    def predict(self, frame):
-
-        
-        print("--")
-        print("Start predictions")
-        #self.width = initial_w
-        #self.height = initial_h
-        requestid = 0
-        preprocessed_image = self.preprocess_input(frame)
-        # Starts synchronous inference
-        print("Start syncro inference")
-        log.info("Start syncro inference")
-        outputs = self.exec_network.infer({self.input_name: preprocessed_image})
-        print("Output of the inference request: " + str(outputs))
-        outputs = self.exec_network.requests[requestid].outputs[self.output_name]
-        print("Output of the inference request (self.output_name): " + str(outputs))
-        processed_image = self.boundingbox(outputs, frame)
-        print("End predictions")
-        print("--------")
-        return processed_image
 
     def check_model(self):
         ### TODO: Check for supported layers ###
@@ -147,6 +127,28 @@ class Facedetection:
             print("--------")
             if len(not_supported_layers) != 0:
                 sys.exit(1)
+        
+    # Start inference and prediction
+    def predict(self, frame):
+ 
+        print("--------")
+        print("Start predictions")
+        #self.width = initial_w
+        #self.height = initial_h
+        requestid = 0
+        # Pre-process the image
+        preprocessed_image = self.preprocess_input(frame)
+        # Starts synchronous inference
+        print("Start syncro inference")
+        log.info("Start syncro inference")
+        outputs = self.exec_network.infer({self.input_name: preprocessed_image})
+        print("Output of the inference request: " + str(outputs))
+        outputs = self.exec_network.requests[requestid].outputs[self.output_name]
+        print("Output of the inference request (self.output_name): " + str(outputs))
+        processed_image = self.boundingbox(outputs, frame)
+        print("End predictions")
+        print("--------")
+        return processed_image
 
     def preprocess_input(self, frame):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
@@ -154,19 +156,15 @@ class Facedetection:
         print("Start: preprocess image")
         log.info("Start: preprocess image")
         n, c, h, w = (self.core, self.input_shape)[1]
-        image = cv2.resize(frame, (w, h))
-        image = image.transpose((2, 0, 1))
-        image = image.reshape((n, c, h, w))
-        #print("Original image size is W= ({}) x H= ({})".format(str(self.width),str(self.height)))
-        print("Image is now [BxCxHxW]: " + str(image.shape))
+        preprocessed_image = cv2.resize(frame, (w, h))
+        preprocessed_image = preprocessed_image.transpose((2, 0, 1))
+        preprocessed_image = preprocessed_image.reshape((n, c, h, w))
+        print("Original image size is W= ({}) x H= ({})".format(str(self.initial_w),str(self.initial_h)))
+        print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
         print("End: preprocess image")
         print("--------")
 
-        '''
-        Before feeding the data into the model for inference,
-        you might have to preprocess it. This function is where you can do that.
-        '''
-        return image
+        return preprocessed_image
 
     def boundingbox(self, outputs, frame):
         #coords = []
@@ -295,13 +293,17 @@ def main():
     print("--------")
 
     # Loads the model
+    start_model_load_time = time.time()  # Time to load the model (Start)
     inference.load_model()
+    total_model_load_time = time.time() - start_model_load_time  # Time model needed to load
     print("Load Model = OK")
+    print("Time to load model: " + str(total_model_load_time))
     print("--------")
     
     # Get the input video stream
     inference.getinputstream(inputtype, video, output_path)
 
+# Start program
 if __name__ == '__main__':
     log.basicConfig(filename="logging.txt", level=log.INFO)
     log.info("Start logging")

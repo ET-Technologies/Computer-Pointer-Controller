@@ -1,14 +1,16 @@
-# source /opt/intel/openvino/bin/setupvars.sh
-# cd /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src
-# python3 facial_landmarks_detection.py --model /home/thomas/PycharmProjects/models/landmarks-regression-retail-0009 --video demo.mp4
-# images/sitting-on-car.jpg
-# images/car.png
-# demo.mp4
+'''
+Udacity Workspace
+source /opt/intel/openvino/bin/setupvars.sh
+cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
+Model Downloader python3 downloader.py --name landmarks-regression-retail-0009 --precisions FP32 -o /home/workspace
 
-# Udacity Workspace
-# cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
-# Model Downloader python3 downloader.py --name landmarks-regression-retail-0009 --precisions FP32 -o /home/workspace
-# python3 facial_landmarks_detection.py --model models/landmarks-regression-retail-0009 --video demo.mp4
+python3 facial_landmarks_detection.py --model models/landmarks-regression-retail-0009 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
+'''
+
+'''
+Rapberry Pi
+
+'''
 
 import numpy as np
 import time
@@ -45,86 +47,102 @@ class Facial_Landmarks:
         # Initialise the network and save it in the self.model variables
         try:
             log.info("Reading model ...")
-            self.model = IENetwork(self.model_structure, self.model_weights)
-            # self.model = core.read_network(self.model_structure, self.model_weights) # new openvino version
+            self.network = IENetwork(self.model_structure, self.model_weights)
+            # self.network = core.read_network(self.model_structure, self.model_weights) # new openvino version
+            modelisloaded = True
         except Exception as e:
+            modelisloaded = False
             raise ValueError("Could not initialise the network")
         print("--------")
-        print("Model is loaded as self.model: " + str(self.model))
+        print("Model is loaded as self.model: " + str(self.network))
 
-        # Get the input layer
-        self.input_name = next(iter(self.model.inputs))
-        # Gets all input_names
-        self.input_name_all = [i for i in self.model.inputs.keys()]
-        self.input_name_all_02 = self.model.inputs.keys()
-        self.input_name_first_entry = self.input_name_all[0]
+        if modelisloaded == True:
 
-        self.input_shape = self.model.inputs[self.input_name].shape
+            # Get the input layer
+            self.input_name = next(iter(self.network .inputs))
+            # Gets all input_names
+            self.input_name_all = [i for i in self.network .inputs.keys()]
+            self.input_name_all_02 = self.network .inputs.keys()
+            self.input_name_first_entry = self.input_name_all[0]
+        
+            self.input_shape = self.network .inputs[self.input_name].shape
+        
+            self.output_name = next(iter(self.network .outputs))
+            self.output_name_type = self.network .outputs[self.output_name]
+            self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+            self.output_names_total_entries = len(self.output_names)
 
-        self.output_name = next(iter(self.model.outputs))
-        self.output_name_type = self.model.outputs[self.output_name]
-        self.output_names = [i for i in self.model.outputs.keys()]  # gets all output_names
-        self.output_names_total_entries = len(self.output_names)
+            self.output_shape = self.network .outputs[self.output_name].shape
+            self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
 
-        self.output_shape = self.model.outputs[self.output_name].shape
-        self.output_shape_second_entry = self.model.outputs[self.output_name].shape[1]
+            print("--------")
+            print("input_name: " + str(self.input_name))
+            print("input_name_all: " + str(self.input_name_all))
+            print("input_name_all_total: " + str(self.input_name_all_02))
+            print("input_name_first_entry: " + str(self.input_name_first_entry))
+            print("--------")
 
-        print("--------")
-        print("input_name: " + str(self.input_name))
-        print("input_name_all: " + str(self.input_name_all))
-        print("input_name_all_total: " + str(self.input_name_all_02))
-        print("input_name_first_entry: " + str(self.input_name_first_entry))
-        print("--------")
+            print("input_shape: " + str(self.input_shape))
+            print("--------")
 
-        print("input_shape: " + str(self.input_shape))
-        print("--------")
+            print("output_name: " + str(self.output_name))
+            print("output_name type: " + str(self.output_name_type))
+            print("output_names: " + str(self.output_names))
+            print("output_names_total_entries: " + str(self.output_names_total_entries))
+            print("--------")
 
-        print("output_name: " + str(self.output_name))
-        print("output_name type: " + str(self.output_name_type))
-        print("output_names: " + str(self.output_names))
-        print("output_names_total_entries: " + str(self.output_names_total_entries))
-        print("--------")
-
-        print("output_shape: " + str(self.output_shape))
-        print("output_shape_second_entry: " + str(self.output_shape_second_entry))
-        print("--------")
+            print("output_shape: " + str(self.output_shape))
+            print("output_shape_second_entry: " + str(self.output_shape_second_entry))
+            print("--------")
 
         self.core = IECore()
+
         # Adds Extension
-        if "CPU" in self.device:
+        if 'CPU' in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
-
+            
         # Load the network into an executable network
-        self.exec_network = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
+        self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
+        self.check_model()
+
+    def check_model(self):
+        ### TODO: Check for supported layers ###
+        if "CPU" in self.device:
+            #supported_layers = self.core.query_network(self.exec_network, "CPU")
+            supported_layers = self.core.query_network(self.network, "CPU")
+            print("--------")
+            print("Check for supported layers")
+            print("supported_layers: " + str(supported_layers)) 
+            not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
+            print("not_supported_layers: " + str(not_supported_layers))
+            print("You are lucky, all layers are supported")
+            print("--------")
+            if len(not_supported_layers) != 0:
+                sys.exit(1)
 
     # Start inference and prediction
-    def predict(self, frame, initial_w, initial_h):
+    def predict(self, frame):
 
         print("--------")
         print("Start predictions")
-        self.width = initial_w
-        self.height = initial_h
+        #self.width = initial_w
+        #self.height = initial_h
         requestid = 0
-
-        # save original image
-        #input_img = image
-
         # Pre-process the image
         preprocessed_image = self.preprocess_input(frame)
         # Starts synchronous inference
         print("Start syncro inference")
+        log.info("Start syncro inference")
         outputs = self.exec_network.infer({self.input_name:preprocessed_image})
         print("Output of the inference request: " + str(outputs))
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
         landmark_results = self.landmark_detection(outputs, frame)
-
         print("End predictions")
         print("--------")
-
         return landmark_results
 
     def preprocess_input(self, frame):
@@ -135,7 +153,7 @@ class Facial_Landmarks:
         image = cv2.resize(frame, (w, h))
         image = image.transpose((2, 0, 1))
         image = image.reshape((n, c, h, w))
-        print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
+        #print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
         print("Image is now [BxCxHxW]: " + str(image.shape))
         print("End: preprocess image")
         print("--------")
@@ -161,16 +179,16 @@ class Facial_Landmarks:
             print("Coordinaten: " + str(c))
             coords.append(c)
         print("Coords: " + str(coords))
-        self.left_eye_coordinates_x = int(coords[0]*self.width)
-        self.left_eye_coordinates_y = int(coords[1]*self.height)
-        self.right_eye_coordinates_x = int(coords[2]*self.width)
-        self.right_eye_coordinates_y = int(coords[3]*self.height)
-        self.nose_coordinates_x = int(coords[4] * self.width)
-        self.nose_coordinates_y = int(coords[5] * self.height)
-        self.left_mouth_coordinates_x = int(coords[6] * self.width)
-        self.left_mouth_coordinates_y = int(coords[7] * self.height)
-        self.right_mouth_coordinates_x = int(coords[8] * self.width)
-        self.right_mouth_coordinates_y = int(coords[9] * self.height)
+        self.left_eye_coordinates_x = int(coords[0]*self.initial_w)
+        self.left_eye_coordinates_y = int(coords[1]*self.initial_h)
+        self.right_eye_coordinates_x = int(coords[2]*self.initial_w)
+        self.right_eye_coordinates_y = int(coords[3]*self.initial_h)
+        self.nose_coordinates_x = int(coords[4] * self.initial_w)
+        self.nose_coordinates_y = int(coords[5] * self.initial_h)
+        self.left_mouth_coordinates_x = int(coords[6] * self.initial_w)
+        self.left_mouth_coordinates_y = int(coords[7] * self.initial_h)
+        self.right_mouth_coordinates_x = int(coords[8] * self.initial_w)
+        self.right_mouth_coordinates_y = int(coords[9] * self.initial_h)
         print("left_eye_coordinates_x: " + str(self.left_eye_coordinates_x))
         print("left_eye_coordinates_y: " + str(self.left_eye_coordinates_y))
         
@@ -244,16 +262,69 @@ class Facial_Landmarks:
         print("--------")
         print("End: preprocess_output")
         return
+
+    def getinputstream(self, inputtype, video, output_path):
+        # gets the inputtype
+        print("--------")
+        print("Start: getinputstream")
+        try:
+            if inputtype == 'video':
+                print("Reading video file:", video)
+                cap = cv2.VideoCapture(video)
+            elif inputtype =='cam':
+                print("Reading webcam")
+                cap = cv2.VideoCapture(0)
+            else:
+                print("Reading image:", video)
+                cap = cv2.imread(video)    
+        except FileNotFoundError:
+            print("Cannot find video file: " + video)
+        except Exception as e:
+            print("Something else went wrong with the video file: ", e)
+            
+        # Capture information about the input video stream
+        self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+        print("--------")
+        print("Input video Data")
+        print("initial_w: " + str(self.initial_w))
+        print("initial_h: " + str(self.initial_h))
+        print("video_len: " + str(self.video_len))
+        print("fps: " + str(self.fps))
+        print("--------")
+        
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
+
+        try:
+            while cap.isOpened():
+                result, frame = cap.read()
+                if not result:
+                    break
+                #image = inference.predict(frame, initial_w, initial_h)
+                image = self.predict(frame)
+                print("The video is writen to the output path")
+                out_video.write(image)
+        except Exception as e:
+            print("Could not run Inference: ", e)
+
+            cap.release()
+            cv2.destroyAllWindows()
+            
+        return
     
 # Collect all the necessary input values
 def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default=None)
+    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='results/')
     parser.add_argument('--threshold', default=0.60)
+    parser.add_argument('--inputtype', default='video')
 
     return parser
 
@@ -265,109 +336,27 @@ def main():
     extension = args.extension
     video = args.video
     video = ("cropped_image.png")
-    threshold = args.threshold
     output_path = args.output_path
-    #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
-    start_model_load_time = time.time()  # Time to load the model (Start)
+    threshold = args.threshold
+    inputtype = args.inputtype
 
     # Load class Facial_Landmarks
-    inference = Facial_Landmarks(model_name, device,threshold, extension)
-    print("Load Model = OK")
+    inference = Facial_Landmarks(model_name, threshold, device, extension)
+    print("Load class Facial_Landmarks = OK")
     print("--------")
 
     # Loads the model
-    inference.load_model(device,extension)
+    start_model_load_time = time.time()  # Time to load the model (Start)
+    inference.load_model()
     total_model_load_time = time.time() - start_model_load_time  # Time model needed to load
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
 
-    # Get the input frame
-    cap = cv2.VideoCapture(video)
-    try:
-        print("Reading video file name:", video)
-        cap = cv2.VideoCapture(video)
-        cap.open(video)
-        if not path.exists(video):
-            print("Cannot find video file: " + video)
-    except FileNotFoundError:
-        print("Cannot find video file: " + video)
-    except Exception as e:
-        print("Something else went wrong with the video file: ", e)
+    # Get the input video stream
+    inference.getinputstream(inputtype, video, output_path)
 
-    # Capture information about the input video stream
-    initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-    print("--------")
-    print("Input video Data")
-    print("initial_w: " + str(initial_w))
-    print("initial_h: " + str(initial_h))
-    print("video_len: " + str(video_len))
-    print("fps: " + str(fps))
-    print("--------")
-
-    # Define output video
-
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter('output_video3.mp4', fourcc, fps, (initial_w, initial_h))
-
-    
-#    feed=InputFeeder(input_type='video', input_file=video)
-#    feed.load_data()
-#    initial_w = int(feed.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-#    initial_h = int(feed.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-#    print ("initial_w: from feed " +str(initial_w))
-#    print ("initial_h: " +str(initial_h))
-
-    try:
-        while cap.isOpened():
-            result, frame = cap.read()
-            if not result:
-                break
-            image = inference.predict(frame, initial_w, initial_h)
-            print("The video is writen to the output path: landmark_image.png")
-            #out_video.write(image)
-    except Exception as e:
-        print("Could not run Inference: ", e)
-
-        cap.release()
-        cv2.destroyAllWindows()
-    
-  #  for batch in feed.next_batch():
-   #     if batch is None:
-    #        break
-     #   image = batch.copy()
-      #  image = inference.predict(image, initial_w, initial_h)
-        
-        
-    
-    #frame = input_feeder_helper.next_batch()
-    #res, image = inference.predict(frame, initial_w, initial_h)
-    #frame = input_feeder_helper.next_batch(image)
-    #image = inference.predict(frame, initial_w, initial_h)
-    #result, frame = input_feeder_helper.load_data()
-    #image = inference.predict(frame, initial_w, initial_h)
-    #while cap.isOpened():
-     #   frame = input_feeder_helper.load_data()
-        #result, frame = cap.read()
-      #  image = inference.predict(frame, initial_w, initial_h)
-     #       frame = input_feeder_helper.load_data()
-            
-            
-            
-    cap.release()
-    cv2.destroyAllWindows()
-    
-    # Read the input image
-    #image = cv2.imread(video_file)
-    # Scale the output text by the image shape
-    #scaler = max(int(image.shape[0] / 1000), 1)
-    # Write the text of color and type onto the image
-    #image = cv2.putText(image, "Color: {}, Type: {}".format(color, car_type), (50 * scaler, 100 * scaler), cv2.FONT_HERSHEY_SIMPLEX, 2 * scaler, (255, 255, 255), 3 * scaler)
-
-# Start sequence
+# Start program
 if __name__ == '__main__':
     log.basicConfig(filename="logging_landmarks.txt", level=log.INFO)
     log.info("Start logging")
