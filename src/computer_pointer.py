@@ -1,7 +1,7 @@
 '''
 Udacity Workspace
 Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
-python3 computer_pointer.py --video demo.mp4 --input_type video
+python3 computer_pointer.py --video demo.mp4 --input_type video --output_path demo_output.mp4
 '''
 
 import time
@@ -28,6 +28,7 @@ def main():
     args = build_argparser().parse_args()
     input_type = args.input_type
     input_file = args.video
+    output_path = args.output_path
     
     # Get Openvinoversion
     openvino_version = (openvino.__file__)
@@ -71,9 +72,13 @@ def main():
     cap = feed.load_data()
     initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
     facedetection.get_initial_w_h (initial_w, initial_h)
-    faciallandmarks.get_initial_w_h (initial_w, initial_h)
+    #faciallandmarks.get_initial_w_h (initial_w, initial_h)
     headposeestimation.get_initial_w_h (initial_w, initial_h)
+    
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
     
     try:
         while cap.isOpened():
@@ -82,9 +87,20 @@ def main():
                 break
                 #image = inference.predict(frame, initial_w, initial_h)
             print("Hello Frame!")
-            image = facedetection.predict(frame)
-            faciallandmarks.predict(image)
-            headposeestimation.predict(image)
+            face_image, frame_cropped = facedetection.predict(frame)
+            print("The video is writen to the output path")
+            out_video.write(face_image)
+            faciallandmarks.get_initial_w_h(frame_cropped)
+            #land_image = cv2.VideoCapture(frame_cropped)
+            left_eye_image, right_eye_image = faciallandmarks.predict(frame_cropped)
+            head_pose_angles = headposeestimation.predict(frame_cropped)
+            print ("ZZZZZZZZZZZZZ")
+            print (head_pose_angles)
+            
+            ##### TODO
+            gaze = gazeestimation.predict(left_eye_image, right_eye_image, head_pose_angles)
+            
+            print (gaze)
             #left_eye, right_eye = gazeestimation.load_model()
            #out_video.write(image)
     except Exception as e:
@@ -175,7 +191,7 @@ def build_argparser():
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default='/results')
+    parser.add_argument('--output_path', default='demo_output.mp4')
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument("-fd_model", default='models/face-detection-retail-0004', required=False)
     parser.add_argument("-fl_model", default='models/landmarks-regression-retail-0009', required=False)

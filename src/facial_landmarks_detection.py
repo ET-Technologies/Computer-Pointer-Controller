@@ -204,8 +204,8 @@ class Facial_Landmarks:
         
         print("Rectangle coordinates: ({}) + ({}) + ({}) + ({})".format(str(self.left_eye_x_min),str(self.left_eye_x_max), str(self.left_eye_y_min), str(self.left_eye_y_max)))
         #log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
-        self.draw_landmarks(frame)
-        return
+        left_eye, right_eye = self.draw_landmarks(frame)
+        return left_eye, right_eye
 
     def draw_landmarks(self, frame):
         print("--------")
@@ -243,7 +243,7 @@ class Facial_Landmarks:
         
         print("End: draw_landmarks")
         print("--------")
-        return
+        return left_eye, right_eye
     
     def preprocess_output(self, frame):
         # crop image to fit the next model
@@ -315,11 +315,14 @@ class Facial_Landmarks:
             
         return
     
-    def get_initial_w_h (self, initial_w, initial_h):
-        self.initial_w = initial_w
-        self.initial_h = initial_h
-        print("initial_w: " + str(initial_w))
-        print("initial_h: " + str(initial_h))
+    def get_initial_w_h (self, frame_cropped):
+        self.initial_w = frame_cropped.shape[1]
+        self.initial_h = frame_cropped.shape[0]
+        #cap = cv2.imread(frame_cropped)
+        #self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        print("initial_w: " + str(self.initial_w))
+        print("initial_h: " + str(self.initial_h))
     
 # Collect all the necessary input values
 def build_argparser():
@@ -340,8 +343,9 @@ def main():
     model_name = args.model
     device = args.device
     extension = args.extension
-    video = args.video
+    #video = args.video
     video = ("cropped_image.png")
+    video = ("face_full_image.png")
     output_path = args.output_path
     threshold = args.threshold
     inputtype = args.inputtype

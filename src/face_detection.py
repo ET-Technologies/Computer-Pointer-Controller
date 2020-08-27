@@ -145,10 +145,11 @@ class Facedetection:
         print("Output of the inference request: " + str(outputs))
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
-        processed_image = self.boundingbox(outputs, frame)
-        print("End predictions")
+        processed_image, frame_cropped = self.boundingbox(outputs, frame)
+        cv2.imwrite("cropped_image_02.png", frame_cropped)
+        print("End predictions face_detection")
         print("--------")
-        return processed_image
+        return processed_image, frame_cropped
 
     def preprocess_input(self, frame):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
@@ -191,12 +192,10 @@ class Facedetection:
         print("--------")
         frame_cropped = frame.copy()
         #frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
-        cv2.imwrite("cropped image.png", frame_cropped)
-        self.preprocess_output(frame)
-
-        #frame = self.cropimage(frame)
-
-        return frame
+        #cv2.imwrite("cropped image.png", frame_cropped)
+        frame_cropped = self.preprocess_output(frame)
+        cv2.imwrite("face_full_image.png", frame)
+        return frame, frame_cropped
 
     def preprocess_output(self, frame):
         # crop image to fit the next model
@@ -207,9 +206,10 @@ class Facedetection:
         frame_cropped = None
         frame_cropped = frame[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
         cv2.imwrite("cropped_image.png", frame_cropped)
+        
         print("--------")
         print("End: preprocess_output")
-        return
+        return frame_cropped
     
     def getinputstream(self, inputtype, video, output_path):
         # gets the inputtype
@@ -250,7 +250,7 @@ class Facedetection:
                 if not result:
                     break
                 #image = inference.predict(frame, initial_w, initial_h)
-                image = self.predict(frame)
+                image, frame_cropped = self.predict(frame)
                 print("The video is writen to the output path")
                 out_video.write(image)
         except Exception as e:
@@ -262,14 +262,10 @@ class Facedetection:
         return
     
     def get_initial_w_h (self, initial_w, initial_h):
-        print("--------")
-        print("Start: get_initial_w_h")
         self.initial_w = initial_w
         self.initial_h = initial_h
         print("initial_w: " + str(initial_w))
         print("initial_h: " + str(initial_h))
-        print("End: get_initial_w_h")
-        print("--------")
         
     
 def build_argparser():
