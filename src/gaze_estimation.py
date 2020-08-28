@@ -122,13 +122,14 @@ class Gaze_Estimation:
     def predict(self, left_eye, right_eye, head_pose_angles):
 
         print("--------")
-        print("Start predictions")
+        print("Start predictions Gaze_Estimation")
         #self.width = initial_w
         #self.height = initial_h
         requestid = 0
         # Pre-process the image
         left_eye_preprocess_image, right_eye_preprocess_image = self.preprocess_input(left_eye, right_eye)
-        head_pose = head_pose_angles
+        
+        #head_pose = head_pose_angles
         head_pose = [2,5,10]
 
         # Starts synchronous inference
@@ -152,19 +153,23 @@ class Gaze_Estimation:
     def preprocess_input(self, left_eye, right_eye):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
-        print("Start: preprocess image")
+        print("Start: preprocess image Gaze_Estimation")
         log.info("Start: preprocess image")
         n, c, h, w = (self.core, self.input_shape)[1]
+        print (n)
+        print (c)
+        print (h)
+        print (w)
         left_eye_preprocess_image = cv2.resize(left_eye, (w, h))
         left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
         left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
         
-        right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
-        right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
-        right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
+        #right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
+        #right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
+        #right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
         
         #print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
-        print("Image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
+        #print("Image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
         print("End: preprocess image")
         print("--------")
         
@@ -246,8 +251,8 @@ def main():
     left_eye = args.left_eye_image
     right_eye = args.right_eye_image
     head_pose_angles  = args.head_pose_angles 
-    left_eye = ("left_eye_frame_cropped.png")
-    right_eye = ("right_eye_frame_cropped.png")
+    left_eye = ("left_eye_computer_pointer.png")
+    right_eye = ("right_eye_computer_pointer.png")
     
     output_path=args.output_path
     #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
