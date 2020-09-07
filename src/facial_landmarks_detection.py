@@ -154,6 +154,7 @@ class Facial_Landmarks:
         image = cv2.resize(frame, (w, h))
         image = image.transpose((2, 0, 1))
         image = image.reshape((n, c, h, w))
+        print("The input shape from the facial landmarks is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
         #print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
         print("Image is now [BxCxHxW]: " + str(image.shape))
         print("End: preprocess image")

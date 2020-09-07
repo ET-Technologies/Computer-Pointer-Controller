@@ -150,6 +150,7 @@ class Head_Pose_Estimation:
         preprocessed_image = cv2.resize(frame, (w, h))
         preprocessed_image = preprocessed_image.transpose((2, 0, 1))
         preprocessed_image = preprocessed_image.reshape((n, c, h, w))
+        print("The input shape from the head pose is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
         print("Original image size is W= ({}) x H= ({})".format(str(self.initial_w),str(self.initial_h)))
         print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
         print("End: preprocess image")
