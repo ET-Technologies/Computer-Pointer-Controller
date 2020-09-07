@@ -262,11 +262,17 @@ class Head_Pose_Estimation:
             
         return
     
-    def get_initial_w_h (self, initial_w, initial_h):
-        self.initial_w = initial_w
-        self.initial_h = initial_h
-        print("initial_w: " + str(initial_w))
-        print("initial_h: " + str(initial_h))
+    #def get_initial_w_h (self, initial_w, initial_h):
+     #   self.initial_w = initial_w
+      #  self.initial_h = initial_h
+       # print("Initialize initial_w in headposeestimation: " + str(initial_w))
+        #print("Initialize initial_h in headposeestimation: " + str(initial_h))
+
+    def get_initial_w_h (self, frame_cropped):
+        self.initial_w = frame_cropped.shape[1]
+        self.initial_h = frame_cropped.shape[0]
+        print("Initialize initial_w in headposeestimation: " + str(self.initial_w))
+        print("Initialize initial_h in headposeestimation: " + str(self.initial_h))
         
 def build_argparser():
     parser = argparse.ArgumentParser()

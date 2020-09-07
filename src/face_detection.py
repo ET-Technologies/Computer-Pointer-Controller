@@ -264,8 +264,8 @@ class Facedetection:
     def get_initial_w_h (self, initial_w, initial_h):
         self.initial_w = initial_w
         self.initial_h = initial_h
-        print("initial_w: " + str(initial_w))
-        print("initial_h: " + str(initial_h))
+        print("Initialize initial_w in facedetection: " + str(initial_w))
+        print("Initialize initial_h in facedetection: " + str(initial_h))
         
     
 def build_argparser():

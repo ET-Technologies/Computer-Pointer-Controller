@@ -74,8 +74,7 @@ def main():
     initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     facedetection.get_initial_w_h (initial_w, initial_h)
-    #faciallandmarks.get_initial_w_h (initial_w, initial_h)
-    headposeestimation.get_initial_w_h (initial_w, initial_h)
+    #headposeestimation.get_initial_w_h (initial_w, initial_h)
     
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
@@ -86,23 +85,32 @@ def main():
             if not result:
                 break
                 #image = inference.predict(frame, initial_w, initial_h)
-            print("Hello Frame!")
+            print ("Start facedetection (computer_pointer.py)")
+            print ("Cap is feeded to the face detection!")
             face_image, frame_cropped = facedetection.predict(frame)
-            print("The video is writen to the output path")
+            print ("The video from the face detection is writen to the output path")
             out_video.write(face_image)
+            print ("End facedetection (computer_pointer.py)")
+
+            print ("Start faciallandmark (computer_pointer.py)")
+            print("The cropped face image is feeded to the faciallandmarks detection.")
             faciallandmarks.get_initial_w_h(frame_cropped)
-            #land_image = cv2.VideoCapture(frame_cropped)
             left_eye_image, right_eye_image = faciallandmarks.predict(frame_cropped)
+            print ("End faciallandmarks (computer_pointer.py)")
+
+            print ("Start headposeestimation (computer_pointer.py)")
+            print("The cropped face image is feeded to the headposeestimation.")
+            headposeestimation.get_initial_w_h(frame_cropped)
             head_pose_angles = headposeestimation.predict(frame_cropped)
-            print ("ZZZZZZZZZZZZZ")
-            print (head_pose_angles)
-            
-            ##### TODO
+            print ("Head pose angeles: ", head_pose_angles)
+            print ("End faciallheadposeestimationandmarks (computer_pointer.py)")
+
+            print ("Start gazeestimation (computer_pointer.py)")
             gaze = gazeestimation.predict(left_eye_image, right_eye_image, head_pose_angles)
-            
+            print ("End gazeestimation (computer_pointer.py)")
             print (gaze)
-            #left_eye, right_eye = gazeestimation.load_model()
-           #out_video.write(image)
+
+            # TODO feed into the mouse controller
     except Exception as e:
         print("Could not run Inference: ", e)
         

@@ -1,15 +1,17 @@
-# source /opt/intel/openvino/bin/setupvars.sh
-# cd /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src
-# python3 head_pose_estimation.py --model /home/thomas/PycharmProjects/models/head-pose-estimation-adas-0001 --video demo.mp4
+'''
+Udacity Workspace
+source /opt/intel/openvino/bin/setupvars.sh
+cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
+Model Downloader python3 downloader.py --name landmarks-regression-retail-0009 --precisions FP32 -o /home/workspace
 
-#intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
+python3 facial_landmarks_detection.py --model models/landmarks-regression-retail-0009 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
+'''
 
 '''
-# Udacity Workspace
-# cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
-# Model Downloader python3 downloader.py --name gaze-estimation-adas-0002 --precisions FP32 -o /home/workspace
-# python3 gaze_estimation.py --model models/gaze-estimation-adas-0002 --video demo.mp4
+Rapberry Pi
+
 '''
+
 import numpy as np
 import time
 import os
@@ -17,23 +19,26 @@ import cv2
 import argparse
 import sys
 from openvino.inference_engine import IENetwork, IECore
+from input_feeder import InputFeeder
+import face_detection as fd
 import logging as log
 
-class Gaze_Estimation:
+class Facial_Landmarks:
 
     # Load all relevant variables into the class
-    def __init__(self, model_name, device, extension):
+    def __init__(self, model_name, threshold, device, extension):
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
-        self.device = device
         self.extension = extension
-
+        self.device = device
+        self.threshold = threshold
+        
         print("--------")
-        print("START Gaze_Estimation")
+        print("START Facial_Landmarks")
         print("model_weights: " + str(self.model_weights))
         print("model_structure: " + str(self.model_structure))
         print("device: " + str(self.device))
-        print("extensions: " + str(self.extension))
+        print("extension: " + str(self.extension))
         print("--------")
 
     # Loads the model
@@ -43,7 +48,7 @@ class Gaze_Estimation:
         try:
             log.info("Reading model ...")
             self.network = IENetwork(self.model_structure, self.model_weights)
-            # self.model = core.read_network(self.model_structure, self.model_weights) # new openvino version
+            # self.network = core.read_network(self.model_structure, self.model_weights) # new openvino version
             modelisloaded = True
         except Exception as e:
             modelisloaded = False
@@ -57,7 +62,7 @@ class Gaze_Estimation:
             self.input_name = next(iter(self.network .inputs))
             # Gets all input_names
             self.input_name_all = [i for i in self.network .inputs.keys()]
-            self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+            self.input_name_all_02 = self.network .inputs.keys()
             self.input_name_first_entry = self.input_name_all[0]
         
             self.input_shape = self.network .inputs[self.input_name].shape
@@ -93,10 +98,10 @@ class Gaze_Estimation:
         self.core = IECore()
 
         # Adds Extension
-        if "CPU" in self.device:
+        if 'CPU' in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
-
+            
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
         print("Exec_network is loaded as:" + str(self.exec_network))
@@ -119,157 +124,225 @@ class Gaze_Estimation:
                 sys.exit(1)
 
     # Start inference and prediction
-    def predict(self, left_eye, right_eye, head_pose_angles):
+    def predict(self, frame):
 
         print("--------")
-        print("Start predictions")
+        print("Start predictions Facial_Landmarks")
         #self.width = initial_w
         #self.height = initial_h
         requestid = 0
         # Pre-process the image
-        left_eye_preprocess_image, right_eye_preprocess_image = self.preprocess_input(left_eye, right_eye)
-        left_eye_preprocess_image = left_eye
-        right_eye_preprocess_image = right_eye
-        
-        head_pose = head_pose_angles
-        head_pose = [2,5,10]
-
+        preprocessed_image = self.preprocess_input(frame)
         # Starts synchronous inference
-        #outputs = self.exec_network.infer({self.input_name: preprocessed_image})
         print("Start syncro inference")
         log.info("Start syncro inference")
-        #outputs = self.exec_network.infer({'left_eye_image': left_eye_preprocess_image, 'head_pose_angles': head_pose, 'right_eye_image': right_eye_preprocess_image})
-        outputs = self.exec_network.infer({"head_pose_angles": head_pose, "left_eye_image": left_eye_preprocess_image, "right_eye_image": right_eye_preprocess_image })
-        #input_dict = {"head_pose_angles": head_angles, "left_eye_image": image_input_preprocessed[0],
-                      #"right_eye_image": image_input_preprocessed[1]}
-        #outputs = self.exec_network.infer({'head_pose_angles':[2,5,10]})
-        # (['left_eye_image', 'head_pose_angles', 'right_eye_image'])
+        outputs = self.exec_network.infer({self.input_name:preprocessed_image})
         print("Output of the inference request: " + str(outputs))
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
-        head_pose_results = self.gaze_estimation(outputs, frame)
-        #head_pose_results = self.preprocess_output(outputs)
-
+        #landmark_results = self.landmark_detection(outputs, frame)
+        left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.landmark_detection(outputs, frame)
         print("End predictions")
         print("--------")
-        
-        return head_pose_results
+        return left_eye_frame_cropped, right_eye_frame_cropped
 
-    def preprocess_input(self, left_eye1, right_eye1):
+    def preprocess_input(self, frame):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
-        log.info("Start: preprocess image")
-        print (left_eye1)
-        #left_eye = left_eye1.copy()
-        #right_eye = right_eye1.copy()
-        
         n, c, h, w = (self.core, self.input_shape)[1]
-        print (n)
-        print (c)
-        print (h)
-        print (w)
-        left_eye_preprocess_image = cv2.resize(left_eye, (w, h))
-        left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
-        left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
-        
-        right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
-        right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
-        right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
-        
+        image = cv2.resize(frame, (w, h))
+        image = image.transpose((2, 0, 1))
+        image = image.reshape((n, c, h, w))
         #print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
-        print("Image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
+        print("Image is now [BxCxHxW]: " + str(image.shape))
         print("End: preprocess image")
         print("--------")
-        
-        return left_eye_preprocess_image, right_eye_preprocess_image
+        return image
 
-    def gaze_estimation(self, outputs,frame):
+    def landmark_detection(self, outputs, frame):
         print("--------")
-        print("Start: gaze_estimation")
+        print("Start: landmark_detection")
         result_len = len(outputs)
         print("total number of entries: " + str(result_len))
-        #output_name: gaze_vector
-        gazes =[]
-        gaze_vector = self.exec_network.requests[0].outputs['gaze_vector']
-        print("Output of the inference request (self.gaze_vector): " + str(gaze_vector))
-        #gaze_vector = int(gaze_vector)
-        print("gaze_vector: " + str(gaze_vector))
-        #gazes.append([gaze_vector])
+        coords = []
+        for obj in outputs[0]:
+            obj= obj[0]
+            c = obj[0]
+            print("Coordinaten: " + str(c))
+            coords.append(c)
+        print("Coords: " + str(coords))
+        self.left_eye_coordinates_x = int(coords[0]*self.initial_w)
+        self.left_eye_coordinates_y = int(coords[1]*self.initial_h)
+        self.right_eye_coordinates_x = int(coords[2]*self.initial_w)
+        self.right_eye_coordinates_y = int(coords[3]*self.initial_h)
+        self.nose_coordinates_x = int(coords[4] * self.initial_w)
+        self.nose_coordinates_y = int(coords[5] * self.initial_h)
+        self.left_mouth_coordinates_x = int(coords[6] * self.initial_w)
+        self.left_mouth_coordinates_y = int(coords[7] * self.initial_h)
+        self.right_mouth_coordinates_x = int(coords[8] * self.initial_w)
+        self.right_mouth_coordinates_y = int(coords[9] * self.initial_h)
+        print("left_eye_coordinates_x: " + str(self.left_eye_coordinates_x))
+        print("left_eye_coordinates_y: " + str(self.left_eye_coordinates_y))
+        
+        self.left_eye_x_min = self.left_eye_coordinates_x-30
+        self.left_eye_x_max = self.left_eye_coordinates_x+30
+        self.left_eye_y_min = self.left_eye_coordinates_y-30
+        self.left_eye_y_max = self.left_eye_coordinates_y+30
+        
+        self.right_eye_x_min = self.right_eye_coordinates_x-30
+        self.right_eye_x_max = self.right_eye_coordinates_x+30
+        self.right_eye_y_min = self.right_eye_coordinates_y-30
+        self.right_eye_y_max = self.right_eye_coordinates_y+30
+        
+        print("Rectangle coordinates: ({}) + ({}) + ({}) + ({})".format(str(self.left_eye_x_min),str(self.left_eye_x_max), str(self.left_eye_y_min), str(self.left_eye_y_max)))
+        #log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
+        left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.draw_landmarks(frame)
+        return left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped
 
-        #print("gaze_vector: " + str(gazes))
-        print("End: gaze_estimation")
+    def draw_landmarks(self, frame):
         print("--------")
-        return gazes
+        print("Start: draw_landmarks")
+        
+        self.frame_original = frame.copy()
+        left_eye_image = frame.copy()
+        right_eye_image = frame.copy()
 
-    def preprocess_output(self, image):
-
+        center_left_eye = (self.left_eye_coordinates_x, self.left_eye_coordinates_y)
+        center_right_eye = (self.right_eye_coordinates_x, self.right_eye_coordinates_y)
+        center_nose= (self.nose_coordinates_x, self.nose_coordinates_y)
+        left_mouth_coordinates = (self.left_mouth_coordinates_x, self.left_mouth_coordinates_y)
+        right_mouth_coordinates = (self.right_mouth_coordinates_x, self.right_mouth_coordinates_y)
+        image = cv2.circle(frame, center_left_eye, 10, (255,0,0), 2)
+        image = cv2.circle(frame, center_right_eye, 10, (255, 0, 0), 2)
+        image = cv2.circle(frame, center_nose, 10, (255, 0, 0), 2)
+        image = cv2.circle(frame, left_mouth_coordinates, 10, (255, 0, 0), 2)
+        image = cv2.circle(frame, right_mouth_coordinates, 10, (255, 0, 0), 2)
+        self.image_path = ("landmark_image.png")
+        cv2.imwrite(self.image_path, image)
+        
+        #Draw rectangle
+        
+        #image_rectangle = cv2.rectangle(frame_rectangle, start_point, end_point, color, thickness)
+        #image_rectangle = cv2.rectangle(frame_rectangle, start_point, end_point, color, thickness)
+        left_eye = cv2.rectangle(left_eye_image, (self.left_eye_x_min, self.left_eye_y_min), (self.left_eye_x_max, self.left_eye_y_max), (255,0,0), 2)
+        right_eye = cv2.rectangle(right_eye_image, (self.right_eye_x_min, self.right_eye_y_min), (self.right_eye_x_max, self.right_eye_y_max), (255,0,0), 2)
+        self.left_eye_image_rectangle_path = ("left_eye_image.png")
+        self.right_eye_image_rectangle_path = ("right_eye_image.png")
+        cv2.imwrite(self.left_eye_image_rectangle_path, left_eye)
+        cv2.imwrite(self.right_eye_image_rectangle_path, right_eye)
+        
+        left_eye_frame_cropped, right_eye_frame_cropped = self.preprocess_output(self.frame_original)
+        
+        print("End: draw_landmarks")
         print("--------")
-        print("Start: head_pose_estimation")
-        outputs = []
-        outputs2 = []
-        
-        outputs.append(image['angle_y_fc'].tolist()[0][0])
-        outputs2.append(image['angle_y_fc'][0][0])
-        angle_y_fc = (image['angle_y_fc'][0][0])
-        
-        outputs.append(image['angle_p_fc'].tolist()[0][0])
-        outputs2.append(image['angle_p_fc'][0][0])
-        angle_p_fc = (image['angle_p_fc'][0][0])
-        
-        outputs.append(image['angle_r_fc'].tolist()[0][0])
-        outputs2.append(image['angle_r_fc'][0][0])
-        angle_r_fc = (image['angle_r_fc'][0][0])
-        
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("angle_y_fc: " +str(angle_y_fc))
-        print ("angle_p_fc: " +str(angle_p_fc))
-        print ("angle_r_fc: " +str(angle_r_fc))
+        return left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped
+    
+    def preprocess_output(self, frame):
+        # crop image to fit the next model
+        print("--------")
+        print("Start: preprocess_output")
+        print("Coordinates for cropped left eye are xmin x ymin x xmax x ymax: " + str(
+            self.left_eye_x_min) + " x " + str(self.left_eye_y_min) + " x " + str(self.left_eye_x_max) + " x " + str(self.left_eye_y_max))
+        print("Coordinates for cropped right eye are xmin x ymin x xmax x ymax: " + str(
+            self.right_eye_x_min) + " x " + str(self.right_eye_y_min) + " x " + str(self.right_eye_x_max) + " x " + str(self.right_eye_y_max))
+        left_eye_frame_cropped = None
+        right_eye_frame_cropped = None
+        left_eye_frame_cropped = frame[self.left_eye_y_min:(self.left_eye_y_max + 1), self.left_eye_x_min:(self.left_eye_x_max + 1)]
+        right_eye_frame_cropped = frame[self.right_eye_y_min:(self.right_eye_y_max + 1), self.right_eye_x_min:(self.right_eye_x_max + 1)]
+        cv2.imwrite("left_eye_frame_cropped.png", left_eye_frame_cropped)
+        cv2.imwrite("right_eye_frame_cropped.png", right_eye_frame_cropped)
+        print("--------")
+        print("End: preprocess_output")
+        return left_eye_frame_cropped, right_eye_frame_cropped
 
-        return outputs
+    def getinputstream(self, inputtype, video, output_path):
+        # gets the inputtype
+        print("--------")
+        print("Start: getinputstream")
+        try:
+            if inputtype == 'video':
+                print("Reading video file:", video)
+                cap = cv2.VideoCapture(video)
+            elif inputtype =='cam':
+                print("Reading webcam")
+                cap = cv2.VideoCapture(0)
+            else:
+                print("Reading image:", video)
+                cap = cv2.imread(video)    
+        except FileNotFoundError:
+            print("Cannot find video file: " + video)
+        except Exception as e:
+            print("Something else went wrong with the video file: ", e)
+            
+        # Capture information about the input video stream
+        self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+        print("--------")
+        print("Input video Data")
+        print("initial_w: " + str(self.initial_w))
+        print("initial_h: " + str(self.initial_h))
+        print("video_len: " + str(self.video_len))
+        print("fps: " + str(self.fps))
+        print("--------")
+        
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
 
+        try:
+            while cap.isOpened():
+                result, frame = cap.read()
+                if not result:
+                    break
+                #image = inference.predict(frame, initial_w, initial_h)
+                image = self.predict(frame)
+                print("The video is writen to the output path")
+                out_video.write(image)
+        except Exception as e:
+            print("Could not run Inference: ", e)
+
+            cap.release()
+            cv2.destroyAllWindows()
+            
+        return
+    
+    def get_initial_w_h (self, frame_cropped):
+        self.initial_w = frame_cropped.shape[1]
+        self.initial_h = frame_cropped.shape[0]
+        print("Initialize initial_w in facial landmarks: " + str(self.initial_w))
+        print("Initialize initial_h in facial landmarks: " + str(self.initial_h))
+    
+# Collect all the necessary input values
 def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default=None)
+    parser.add_argument('--output_path', default='results/')
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype', default='video')
-    parser.add_argument('--left_eye_image', default='None')
-    parser.add_argument('--right_eye_image', default='None')
-    parser.add_argument('--head_pose_angles', default='None')
 
     return parser
+
 
 def main():
     args = build_argparser().parse_args()
     model_name = args.model
     device = args.device
     extension = args.extension
-    video = args.video
+    #video = args.video
+    video = ("cropped_image.png")
+    video = ("face_full_image.png")
+    output_path = args.output_path
     threshold = args.threshold
     inputtype = args.inputtype
-    left_eye = args.left_eye_image
-    right_eye = args.right_eye_image
-    head_pose_angles  = args.head_pose_angles 
-    left_eye = ("left_eye_frame_cropped.png")
-    right_eye = ("right_eye_frame_cropped.png")
-    #left_eye = ("landmark_image_rectangle.png")
-    #right_eye = ("right_eye_computer_pointer.png")
-    
-    output_path=args.output_path
-    #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
-    # Load class Gaze_Estimation
-    inference = Gaze_Estimation(model_name, device, extension)
-    print("Load Model = OK")
+
+    # Load class Facial_Landmarks
+    inference = Facial_Landmarks(model_name, threshold, device, extension)
+    print("Load class Facial_Landmarks = OK")
     print("--------")
 
     # Loads the model
@@ -279,17 +352,12 @@ def main():
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
-    #image = [left_eye, right_eye]
-    # open image
-    cap = cv2.VideoCapture(left_eye)
-    #cap = cv2.imread(left_eye[1])
-    res, eyes = cap.read()
-    # Gets the coordinates of gaze direction vector
-    coordinates = inference.predict(eyes, head_pose_angles)
-    cap.release()
 
+    # Get the input video stream
+    inference.getinputstream(inputtype, video, output_path)
 
+# Start program
 if __name__ == '__main__':
-    log.basicConfig(filename="logging_gaze.txt", level=log.INFO)
+    log.basicConfig(filename="logging_landmarks.txt", level=log.INFO)
     log.info("Start logging")
     main()
