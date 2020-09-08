@@ -124,7 +124,7 @@ class Facial_Landmarks:
                 sys.exit(1)
 
     # Start inference and prediction
-    def predict(self, frame):
+    def predict(self, face_cropped):
 
         print("--------")
         print("Start predictions Facial_Landmarks")
@@ -132,7 +132,7 @@ class Facial_Landmarks:
         #self.height = initial_h
         requestid = 0
         # Pre-process the image
-        preprocessed_image = self.preprocess_input(frame)
+        preprocessed_image = self.preprocess_input(face_cropped)
         # Starts synchronous inference
         print("Start syncro inference")
         log.info("Start syncro inference")
@@ -141,7 +141,8 @@ class Facial_Landmarks:
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
         #landmark_results = self.landmark_detection(outputs, frame)
-        left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.landmark_detection(outputs, frame)
+        
+        left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.landmark_detection(outputs, face_cropped)
         print("End predictions")
         print("--------")
         return left_eye_frame_cropped, right_eye_frame_cropped
@@ -150,6 +151,7 @@ class Facial_Landmarks:
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
+        frame_input = frame.copy()
         n, c, h, w = (self.core, self.input_shape)[1]
         image = cv2.resize(frame, (w, h))
         image = image.transpose((2, 0, 1))
@@ -177,20 +179,26 @@ class Facial_Landmarks:
         self.left_eye_coordinates_y = int(coords[1]*self.initial_h)
         self.right_eye_coordinates_x = int(coords[2]*self.initial_w)
         self.right_eye_coordinates_y = int(coords[3]*self.initial_h)
+
+        print ("initial_w: ", self.initial_w)
+        print("left_eye_coordinates_x: " + str(self.left_eye_coordinates_x))
+        print("left_eye_coordinates_y: " + str(self.left_eye_coordinates_y))
+
+        #### Not necessary for gaze estimation 
         self.nose_coordinates_x = int(coords[4] * self.initial_w)
         self.nose_coordinates_y = int(coords[5] * self.initial_h)
         self.left_mouth_coordinates_x = int(coords[6] * self.initial_w)
         self.left_mouth_coordinates_y = int(coords[7] * self.initial_h)
         self.right_mouth_coordinates_x = int(coords[8] * self.initial_w)
         self.right_mouth_coordinates_y = int(coords[9] * self.initial_h)
-        print("left_eye_coordinates_x: " + str(self.left_eye_coordinates_x))
-        print("left_eye_coordinates_y: " + str(self.left_eye_coordinates_y))
+        ####
         
+        # left eye
         self.left_eye_x_min = self.left_eye_coordinates_x-30
         self.left_eye_x_max = self.left_eye_coordinates_x+30
         self.left_eye_y_min = self.left_eye_coordinates_y-30
         self.left_eye_y_max = self.left_eye_coordinates_y+30
-        
+        # right eye 
         self.right_eye_x_min = self.right_eye_coordinates_x-30
         self.right_eye_x_max = self.right_eye_coordinates_x+30
         self.right_eye_y_min = self.right_eye_coordinates_y-30
@@ -199,6 +207,7 @@ class Facial_Landmarks:
         print("Rectangle coordinates: ({}) + ({}) + ({}) + ({})".format(str(self.left_eye_x_min),str(self.left_eye_x_max), str(self.left_eye_y_min), str(self.left_eye_y_max)))
         #log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
         left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.draw_landmarks(frame)
+
         return left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped
 
     def draw_landmarks(self, frame):
@@ -251,6 +260,23 @@ class Facial_Landmarks:
         right_eye_frame_cropped = None
         left_eye_frame_cropped = frame[self.left_eye_y_min:(self.left_eye_y_max + 1), self.left_eye_x_min:(self.left_eye_x_max + 1)]
         right_eye_frame_cropped = frame[self.right_eye_y_min:(self.right_eye_y_max + 1), self.right_eye_x_min:(self.right_eye_x_max + 1)]
+
+        # reshape image for gaze estimation
+        w = left_eye_frame_cropped.shape[1]
+        h = left_eye_frame_cropped.shape[0]
+        c = left_eye_frame_cropped.shape[2]
+        n = left_eye_frame_cropped.shape[3]
+        print (w, h, c, n)
+        print ("Reshape image")
+        left_eye_frame_cropped = cv2.resize(left_eye_frame_cropped, (60, 60))
+        left_eye_frame_cropped = left_eye_frame_cropped.transpose((3, 0, 1))
+        left_eye_frame_cropped = left_eye_frame_cropped.reshape((1, 3, 60, 60))
+
+        right_eye_frame_cropped = cv2.resize(right_eye_frame_cropped, (60, 60))
+        right_eye_frame_cropped = right_eye_frame_cropped.transpose((3, 0, 1))
+        right_eye_frame_cropped = right_eye_frame_cropped.reshape((1, 3, 60, 60))
+        #1x3x60x60
+
         cv2.imwrite("left_eye_frame_cropped.png", left_eye_frame_cropped)
         cv2.imwrite("right_eye_frame_cropped.png", right_eye_frame_cropped)
         print("--------")

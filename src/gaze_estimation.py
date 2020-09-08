@@ -157,7 +157,8 @@ class Gaze_Estimation:
         log.info("Start: preprocess image")
         n, c, h, w = (self.core, self.input_shape)[1]
         print("The input shape from the gaze estimation is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
-        left_eye_preprocess_image = cv2.resize(left_eye, (w, h))
+        left_eye_image = left_eye.copy()
+        left_eye_preprocess_image = cv2.resize(left_eye_image, (w, h))
         left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
         left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
         
