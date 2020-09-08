@@ -265,17 +265,11 @@ class Facial_Landmarks:
         w = left_eye_frame_cropped.shape[1]
         h = left_eye_frame_cropped.shape[0]
         c = left_eye_frame_cropped.shape[2]
-        n = left_eye_frame_cropped.shape[3]
-        print (w, h, c, n)
+        print (w, h, c)
         print ("Reshape image")
-        left_eye_frame_cropped = cv2.resize(left_eye_frame_cropped, (60, 60))
-        left_eye_frame_cropped = left_eye_frame_cropped.transpose((3, 0, 1))
-        left_eye_frame_cropped = left_eye_frame_cropped.reshape((1, 3, 60, 60))
-
-        right_eye_frame_cropped = cv2.resize(right_eye_frame_cropped, (60, 60))
-        right_eye_frame_cropped = right_eye_frame_cropped.transpose((3, 0, 1))
-        right_eye_frame_cropped = right_eye_frame_cropped.reshape((1, 3, 60, 60))
-        #1x3x60x60
+       # left_eye_frame_cropped = cv2.resize(left_eye_frame_cropped, (60, 60))
+       # left_eye_frame_cropped = left_eye_frame_cropped.transpose((2, 0, 1))
+       # left_eye_frame_cropped = left_eye_frame_cropped.reshape((1, 2, 60, 60))
 
         cv2.imwrite("left_eye_frame_cropped.png", left_eye_frame_cropped)
         cv2.imwrite("right_eye_frame_cropped.png", right_eye_frame_cropped)
