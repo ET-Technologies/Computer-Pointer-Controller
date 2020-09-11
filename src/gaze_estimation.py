@@ -158,7 +158,7 @@ class Gaze_Estimation:
         print("End predictions")
         print("--------")
         
-        return head_pose_results
+        return mouse_coordinates
 
     def preprocess_input(self, left_eye, right_eye):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
@@ -210,7 +210,7 @@ class Gaze_Estimation:
         #print("gaze_vector: " + str(gazes))
         print("End: gaze_estimation")
         print("--------")
-        return gazes
+        return gaze_vector
 
     def preprocess_output(self, image):
 
@@ -313,8 +313,8 @@ def main():
     
     
     # Gets the coordinates of gaze direction vector
-    coordinates = inference.predict(left_eye_feed, right_eye_feed, head_pose_angles)
-    print ("Coordinates for mouse are: ", coordinates)
+    mouse_coordinates = inference.predict(left_eye_feed, right_eye_feed, head_pose_angles)
+    print ("Coordinates for mouse are: ", mouse_coordinates)
 
 
 if __name__ == '__main__':
