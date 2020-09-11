@@ -16,6 +16,8 @@
 Windows
 python3 gaze_estimation.py
 '''
+import numpy as np
+import os
 import time
 import cv2
 import argparse
@@ -65,6 +67,10 @@ class Gaze_Estimation:
             self.input_name_first_entry = self.input_name_all[0]
         
             self.input_shape = self.network .inputs[self.input_name].shape
+            self.input_shape_n = self.input_shape[0]
+            self.input_shape_c = self.input_shape[1]
+            #self.input_shape_w = self.input_shape[2]
+            #self.input_shape_h = self.input_shape[3]
         
             self.output_name = next(iter(self.network .outputs))
             self.output_name_type = self.network .outputs[self.output_name]
@@ -82,6 +88,10 @@ class Gaze_Estimation:
             print("--------")
 
             print("input_shape: " + str(self.input_shape))
+            print("input_shape_n: " + str(self.input_shape_n))
+            print("input_shape_c: " + str(self.input_shape_c))
+            #print("input_shape_w: " + str(self.input_shape_w))
+            #print("input_shape_h: " + str(self.input_shape_h))
             print("--------")
 
             print("output_name: " + str(self.output_name))
@@ -127,26 +137,22 @@ class Gaze_Estimation:
 
         print("--------")
         print("Start predictions Gaze_Estimation")
-        #self.width = initial_w
-        #self.height = initial_h
+
         requestid = 0
-        # Pre-process the image
-        left_eye_preprocess_image, right_eye_preprocess_image = self.preprocess_input(left_eye, right_eye)
         
-        #head_pose = head_pose_angles
-        head_pose = [2,5,10]
+        # Pre-process the images (left an right eye)
+        left_eye_preprocess_image, right_eye_preprocess_image = self.preprocess_input(left_eye, right_eye)
 
         # Starts synchronous inference
-        #outputs = self.exec_network.infer({self.input_name: preprocessed_image})
         print("Start syncro inference")
         log.info("Start syncro inference")
-        outputs = self.exec_network.infer({'left_eye_image': left_eye_preprocess_image, 'head_pose_angles': head_pose, 'right_eye_image': right_eye_preprocess_image})
-        #outputs = self.exec_network.infer({'head_pose_angles':[2,5,10]})
-        # (['left_eye_image', 'head_pose_angles', 'right_eye_image'])
+        outputs = self.exec_network.infer({'left_eye_image': left_eye_preprocess_image, 'head_pose_angles': head_pose_angles, 'right_eye_image': right_eye_preprocess_image})
         print("Output of the inference request: " + str(outputs))
+        
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
-        head_pose_results = self.gaze_estimation(outputs, frame)
+        
+        mouse_coordinates = self.gaze_estimation(outputs, head_pose_angles)
         #head_pose_results = self.preprocess_output(outputs)
 
         print("End predictions")
@@ -159,25 +165,36 @@ class Gaze_Estimation:
         print("--------")
         print("Start: preprocess image Gaze_Estimation")
         log.info("Start: preprocess image")
-        n, c, h, w = (self.core, self.input_shape)[1]
+        n = self.input_shape_n
+        c = self.input_shape_c
+        h = 60
+        w = 60
         print("The input shape from the gaze estimation is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
-        left_eye_image = left_eye.copy()
-        left_eye_preprocess_image = cv2.resize(left_eye_image, (w, h))
-        left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
-        left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
         
-        #right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
+        left_eye_image = left_eye.copy()
+        print ("left_eye_image", left_eye_image)
+        left_eye_preprocess_image = cv2.resize(left_eye_image, (w, h))
+        print ("left_eye_preprocess_image 1", left_eye_preprocess_image)
+        left_eye_preprocess_image = np.transpose(np.expand_dims(left_eye_preprocess_image, axis=0), (0, 3, 1, 2))
+        print ("left_eye_preprocess_image 2", left_eye_preprocess_image)
+        #left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
+        #left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
+        
+        #right_eye_image = right_eye.copy()
+        right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
+        right_eye_preprocess_image = np.transpose(np.expand_dims(right_eye_preprocess_image, axis=0), (0, 3, 1, 2))
         #right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
         #right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
         
         #print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
-        #print("Image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
+        print("left_eye_preprocess_image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
+        print("right_eye_preprocess_image is now [BxCxHxW]: " + str(right_eye_preprocess_image.shape))
         print("End: preprocess image")
         print("--------")
         
         return left_eye_preprocess_image, right_eye_preprocess_image
 
-    def gaze_estimation(self, outputs,frame):
+    def gaze_estimation(self, outputs, head_pose_angles):
         print("--------")
         print("Start: gaze_estimation")
         result_len = len(outputs)
@@ -226,22 +243,42 @@ class Gaze_Estimation:
         print ("angle_r_fc: " +str(angle_r_fc))
 
         return outputs
+    
+    def getinputstream(self, left_eye, right_eye):
+        try:
+            right_eye_feed = cv2.imread(right_eye)
+            left_eye_feed = cv2.imread(left_eye)
+            right_eye_feed = cv2.imread(right_eye)
+        except FileNotFoundError:
+            print("Cannot find video file: " + video)
+        except Exception as e:
+            print("Something else went wrong with the video file: ", e)
+            
+        # Capture information about the input video stream
+        #self.initial_w_left = int(left_eye_feed.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #self.initial_h_right = int(left_eye_feed.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        print("--------")
+        print("Input video Data")
+        #print("initial_w_left: " + str(self.initial_w_left))
+        #print("initial_h_right: " + str(self.initial_h_right))
+        print("--------")
+
+        return left_eye_feed, right_eye_feed
 
 def build_argparser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', default='gaze-estimation-adas-0002')
+    parser.add_argument('--model', default='./models/gaze-estimation-adas-0002')
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
-    parser.add_argument('--video', default='./bin/demo.mp4')
+    parser.add_argument('--video', default='demo.mp4')
     parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype', default='video')
-    parser.add_argument('--left_eye_image', default='None')
-    parser.add_argument('--right_eye_image', default='None')
-    parser.add_argument('--head_pose_angles', default='None')
-
+    parser.add_argument('--left_eye_image', default='left_eye_frame_cropped.png')
+    parser.add_argument('--right_eye_image', default='right_eye_frame_cropped.png')
+    parser.add_argument('--head_pose_angles', default = None)
     return parser
-#Computer-Pointer-Controller/models/gaze-estimation-adas-0002.bin
+
 def main():
     args = build_argparser().parse_args()
     model_name = args.model
@@ -253,11 +290,11 @@ def main():
     left_eye = args.left_eye_image
     right_eye = args.right_eye_image
     head_pose_angles  = args.head_pose_angles 
-    left_eye = ("left_eye_computer_pointer.png")
-    right_eye = ("right_eye_computer_pointer.png")
-    
     output_path=args.output_path
-    #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
+    head_pose_angles = [2,5,10]
+    #left_eye_image = ('cropped_image.png')
+    #right_eye = ('left_eye_frame_cropped.png')
+
     # Load class Gaze_Estimation
     inference = Gaze_Estimation(model_name, device, extension)
     print("Load Model = OK")
@@ -271,8 +308,13 @@ def main():
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
 
+    # Get the input video stream and the coordinates of the gaze direction vector
+    left_eye_feed, right_eye_feed = inference.getinputstream(left_eye, right_eye)
+    
+    
     # Gets the coordinates of gaze direction vector
-    coordinates = inference.predict(left_eye, right_eye, head_pose_angles)
+    coordinates = inference.predict(left_eye_feed, right_eye_feed, head_pose_angles)
+    print ("Coordinates for mouse are: ", coordinates)
 
 
 if __name__ == '__main__':
