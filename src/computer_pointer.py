@@ -22,6 +22,13 @@ from input_feeder import InputFeeder
 
 #import mouse_controller_original
 
+'''
+Used following resources:
+https://knowledge.udacity.com/questions/254779
+https://knowledge.udacity.com/questions/171017
+https://knowledge.udacity.com/questions/257811 (move mouse)
+'''
+
 def main():
     
     # loads argparser

@@ -213,6 +213,13 @@ class Gaze_Estimation:
         return gaze_vector
 
     def preprocess_output(self, image):
+        '''
+        https://docs.openvinotoolkit.org/2019_R1/_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html
+        The network takes three inputs: square crop of left eye image, square crop of right eye image, and three head pose angles – (yaw, pitch, and roll) 
+        (see figure). The network outputs 3-D vector corresponding to the direction of a person’s gaze in a Cartesian coordinate system in which 
+        z-axis is directed from person’s eyes (mid-point between left and right eyes’ centers) to the camera center, y-axis is 
+        vertical, and x-axis is orthogonal to both z,y axes so that (x,y,z) constitute a right-handed coordinate system.
+        '''
 
         print("--------")
         print("Start: head_pose_estimation")
