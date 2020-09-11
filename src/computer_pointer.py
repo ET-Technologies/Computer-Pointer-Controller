@@ -84,7 +84,6 @@ def main():
             result, frame = cap.read()
             if not result:
                 break
-                #image = inference.predict(frame, initial_w, initial_h)
             print ("Start facedetection (computer_pointer.py)")
             print ("Cap is feeded to the face detection!")
             face_frame = frame.copy()
@@ -111,9 +110,14 @@ def main():
             #print ("Head pose left_eye_image", left_eye_image)
             gaze_result = gazeestimation.predict(left_eye_image, right_eye_image, head_pose_angles)
             print ("End gazeestimation (computer_pointer.py)")
-            print (gaze)
+            print (gaze_result)
+            log.info("Gaze results: ({})".format(str(gaze_result)))
 
             # TODO feed into the mouse controller
+            #mousecontroller = MouseController('high', 'fast')
+            #mousecontroller.move(10,100)
+            
+            
     except Exception as e:
         print("Could not run Inference: ", e)
         
@@ -129,72 +133,7 @@ def main():
         #do_something(batch)
     feed.close()
     
-    
-    self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    self.fps = int(cap.get(cv2.CAP_PROP_FPS))
-    print("--------")
-    print("Input video Data")
-    print("initial_w: " + str(self.initial_w))
-    print("initial_h: " + str(self.initial_h))
-    print("video_len: " + str(self.video_len))
-    print("fps: " + str(self.fps))
-    print("--------")
-    
-    
-    for batch in feed.next_batch():
-        do_something(batch)
-    feed.close()
-    ##############
-        # Text Mouse Controller
-    #mousecontroller = MouseController('high', 'fast')
-    #mousecontroller.move(10,100)
     '''
-def getinputstream(input_type, input_file):
-    # Get the input video stream
-    print("Get input from input_feeder")
-    input_stream = InputFeeder(input_type, input_file)
-    input_stream.load_data()
-    print("input_stream: " + str(input_stream))
-    print("Reading video file: ", input_file)
-    if not (input_stream.cap.isOpened()):
-        print("Cannot find video file: " + input_file)
-        
-    # Capture information about the input video stream
-    initial_w = int(input_stream.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    initial_h = int(input_stream.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    video_len = int(input_stream.cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = int(input_stream.cap.get(cv2.CAP_PROP_FPS))
-    print("--------")
-    print("Input video Data")
-    print("initial_w: " + str(initial_w))
-    print("initial_h: " + str(initial_h))
-    print("video_len: " + str(video_len))
-    print("fps: " + str(fps))
-    print("--------")
-    
-    return initial_w, initial_h
-
-def test():
-    # Define output video
-
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter('output_video3.mp4', fourcc, fps, (initial_w, initial_h))
-
-    try:
-        while input_stream.cap.isOpened():
-            result, frame = input_stream.cap.read()
-            if not result:
-                break
-            image = facedetection.predict(frame, initial_w, initial_h)
-            print("The video is writen to the output path")
-            out_video.write(image)
-    except Exception as e:
-        print("Could not run Inference: ", e)
-
-        input_stream.close()
-        cv2.destroyAllWindows()
     
 def build_argparser():
     parser = argparse.ArgumentParser()
@@ -213,6 +152,6 @@ def build_argparser():
     return parser
 
 if __name__ == '__main__':
-    log.basicConfig(filename="logging.txt", level=log.INFO)
-    log.info("Start logging")
+    log.basicConfig(filename="logging_basic.txt", level=log.INFO)
+    log.info("Start computer_pointer.py")
     main()
