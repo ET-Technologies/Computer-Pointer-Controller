@@ -11,7 +11,12 @@ python3 face_detection.py --model models/face-detection-retail-0004 --device CPU
 
 '''
 Raspberry Pi
-python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 --device MYRIAD --extension None --video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 --output_path /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4 --inputtype cam
+python3 face_detection.py --model /home/pi/Computer-Pointer-Controller/models/face-detection-retail-0004 \
+--device MYRIAD \
+--extension None \
+--video /home/pi/Computer-Pointer-Controller/src/demo.mp4 \
+--output_path /home/pi/Computer-Pointer-Controller/src/demo_output.mp4 \
+--inputtype video
 '''
 #/home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001.xml
 
@@ -201,9 +206,8 @@ class Facedetection:
     def preprocess_output(self, frame):
         # crop image to fit the next model
         print("--------")
-        print("Start: preprocess_output")
-        print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(
-            self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
+        print("Start: preprocess_output face")
+        #print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
         frame_cropped = None
         frame_cropped = frame[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
         cv2.imwrite("cropped_image.png", frame_cropped)
@@ -315,3 +319,4 @@ if __name__ == '__main__':
     log.basicConfig(filename="logging.txt", level=log.INFO)
     log.info("Start logging")
     main()
+
