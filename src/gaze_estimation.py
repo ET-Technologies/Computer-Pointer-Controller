@@ -6,13 +6,17 @@
 
 '''
 # Udacity Workspace
+# source /opt/intel/openvino/bin/setupvars.sh
 # cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
 # Model Downloader python3 downloader.py --name gaze-estimation-adas-0002 --precisions FP32 -o /home/workspace
 # python3 gaze_estimation.py --model models/gaze-estimation-adas-0002 --video demo.mp4
 '''
-import numpy as np
+
+'''
+Windows
+python3 gaze_estimation.py
+'''
 import time
-import os
 import cv2
 import argparse
 import sys
@@ -225,10 +229,10 @@ class Gaze_Estimation:
 
 def build_argparser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', required=True)
+    parser.add_argument('--model', default='gaze-estimation-adas-0002')
     parser.add_argument('--device', default='CPU')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
-    parser.add_argument('--video', default=None)
+    parser.add_argument('--video', default='./bin/demo.mp4')
     parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype', default='video')
@@ -237,7 +241,7 @@ def build_argparser():
     parser.add_argument('--head_pose_angles', default='None')
 
     return parser
-
+#Computer-Pointer-Controller/models/gaze-estimation-adas-0002.bin
 def main():
     args = build_argparser().parse_args()
     model_name = args.model
