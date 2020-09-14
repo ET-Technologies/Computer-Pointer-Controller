@@ -24,7 +24,7 @@ from input_feeder import InputFeeder
 
 '''
 Used following resources:
-https://knowledge.udacity.com/questions/254779
+https://knowledge.udacity.com/questions/254779 output gaze estimation
 https://knowledge.udacity.com/questions/171017
 https://knowledge.udacity.com/questions/257811 (move mouse)
 '''
@@ -115,7 +115,7 @@ def main():
             print ("Start gazeestimation (computer_pointer.py)")
             #print ("Head pose angles", head_pose_angles)
             #print ("Head pose left_eye_image", left_eye_image)
-            gaze_result = gazeestimation.predict(left_eye_image, right_eye_image, head_pose_angles)
+            gaze_result, tmpX, tmpY, gaze_vector02  = gazeestimation.predict(left_eye_image, right_eye_image, head_pose_angles)
             print ("End gazeestimation (computer_pointer.py)")
             print (gaze_result)
             log.info("Gaze results: ({})".format(str(gaze_result)))

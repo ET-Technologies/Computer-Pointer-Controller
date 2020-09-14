@@ -24,6 +24,7 @@ import argparse
 import sys
 from openvino.inference_engine import IENetwork, IECore
 import logging as log
+import math
 
 class Gaze_Estimation:
 
@@ -152,13 +153,13 @@ class Gaze_Estimation:
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
         
-        mouse_coordinates = self.gaze_estimation(outputs, head_pose_angles)
+        mouse_coordinates, tmpX, tmpY, gaze_vector02 = self.gaze_estimation(outputs, head_pose_angles)
         #head_pose_results = self.preprocess_output(outputs)
 
         print("End predictions")
         print("--------")
         
-        return mouse_coordinates
+        return mouse_coordinates, tmpX, tmpY, gaze_vector02 
 
     def preprocess_input(self, left_eye, right_eye):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
@@ -210,7 +211,21 @@ class Gaze_Estimation:
         #print("gaze_vector: " + str(gazes))
         print("End: gaze_estimation")
         print("--------")
-        return gaze_vector
+
+        # like https://knowledge.udacity.com/questions/254779
+
+        gaze_vector02 = outputs[0]
+        print ("gaze_vector02", gaze_vector02)
+        roll = gaze_vector02[2]
+        print ("roll", roll)
+        gaze_vector02 = gaze_vector02 / np.linalg.norm(gaze_vector02)
+        cs = math.cos(roll * math.pi / 180.0)
+        sn = math.sin(roll * math.pi / 180.0)
+        tmpX = gaze_vector02[0] * cs + gaze_vector02[1] * sn
+        tmpY = -gaze_vector02[0] * sn + gaze_vector02[1] * cs
+        print (tmpX, tmpY, gaze_vector02)
+
+        return gaze_vector, tmpX, tmpY, gaze_vector02
 
     def preprocess_output(self, image):
         '''
@@ -260,14 +275,9 @@ class Gaze_Estimation:
             print("Cannot find video file: " + video)
         except Exception as e:
             print("Something else went wrong with the video file: ", e)
-            
-        # Capture information about the input video stream
-        #self.initial_w_left = int(left_eye_feed.get(cv2.CAP_PROP_FRAME_WIDTH))
-        #self.initial_h_right = int(left_eye_feed.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
         print("--------")
         print("Input video Data")
-        #print("initial_w_left: " + str(self.initial_w_left))
-        #print("initial_h_right: " + str(self.initial_h_right))
         print("--------")
 
         return left_eye_feed, right_eye_feed
