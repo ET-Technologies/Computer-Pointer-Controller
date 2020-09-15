@@ -26,12 +26,13 @@ import logging as log
 class Facial_Landmarks:
 
     # Load all relevant variables into the class
-    def __init__(self, model_name, threshold, device, extension):
+    def __init__(self, model_name, threshold, device, extension, version):
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.extension = extension
         self.device = device
         self.threshold = threshold
+        self.version = version
         
         print("--------")
         print("START Facial_Landmarks")
@@ -98,7 +99,7 @@ class Facial_Landmarks:
         self.core = IECore()
 
         # Adds Extension
-        if 'CPU' in self.device:
+        if "CPU" in self.device and (self.version == 2019):
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
             
