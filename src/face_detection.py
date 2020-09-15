@@ -18,6 +18,16 @@ python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-m
 --output_path /home/pi/Computer-Pointer-Controller/src/demo_output.mp4 \
 --inputtype cam
 '''
+
+'''
+Linux
+python3 face_detection.py --model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
+--video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo.mp4 \
+--output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
+--inputtype cam \
+--version 2020
+'''
+
 #/home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001.xml
 
 
@@ -35,12 +45,13 @@ import logging as log
 class Facedetection:
     
     # Load all relevant variables into the class
-    def __init__(self, model_name, threshold, device, extension):
+    def __init__(self, model_name, threshold, device, extension, version):
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
         self.extension = extension
         self.threshold = threshold
+        self.version = version
         
         print("--------")
         print("START Facedetection")
@@ -108,7 +119,7 @@ class Facedetection:
         self.core = IECore()
         
         # Add extension
-        if "CPU" in self.device:
+        if "CPU" in self.device and (self.version == 2019):
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
         
@@ -120,7 +131,7 @@ class Facedetection:
 
     def check_model(self):
         ### TODO: Check for supported layers ###
-        if "CPU" in self.device:
+        if "CPU" in self.device and (self.version == 2019):
             #supported_layers = self.core.query_network(self.exec_network, "CPU")
             supported_layers = self.core.query_network(self.network, "CPU")
             print("--------")
@@ -181,7 +192,7 @@ class Facedetection:
         #print("Coords: " + str(coords))
         print("Original image size is (W x H): " + str(self.initial_w) + "x" + str(self.initial_h))
         for obj in outputs[0][0]:
-            if obj[2] > self.threshold:
+            if obj[2] >= self.threshold:
                 obj[3] = int(obj[3] * self.initial_w)
                 obj[4] = int(obj[4] * self.initial_h)
                 obj[5] = int(obj[5] * self.initial_w)
@@ -286,13 +297,14 @@ def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     #parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
+    parser.add_argument('--extension')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='demo_output.mp4')
     #parser.add_argument('--output_path', default='/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4')
     parser.add_argument('--threshold', default=0.20)
     parser.add_argument('--inputtype', default='video')
+    parser.add_argument('--version', default='2020')
 
     return parser
     
@@ -306,9 +318,10 @@ def main():
     #output_path = ("/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4")
     threshold = args.threshold
     inputtype = args.inputtype
+    version = args.version
 
     # Load class Facedetection
-    inference = Facedetection(model_name, threshold, device, extension)
+    inference = Facedetection(model_name, threshold, device, extension, version)
     print("Load class Facedetection = OK")
     print("--------")
 
