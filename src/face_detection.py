@@ -11,12 +11,12 @@ python3 face_detection.py --model models/face-detection-retail-0004 --device CPU
 
 '''
 Raspberry Pi
-python3 face_detection.py --model /home/pi/Computer-Pointer-Controller/models/face-detection-retail-0004 \
+python3 face_detection.py --model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
 --device MYRIAD \
 --extension None \
 --video /home/pi/Computer-Pointer-Controller/src/demo.mp4 \
 --output_path /home/pi/Computer-Pointer-Controller/src/demo_output.mp4 \
---inputtype video
+--inputtype cam
 '''
 #/home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001.xml
 
@@ -225,6 +225,15 @@ class Facedetection:
             elif inputtype =='cam':
                 print("Reading webcam")
                 cap = cv2.VideoCapture(0)
+            elif inputtype =='picamera':
+                import picamera
+                camera = picamera.PiCamera()
+                camera.resolution = (320,240)
+                camera.framerate = 24
+                time.sleep(2)
+                image = np.empty((240 * 320 * 3,), dtype=np.uint8)
+                camera.capture(image, 'bgr')
+                cap = image.reshape((240,320, 3))
             else:
                 print("Reading image:", video)
                 cap = cv2.imread(video)    
@@ -282,7 +291,7 @@ def build_argparser():
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='demo_output.mp4')
     #parser.add_argument('--output_path', default='/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4')
-    parser.add_argument('--threshold', default=0.60)
+    parser.add_argument('--threshold', default=0.20)
     parser.add_argument('--inputtype', default='video')
 
     return parser

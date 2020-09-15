@@ -4,6 +4,12 @@ Model Downloader python3 downloader.py --name face-detection-retail-0004 --preci
 python3 computer_pointer.py --video demo.mp4 --input_type video --output_path demo_output.mp4
 '''
 
+'''
+Raspberry
+python3 computer_pointer.py --video /bin/demo.mp4 --input_type video --output_path demo_output.mp4 --device MYRIAD
+/home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4
+'''
+
 import time
 import argparse
 import cv2
