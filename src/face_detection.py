@@ -96,6 +96,8 @@ class Facedetection:
             self.output_shape = self.network .outputs[self.output_name].shape
             self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
 
+            self.model_data = ["\n" + ("input_name: " + str(self.input_name)) + "\n" + ("input_shape: " + str(self.input_shape))+ "\n" + ("output_name: " + str(self.output_name)) + "\n" + ("output_shape: " + str(self.output_shape))]
+
             print("--------")
             print("input_name: " + str(self.input_name))
             print("input_name_all: " + str(self.input_name_all))
@@ -115,7 +117,7 @@ class Facedetection:
             print("output_shape: " + str(self.output_shape))
             print("output_shape_second_entry: " + str(self.output_shape_second_entry))
             print("--------")
-        
+
         self.core = IECore()
         
         # Add extension
@@ -128,6 +130,8 @@ class Facedetection:
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
         self.check_model()
+
+        return self.model_data
 
     def check_model(self):
         ### TODO: Check for supported layers ###
@@ -204,7 +208,7 @@ class Facedetection:
                 self.ymin = int(obj[4])
                 self.xmax = int(obj[5])
                 self.ymax = int(obj[6])
-
+        #print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
         print("End: boundingbox")
         print("--------")
         frame_cropped = frame.copy()
@@ -218,6 +222,7 @@ class Facedetection:
         # crop image to fit the next model
         print("--------")
         print("Start: preprocess_output face")
+        print(str(self.xmin))
         #print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
         frame_cropped = None
         frame_cropped = frame[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
@@ -254,34 +259,37 @@ class Facedetection:
             print("Something else went wrong with the video file: ", e)
             
         # Capture information about the input video stream
-        self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
-        print("--------")
-        print("Input video Data")
-        print("initial_w: " + str(self.initial_w))
-        print("initial_h: " + str(self.initial_h))
-        print("video_len: " + str(self.video_len))
-        print("fps: " + str(self.fps))
+        #self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        #self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        #self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+        #print("--------")
+        #print("Input video Data")
+        #print("initial_w: " + str(self.initial_w))
+        #print("initial_h: " + str(self.initial_h))
+        #print("video_len: " + str(self.video_len))
+        #print("fps: " + str(self.fps))
         print("--------")
         
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
+        #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        #out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
 
         try:
-            while cap.isOpened():
+            while cap == True:
+            #while cap.isOpened():
                 result, frame = cap.read()
                 if not result:
                     break
                 #image = inference.predict(frame, initial_w, initial_h)
                 image, frame_cropped = self.predict(frame)
                 print("The video is writen to the output path")
-                out_video.write(image)
+                #out_video.write(image)
         except Exception as e:
             print("Could not run Inference: ", e)
 
-            cap.release()
+            
+            if not inputtype == "image":
+                cap.release()
             cv2.destroyAllWindows()
             
         return
