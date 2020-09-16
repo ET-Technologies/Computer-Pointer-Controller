@@ -26,6 +26,17 @@ python3 face_detection.py --model /home/thomas/PycharmProjects/Intel/Computer-Po
 --output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
 --inputtype cam \
 --version 2020
+
+python3 face_detection.py --model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
+--video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo.mp4 \
+--output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
+--inputtype video \
+--version 2020
+
+python3 face_detection.py --model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
+--video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
+--output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
+--version 2020
 '''
 
 #/home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001.xml
@@ -96,8 +107,6 @@ class Facedetection:
             self.output_shape = self.network .outputs[self.output_name].shape
             self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
 
-            self.model_data = ["\n" + ("input_name: " + str(self.input_name)) + "\n" + ("input_shape: " + str(self.input_shape))+ "\n" + ("output_name: " + str(self.output_name)) + "\n" + ("output_shape: " + str(self.output_shape))]
-
             print("--------")
             print("input_name: " + str(self.input_name))
             print("input_name_all: " + str(self.input_name_all))
@@ -117,7 +126,7 @@ class Facedetection:
             print("output_shape: " + str(self.output_shape))
             print("output_shape_second_entry: " + str(self.output_shape_second_entry))
             print("--------")
-
+        
         self.core = IECore()
         
         # Add extension
@@ -130,8 +139,6 @@ class Facedetection:
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
         self.check_model()
-
-        return self.model_data
 
     def check_model(self):
         ### TODO: Check for supported layers ###
@@ -157,6 +164,7 @@ class Facedetection:
         #self.height = initial_h
         requestid = 0
         # Pre-process the image
+        #self.initial_h, self.initial_w  = frame.shape[0], frame.shape[1]
         preprocessed_image = self.preprocess_input(frame)
         # Starts synchronous inference
         print("Start syncro inference")
@@ -176,7 +184,9 @@ class Facedetection:
         print("--------")
         print("Start: preprocess image")
         log.info("Start: preprocess image")
+        #cv2.imwrite("cap2.png", frame)
         n, c, h, w = (self.core, self.input_shape)[1]
+        print (w,h)
         preprocessed_image = cv2.resize(frame, (w, h))
         preprocessed_image = preprocessed_image.transpose((2, 0, 1))
         preprocessed_image = preprocessed_image.reshape((n, c, h, w))
@@ -208,7 +218,7 @@ class Facedetection:
                 self.ymin = int(obj[4])
                 self.xmax = int(obj[5])
                 self.ymax = int(obj[6])
-        #print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
+
         print("End: boundingbox")
         print("--------")
         frame_cropped = frame.copy()
@@ -222,7 +232,6 @@ class Facedetection:
         # crop image to fit the next model
         print("--------")
         print("Start: preprocess_output face")
-        print(str(self.xmin))
         #print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
         frame_cropped = None
         frame_cropped = frame[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
@@ -233,6 +242,8 @@ class Facedetection:
         return frame_cropped
     
     def getinputstream(self, inputtype, video, output_path):
+        print("--------")
+        print("Start: getinputstream face")
         # gets the inputtype
         try:
             if inputtype == 'video':
@@ -257,13 +268,14 @@ class Facedetection:
             print("Cannot find video file: " + video)
         except Exception as e:
             print("Something else went wrong with the video file: ", e)
-            
+
+        #self.initial_w = cap.shape[0]
         # Capture information about the input video stream
         #self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         #self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         #self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         #self.fps = int(cap.get(cv2.CAP_PROP_FPS))
-        #print("--------")
+        print("--------")
         #print("Input video Data")
         #print("initial_w: " + str(self.initial_w))
         #print("initial_h: " + str(self.initial_h))
@@ -271,35 +283,45 @@ class Facedetection:
         #print("fps: " + str(self.fps))
         print("--------")
         
-        #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        #out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
+        if inputtype == 'video':
+            self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
 
-        try:
-            while cap == True:
-            #while cap.isOpened():
-                result, frame = cap.read()
-                if not result:
-                    break
-                #image = inference.predict(frame, initial_w, initial_h)
-                image, frame_cropped = self.predict(frame)
-                print("The video is writen to the output path")
-                #out_video.write(image)
-        except Exception as e:
-            print("Could not run Inference: ", e)
 
-            
-            if not inputtype == "image":
-                cap.release()
-            cv2.destroyAllWindows()
-            
-        return
+
+        image = self.next_batch(cap)
+        #cv2.imwrite("cap.png", cap)
+        #H, W = cap[2], cap[3]
+        image, frame_cropped = self.predict(image)
+  #      try:
+   #         while cap.isOpened():
+    #            result, frame = cap.read()
+     #           if not result:
+      #              break
+       #         #image = inference.predict(frame, initial_w, initial_h)
+        #        image, frame_cropped = self.predict(frame)
+         #       print("The video is writen to the output path")
+          #      out_video.write(image)
+       # except Exception as e:
+        #    print("Could not run Inference: ", e)
+
+            #cap.release()
+            #cv2.destroyAllWindows()
     
     def get_initial_w_h (self, initial_w, initial_h):
         self.initial_w = initial_w
         self.initial_h = initial_h
         print("Initialize initial_w in facedetection: " + str(initial_w))
         print("Initialize initial_h in facedetection: " + str(initial_h))
-        
+
+    def next_batch(self, frame):
+        while True:
+            for _ in range(10):
+                _, frame = self.cap.read()
+            yield frame
     
 def build_argparser():
     parser = argparse.ArgumentParser()
@@ -308,10 +330,10 @@ def build_argparser():
     #parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--extension')
     parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default='demo_output.mp4')
+    parser.add_argument('--output_path')
     #parser.add_argument('--output_path', default='/home/pi/Udacity/Computer-Pointer-Controller-master/src/demo_output.mp4')
     parser.add_argument('--threshold', default=0.20)
-    parser.add_argument('--inputtype', default='video')
+    parser.add_argument('--inputtype')
     parser.add_argument('--version', default='2020')
 
     return parser
