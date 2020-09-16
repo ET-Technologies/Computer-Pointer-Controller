@@ -20,9 +20,19 @@ python3 computer_pointer.py \
 -fl_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
 -hp_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
 -ga_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
+--version 2020
 --input_type video \
+
+python3 computer_pointer.py \
+--video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
+--output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
+-fd_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-adas-0001 \
+-fl_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
+-hp_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
+-ga_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
 --version 2020
 '''
+
 
 
 import time
@@ -227,7 +237,7 @@ def build_argparser():
     parser.add_argument("-fl_model", default='models/landmarks-regression-retail-0009', required=False)
     parser.add_argument("-hp_model", default='models/head-pose-estimation-adas-0001', required=False)
     parser.add_argument("-ga_model", default='models/gaze-estimation-adas-0002', required=False)
-    parser.add_argument('--input_type', default='video', required=False)
+    parser.add_argument('--input_type', required=False)
     parser.add_argument('--version', default='2020', required=False)
 
     return parser
