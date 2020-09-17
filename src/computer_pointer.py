@@ -32,8 +32,6 @@ python3 computer_pointer.py \
 -ga_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
 --version 2020
 '''
-Nein
-
 
 import time
 import argparse
