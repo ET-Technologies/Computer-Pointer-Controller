@@ -1,4 +1,20 @@
 '''
+Udacity Workspace
+python3 face_detection_v1.py \
+--model models/face-detection-retail-0004 \
+--extension /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so \
+--video demo.mp4 \
+--output_path demo_output.mp4 \
+--inputtype video
+
+python3 face_detection_v1.py \
+--model models/face-detection-retail-0004 \
+--extension /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so \
+--video face.jpg \
+--output_path demo_output.mp4
+'''
+
+'''
 Linux:
 source /opt/intel/openvino/bin/setupvars.sh
 
@@ -34,7 +50,7 @@ from os import path
 from openvino.inference_engine import IENetwork, IECore
 from input_feeder import InputFeeder
 import logging as log
-import imutils
+#import imutils
 
 
 class Facedetection:
@@ -69,9 +85,6 @@ class Facedetection:
         # Initialise the network and save it in the self.network variables
         try:
             log.info("Reading model ...")
-            if self.version == "2020":
-                # new openvino version
-                self.network = IECore.read_network(self.model_structure, self.model_weights)
             self.network = IENetwork(model=self.model_structure, weights=self.model_weights)
             modelisloaded = True
 
@@ -89,7 +102,7 @@ class Facedetection:
         self.core = IECore()
 
         # Add extension
-        if "CPU" in self.device and (self.version == 2019):
+        if "CPU" in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
 
@@ -130,42 +143,52 @@ class Facedetection:
                 cv2.imwrite('test28.png', frame)
             return frame
 
-    def example_videocapture_01():
-        cap = cv2.VideoCapture(video)
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            print("load frame")
-            print(video)
-            cv2.imwrite('test28.png', frame)
-
-            return frame
-
-
-    def example_videocapture_04(self, video):
-        cap = cv2.VideoCapture(video)
+    def example_videocapture_04(self, cap):
+        #cap = cv2.VideoCapture(video)
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
                 break
             print("load frame")
-            print(video)
+            print(frame)
             cv2.imwrite('test.png', frame)
 
             return frame
 
-    def example_videocapture_01(self, video):
-        cap = cv2.VideoCapture(video)
+    def example_videocapture_01(self, cap):
+        #cap = cv2.VideoCapture(video)
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
             print("load ha frame")
-            print(video)
+            print(frame)
             cv2.imwrite('test28.png', frame)
 
             return frame
+        
+    def example_yield(self, video):
+        while True:
+            for _ in range(10):
+                flag_return, frame=self.cap.read()
+            
+            yield flag_return, frame
+            
+    def load_data(self, input_type, input_file):
+        print ("Start load_data from InputFeeder")
+        if input_type=='video':
+            self.cap=cv2.VideoCapture(input_file)
+            print ("video")
+        elif input_type=='cam':
+            self.cap=cv2.VideoCapture(0)
+            print ("cam")
+        else:
+            #self.cap=cv2.imread(input_file)
+            self.cap = input_file
+            print ("image")
+            
+        return self.cap
+        
 
     def example_videostream(self, video):
         from imutils.video import VideoStream
@@ -209,8 +232,13 @@ def main():
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
-
-    inference.example_videocapture_01(video)
+    
+    cap = inference.load_data(inputtype, video)
+    print ("cap",cap)
+    flag_return, frame = inference.example_yield(cap)
+    print (flag_return)
+    print ("vor imwrite")
+    #cv2.imwrite('test28.png', frame)
 
 def build_argparser():
     parser = argparse.ArgumentParser()
