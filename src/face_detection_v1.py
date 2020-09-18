@@ -1,5 +1,6 @@
 '''
 Udacity Workspace
+Video:
 python3 face_detection_v1.py \
 --model models/face-detection-retail-0004 \
 --extension /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so \
@@ -7,10 +8,11 @@ python3 face_detection_v1.py \
 --output_path demo_output.mp4 \
 --inputtype video
 
+Image:
 python3 face_detection_v1.py \
 --model models/face-detection-retail-0004 \
 --extension /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so \
---video face.jpg \
+--video face.png \
 --output_path demo_output.mp4
 '''
 
@@ -55,8 +57,8 @@ import logging as log
 
 class Facedetection:
 
-    # Load all relevant variables into the class
     def __init__(self, model_name, threshold, device, extension, version):
+        # Load all relevant variables into the class
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
@@ -64,150 +66,176 @@ class Facedetection:
         self.threshold = threshold
         self.version = version
 
-        # noinspection PyStringFormat
-        print("model_weights: {}\n".format(self.model_weights))
-        # model_info = [self.model_weights, self.model_structure]
-       # print("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.(
-        #    self.model_weights), (self.model_structure), (self.device), (self.extension, (self.threshold)))
-        # log.info ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
-        # model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
         print("--------")
         print("START Facedetection")
-        print("model_weights: " + str(self.model_weights))
-        print("model_structure: " + str(self.model_structure))
-        print("device: " + str(self.device))
-        print("extension: " + str(self.extension))
-        print("threshold: " + str(self.threshold))
         print("--------")
 
     def load_model(self):
 
         # Initialise the network and save it in the self.network variables
         try:
-            log.info("Reading model ...")
+            self.core = IECore()
+            #self.network = self.core.read_network(model=self.model_structure, weights=self.model_weights)
             self.network = IENetwork(model=self.model_structure, weights=self.model_weights)
-            modelisloaded = True
-
+            #log.info("Model is loaded as: ", self.network)
+            self.input_name = next(iter(self.network.inputs))
         except Exception as e:
-            modelisloaded = False
+            log.error("Could not initialise the network")
             raise ValueError("Could not initialise the network")
         print("--------")
         print("Model is loaded as self.network : " + str(self.network))
 
-        if modelisloaded == True:
-            log.info("Model is loaded...")
-            # Get the input layer
-            self.input_name = next(iter(self.network.inputs))
-
-        self.core = IECore()
-
         # Add extension
-        if "CPU" in self.device:
+        if self.extension and "CPU" in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
 
+        # Check supported layers
+        self.check_model()
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
         log.info("Exec_network is loaded as:" + str(self.exec_network))
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
-        self.check_model()
-        model_data = [self.model_weights, self.model_structure]
 
-        return model_data
+        model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
+        modellayers = self.getmodellayers()
+
+        return model_data, modellayers
+
+    def getmodellayers(self):
+        # Get all necessary model values. 
+        self.input_name = next(iter(self.network.inputs))
+        self.output_name = next(iter(self.network .outputs))
+
+        # Gets all input_names. Just for information.
+        self.input_name_all = [i for i in self.network.inputs.keys()]
+        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+        self.input_name_first_entry = self.input_name_all[0]
+        
+        self.input_shape = self.network .inputs[self.input_name].shape
+        
+        self.output_name_type = self.network .outputs[self.output_name]
+        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+        self.output_names_total_entries = len(self.output_names)
+
+        self.output_shape = self.network .outputs[self.output_name].shape
+        self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
+        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
+        modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
+            self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
+
+        return modellayers
 
     def check_model(self):
 
-        # Check for supported layers 
-        if "CPU" in self.device and (self.version == 2019):
+        # Check for supported layers
+        log.info("Checking for unsupported layers")
+        if "CPU" in self.device:
             supported_layers = self.core.query_network(self.network, "CPU")
             print("--------")
             print("Check for supported layers")
-            print("supported_layers: " + str(supported_layers))
+            #print("supported_layers: " + str(supported_layers))
             not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
-            print("not_supported_layers: " + str(not_supported_layers))
-            print("You are lucky, all layers are supported")
+            log.info("All layers are supported")
             print("--------")
             if len(not_supported_layers) != 0:
-                log.info("Check for supported layers")
+                log.error("Following layers are not supported:", not_supported_layers)
+                print("You are not lucky, not all layers are supported")
                 sys.exit(1)
 
-    def getinputstream(self, video):
-        cap = cv2.VideoCapture(video)
+    def predict(self, frame):
+        # Starts predictions face_detection
+        print("--------")
+        print("Starts predictions for face_detection")
 
-        while True:
-            for _ in range(10):
-                _, frame = cap.read()
-                print("load frame")
-                print(video)
-                cv2.imwrite('test28.png', frame)
-            return frame
+        # Pre-process the image
+        preprocessed_image = self.preprocess_input(frame)
 
-    def example_videocapture_04(self, cap):
-        #cap = cv2.VideoCapture(video)
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-            print("load frame")
-            print(frame)
-            cv2.imwrite('test.png', frame)
+        # Starts synchronous inference
+        print("Start syncro inference")
+        log.info("Start syncro inference")
 
-            return frame
+        outputs = self.exec_network.infer({self.input_name: preprocessed_image})
+        print("Output of the inference request: " + str(outputs))
 
-    def example_videocapture_01(self, cap):
-        #cap = cv2.VideoCapture(video)
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            print("load ha frame")
-            print(frame)
-            cv2.imwrite('test28.png', frame)
+        requestid = 0
+        outputs = self.exec_network.requests[requestid].outputs[self.output_name]
+        print("Output of the inference request (self.output_name): " + str(outputs))
+        processed_image, frame_cropped = self.preprocess_output(outputs, frame)
+        cv2.imwrite("cropped_image_02.png", frame_cropped)
+        print("End predictions face_detection")
+        print("--------")
 
-            return frame
+        return processed_image, frame_cropped
+
+    def preprocess_input(self, frame):
+        # In this function the original image is resized, transposed and reshaped to fit the model requirements.
+        print("--------")
+        print("Start: preprocess image")
+        log.info("Start: preprocess image")
+        n, c, h, w = (self.core, self.input_shape)[1]
+        print (w,h)
+        preprocessed_image = cv2.resize(frame, (w, h))
+        preprocessed_image = preprocessed_image.transpose((2, 0, 1))
+        preprocessed_image = preprocessed_image.reshape((n, c, h, w))
+        print("The input shape from the face detection is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
+        print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
+        print("End: preprocess image")
+        print("--------")
+
+        return preprocessed_image
+
+    def preprocess_output(self, outputs, frame):
         
-    def example_yield(self, video):
-        while True:
-            for _ in range(10):
-                flag_return, frame=self.cap.read()
-            
-            yield flag_return, frame
-            
+        coords = []
+        print("--------")
+        print("Start: preprocess_output")
+        print("Bounding box input: " + str(outputs))
+        self.initial_w = frame.shape[1]
+        self.initial_h = frame.shape[0]
+        print("Original image size is (W x H): " + str(self.initial_w) + "x" + str(self.initial_h))
+        for obj in outputs[0][0]:
+            confidence = obj[2]
+            if confidence >= self.threshold:
+                obj[3] = int(obj[3] * self.initial_w)
+                obj[4] = int(obj[4] * self.initial_h)
+                obj[5] = int(obj[5] * self.initial_w)
+                obj[6] = int(obj[6] * self.initial_h)
+                coords.append([obj[3], obj[4], obj[5], obj[6]])
+                cv2.rectangle(frame, (obj[3], obj[4]), (obj[5], obj[6]), (0, 55, 255), 1)
+                print("Bounding box output coordinates of frame: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
+                self.xmin = int(obj[3])
+                self.ymin = int(obj[4])
+                self.xmax = int(obj[5])
+                self.ymax = int(obj[6])
+
+        print("End: boundingbox")
+        print("--------")
+        frame_cropped = frame.copy()
+        frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
+        cv2.imwrite("Face_cropped image.png", frame_cropped)
+        cv2.imwrite("Face_image.png", frame)
+        return frame, frame_cropped
+
     def load_data(self, input_type, input_file):
+
         print ("Start load_data from InputFeeder")
         if input_type=='video':
-            self.cap=cv2.VideoCapture(input_file)
-            print ("video")
+            cap=cv2.VideoCapture(input_file)
+            print ("Input = video")
+            log.info("Input = video")
         elif input_type=='cam':
-            self.cap=cv2.VideoCapture(0)
-            print ("cam")
+            cap=cv2.VideoCapture(0)
+            print ("Input = cam")
+            log.info("Input = cam")
         else:
-            #self.cap=cv2.imread(input_file)
-            self.cap = input_file
-            print ("image")
+            cap=cv2.imread(input_file)
+            print ("Input = image")
+            log.info("Input = image")
             
-        return self.cap
-        
+        return cap        
 
-    def example_videostream(self, video):
-        from imutils.video import VideoStream
-        from imutils.video import FPS
-        #cap = VideoStream(usePiCamera=True).start()
-        cap = VideoStream(0).start()
-        cap = VideoStream(video).start()
-        # camera warm up
-        time.sleep(2.0)
-        while True:
-            frame = cap.read()
-            #frame = imutils.resize(frame, width=450)
-            #(h, w) = frame.shape[:2]
-            #print(h, w)
-            #cv2.imshow("Test", frame)
-            cv2.waitKey(2)
-
-        cv2.destroyAllWindows()
-        cap.stop()
 def main():
     args = build_argparser().parse_args()
     model_name = args.model
@@ -225,20 +253,44 @@ def main():
     print("--------")
 
     # Loads the model
-    start_model_load_time = time.time()  # Time to load the model (Start)
-    model_info = inference.load_model()
-    print(model_info)
-    total_model_load_time = time.time() - start_model_load_time  # Time model needed to load
+    # Time to load the model (Start)
+    start_model_load_time = time.time()  
+    model_data, modellayers = inference.load_model()
+    #print("Model data: ", model_data)
+    #print("Model layers: ", modellayers)
+    # Time model needed to load
+    total_model_load_time = time.time() - start_model_load_time  
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
     
+    # Load data (video, cam or image)
     cap = inference.load_data(inputtype, video)
-    print ("cap",cap)
-    flag_return, frame = inference.example_yield(cap)
-    print (flag_return)
-    print ("vor imwrite")
-    #cv2.imwrite('test28.png', frame)
+    print ("cap:",cap)
+
+    #  Start predictions
+
+    if inputtype == 'video' or 'cam':
+        try:
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                frame = inference.predict(frame)
+                cap.release()
+                
+        except Exception as e:
+            print("Could not run Inference: ", e)
+        
+    if inputtype == 'image':
+        print("Image")
+        frame=cv2.imread(video)
+        frame = inference.predict(frame)
+    
+    cv2.destroyAllWindows()
+            
+            
+        
 
 def build_argparser():
     parser = argparse.ArgumentParser()

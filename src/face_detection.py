@@ -91,9 +91,9 @@ class Facedetection:
         if modelisloaded == True:
 
             # Get the input layer
-            self.input_name = next(iter(self.network .inputs))
+            self.input_name = next(iter(self.network.inputs))
             # Gets all input_names
-            self.input_name_all = [i for i in self.network .inputs.keys()]
+            self.input_name_all = [i for i in self.network.inputs.keys()]
             self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
             self.input_name_first_entry = self.input_name_all[0]
         
@@ -106,7 +106,7 @@ class Facedetection:
 
             self.output_shape = self.network .outputs[self.output_name].shape
             self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-
+            #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
             print("--------")
             print("input_name: " + str(self.input_name))
             print("input_name_all: " + str(self.input_name_all))
@@ -198,20 +198,23 @@ class Facedetection:
 
         return preprocessed_image
 
-    def boundingbox(self, outputs, frame):
-        #coords = []
+    def preprocess_output(self, outputs, frame):
+        
+        coords = []
         print("--------")
-        print("Start: boundingbox")
+        print("Start: preprocess_output")
         print("Bounding box input: " + str(outputs))
-        #print("Coords: " + str(coords))
+        self.initial_w = frame.shape[1]
+        self.initial_h = frame.shape[0]
         print("Original image size is (W x H): " + str(self.initial_w) + "x" + str(self.initial_h))
         for obj in outputs[0][0]:
-            if obj[2] >= self.threshold:
+            confidence = obj[2]
+            if confidence >= self.threshold:
                 obj[3] = int(obj[3] * self.initial_w)
                 obj[4] = int(obj[4] * self.initial_h)
                 obj[5] = int(obj[5] * self.initial_w)
                 obj[6] = int(obj[6] * self.initial_h)
-                #coords.append([obj[3], obj[4], obj[5], obj[6]])
+                coords.append([obj[3], obj[4], obj[5], obj[6]])
                 cv2.rectangle(frame, (obj[3], obj[4]), (obj[5], obj[6]), (0, 55, 255), 1)
                 print("Bounding box output coordinates of frame: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
                 self.xmin = int(obj[3])
@@ -222,24 +225,10 @@ class Facedetection:
         print("End: boundingbox")
         print("--------")
         frame_cropped = frame.copy()
-        #frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
-        #cv2.imwrite("cropped image.png", frame_cropped)
-        frame_cropped = self.preprocess_output(frame)
-        cv2.imwrite("face_full_image.png", frame)
+        frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
+        cv2.imwrite("Face_cropped image.png", frame_cropped)
+        cv2.imwrite("Face_image.png", frame)
         return frame, frame_cropped
-
-    def preprocess_output(self, frame):
-        # crop image to fit the next model
-        print("--------")
-        print("Start: preprocess_output face")
-        #print("Coordinates for cropped frame are xmin x ymin x xmax x ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
-        frame_cropped = None
-        frame_cropped = frame[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
-        cv2.imwrite("cropped_image.png", frame_cropped)
-        
-        print("--------")
-        print("End: preprocess_output")
-        return frame_cropped
     
     def getinputstream(self, inputtype, video, output_path):
         print("--------")
