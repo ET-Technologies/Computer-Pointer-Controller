@@ -52,8 +52,6 @@ from os import path
 from openvino.inference_engine import IENetwork, IECore
 from input_feeder import InputFeeder
 import logging as log
-#import imutils
-
 
 class Facedetection:
 
@@ -277,20 +275,17 @@ def main():
                 if not ret:
                     break
                 frame = inference.predict(frame)
-                cap.release()
+            cap.release()
                 
         except Exception as e:
             print("Could not run Inference: ", e)
-        
+
     if inputtype == 'image':
         print("Image")
         frame=cv2.imread(video)
         frame = inference.predict(frame)
     
-    cv2.destroyAllWindows()
-            
-            
-        
+    cv2.destroyAllWindows()  
 
 def build_argparser():
     parser = argparse.ArgumentParser()
