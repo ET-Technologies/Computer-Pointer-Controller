@@ -41,6 +41,26 @@ python3 face_detection_v1.py --model /home/thomas/PycharmProjects/Intel/Computer
 --output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
 --version 2019
 '''
+'''
+Raspberry
+python3 face_detection.py  \
+--model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001  \
+--device MYRIAD \
+--extension None \
+--video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 \
+--output_path ./output/demo_output.mp4 \
+--inputtype video \
+--version 2019
+
+python3 face_detection.py  \
+--model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001  \
+--device MYRIAD \
+--extension None \
+--video /home/pi/KeyBox/face_test.jpeg \
+--output_path ./output/demo_output.mp4 \
+--inputtype image \
+--version 2019
+'''
 
 import numpy as np
 import time
@@ -232,7 +252,31 @@ class Facedetection:
             print ("Input = image")
             log.info("Input = image")
             
-        return cap        
+        return cap
+    
+    def start(self, frame, inputtype):
+          # Start predictions
+        if inputtype == 'video' or 'cam':
+            try:
+                while cap.isOpened():
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
+                    frame = self.predict(frame)
+                    cap.release()
+            except Exception as e:
+                print("Could not run Inference: ", e)
+
+        if inputtype == 'image':
+            print("Image")
+            #image = '/home/pi/KeyBox/face_test.jpg'
+            #frame=cv2.imread(image)
+            frame = self.predict(frame)
+            path = '/home/pi/KeyBox/Face_cropped image.png'
+            image = cv2.imread(path)
+            cv2.imshow("test", image)
+            cv2.waitKey(0)
+        cv2.destroyAllWindows()  
 
 def main():
     args = build_argparser().parse_args()
@@ -284,6 +328,10 @@ def main():
         print("Image")
         frame=cv2.imread(video)
         frame = inference.predict(frame)
+        path = '/home/pi/KeyBox/Face_cropped image.png'
+        image = cv2.imread(path)
+        cv2.imshow("test", image)
+        cv2.waitKey(0) 
     
     cv2.destroyAllWindows()  
 
