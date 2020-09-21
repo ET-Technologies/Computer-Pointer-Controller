@@ -6,7 +6,18 @@ python3 computer_pointer.py --video demo.mp4 --input_type video --output_path de
 
 '''
 Raspberry
-python3 computer_pointer.py --video /bin/demo.mp4 --input_type video --output_path demo_output.mp4 --device MYRIAD
+python3 computer_pointer.py \
+-fd_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 \
+-fl_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
+-hp_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
+-ga_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
+--video /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4 \
+--input_type video \
+--output_path demo_output.mp4 \
+--threshold 0.4 \
+--device MYRIAD \
+--version 2020
+
 /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4
 '''
 
@@ -84,7 +95,7 @@ def main():
     faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
     print("Load class Facial_Landmarks = OK")
     print("--------")
-    faciallandmarks.load_model()
+    #faciallandmarks.load_model()
     print("Load model Facial_Landmarks = Finished")
     print("--------")
     
@@ -238,7 +249,7 @@ def old():
 def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=False)
-    parser.add_argument('--device', default='CPU')
+    parser.add_argument('--device')
     parser.add_argument('--extension')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='demo_output.mp4')
