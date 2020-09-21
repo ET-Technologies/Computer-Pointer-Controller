@@ -24,15 +24,17 @@ python3 computer_pointer.py \
 '''
 Linux
 source /opt/intel/openvino/bin/setupvars.sh
+
 python3 computer_pointer.py \
---video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo.mp4 \
---output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
--fd_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-adas-binary-0001 \
--fl_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
--hp_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
--ga_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
+--video /home/thomas/Github/Computer-Pointer-Controller-master/bin/demo.mp4 \
+--output_path /home/thomas/Github/Computer-Pointer-Controller-master/bin/demo.mp4/demo_output.mp4 \
+-fd_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/face-detection-adas-0001 \
+-fl_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/landmarks-regression-retail-0009 \
+-hp_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/head-pose-estimation-adas-0001 \
+-ga_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/gaze-estimation-adas-0002 \
 --threshold 0.4 \
 --input_type video \
+--device CPU \
 --version 2020
 
 
@@ -95,7 +97,7 @@ def main():
     faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
     print("Load class Facial_Landmarks = OK")
     print("--------")
-    #faciallandmarks.load_model()
+    faciallandmarks.load_model()
     print("Load model Facial_Landmarks = Finished")
     print("--------")
     
