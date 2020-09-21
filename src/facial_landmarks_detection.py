@@ -104,13 +104,14 @@ class Facial_Landmarks:
             print("--------")
             print("Check for supported layers")
             #print("supported_layers: " + str(supported_layers))
-            not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
-            log.info("All layers are supported")
-            print("--------")
+            not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]          
             if len(not_supported_layers) != 0:
                 log.error("Following layers are not supported:", not_supported_layers)
                 print("You are not lucky, not all layers are supported")
                 sys.exit(1)
+        log.info("All layers are supported")
+        print("All layers are supported")
+        print("--------")
 
     # Start inference and prediction
     def predict(self, face_cropped):
@@ -142,13 +143,13 @@ class Facial_Landmarks:
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
-        frame_input = frame.copy()
+        log.info("Start: preprocess image face")
         n, c, h, w = (self.core, self.input_shape)[1]
         preprocessed_image = cv2.resize(frame, (w, h))
-        preprocessed_image = image.transpose((2, 0, 1))
-        preprocessed_image = image.reshape((n, c, h, w))
+        preprocessed_image = preprocessed_image.transpose((2, 0, 1))
+        preprocessed_image = preprocessed_image.reshape((n, c, h, w))
         print("The input shape from the facial landmarks is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
-        print("Image is now [BxCxHxW]: " + str(image.shape))
+        print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
         print("End: preprocess image")
         print("--------")
 
@@ -159,6 +160,8 @@ class Facial_Landmarks:
         print("Start: landmark_detection")
         result_len = len(outputs)
         print("total number of entries: " + str(result_len))
+        self.initial_w = frame.shape[1]
+        self.initial_h = frame.shape[0]
         coords = []
         for obj in outputs[0]:
             obj= obj[0]
@@ -166,6 +169,7 @@ class Facial_Landmarks:
             print("Coordinaten: " + str(c))
             coords.append(c)
         print("Coords: " + str(coords))
+
         self.left_eye_coordinates_x = int(coords[0]*self.initial_w)
         self.left_eye_coordinates_y = int(coords[1]*self.initial_h)
         self.right_eye_coordinates_x = int(coords[2]*self.initial_w)
@@ -178,8 +182,10 @@ class Facial_Landmarks:
         #### Not necessary for gaze estimation 
         self.nose_coordinates_x = int(coords[4] * self.initial_w)
         self.nose_coordinates_y = int(coords[5] * self.initial_h)
+
         self.left_mouth_coordinates_x = int(coords[6] * self.initial_w)
         self.left_mouth_coordinates_y = int(coords[7] * self.initial_h)
+
         self.right_mouth_coordinates_x = int(coords[8] * self.initial_w)
         self.right_mouth_coordinates_y = int(coords[9] * self.initial_h)
         ####
@@ -189,6 +195,7 @@ class Facial_Landmarks:
         self.left_eye_x_max = self.left_eye_coordinates_x+30
         self.left_eye_y_min = self.left_eye_coordinates_y-30
         self.left_eye_y_max = self.left_eye_coordinates_y+30
+
         # right eye 
         self.right_eye_x_min = self.right_eye_coordinates_x-30
         self.right_eye_x_max = self.right_eye_coordinates_x+30
