@@ -21,123 +21,116 @@ import logging as log
 class Head_Pose_Estimation:
 
     # Load all relevant variables into the class
-    def __init__(self, model_name, device, extension, version):
+    def __init__(self, model_name, device, extension, version, threshold=0):
 
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
         self.extension = extension
         self.version = version
+        self.threshold = threshold
 
         print("--------")
         print("START Head_Pose_Estimation")
-        print("model_weights: " + str(self.model_weights))
-        print("model_structure: " + str(self.model_structure))
-        print("device: " + str(self.device))
-        print("extension: " + str(self.extension))
         print("--------")
 
-    # Loads the model
+    
     def load_model(self):
+        # Loads the model
 
         # Initialise the network and save it in the self.model variables
         try:
-            log.info("Reading model ...")
+            self.core = IECore()
             self.network = IENetwork(self.model_structure, self.model_weights)
-            # self.model = core.read_network(self.model_structure, self.model_weights) # new openvino version
-            modelisloaded = True
+            # self.network = core.read_network(self.model_structure, self.model_weights) # new openvino version
+            self.input_name = next(iter(self.network.inputs))
         except Exception as e:
-            modelisloaded = False
+            log.error("Could not initialise the network")
             raise ValueError("Could not initialise the network")
         print("--------")
         print("Model is loaded as self.model: " + str(self.network))
 
-        if modelisloaded == True:
-
-            # Get the input layer
-            self.input_name = next(iter(self.network .inputs))
-            # Gets all input_names
-            self.input_name_all = [i for i in self.network .inputs.keys()]
-            self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
-            self.input_name_first_entry = self.input_name_all[0]
-        
-            self.input_shape = self.network .inputs[self.input_name].shape
-        
-            self.output_name = next(iter(self.network .outputs))
-            self.output_name_type = self.network .outputs[self.output_name]
-            self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
-            self.output_names_total_entries = len(self.output_names)
-
-            self.output_shape = self.network .outputs[self.output_name].shape
-            self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-
-            print("--------")
-            print("input_name: " + str(self.input_name))
-            print("input_name_all: " + str(self.input_name_all))
-            print("input_name_all_total: " + str(self.input_name_all_02))
-            print("input_name_first_entry: " + str(self.input_name_first_entry))
-            print("--------")
-
-            print("input_shape: " + str(self.input_shape))
-            print("--------")
-
-            print("output_name: " + str(self.output_name))
-            print("output_name type: " + str(self.output_name_type))
-            print("output_names: " + str(self.output_names))
-            print("output_names_total_entries: " + str(self.output_names_total_entries))
-            print("--------")
-
-            print("output_shape: " + str(self.output_shape))
-            print("output_shape_second_entry: " + str(self.output_shape_second_entry))
-            print("--------")
-
-        self.core = IECore()
-
-        # Adds Extension
-        if "CPU" in self.device and (self.version == 2019):
+        # Add extension
+        if self.extension and "CPU" in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
 
+        # Check supported layers
+        self.check_model()
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
+        log.info("Exec_network is loaded as:" + str(self.exec_network))
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
-        self.check_model()
+
+        model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
+        modellayers = self.getmodellayers()
+
+        return model_data, modellayers
+
+    def getmodellayers(self):
+        # Get all necessary model values. 
+        self.input_name = next(iter(self.network.inputs))
+        self.output_name = next(iter(self.network .outputs))
+
+        # Gets all input_names. Just for information.
+        self.input_name_all = [i for i in self.network.inputs.keys()]
+        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+        self.input_name_first_entry = self.input_name_all[0]
+        
+        self.input_shape = self.network .inputs[self.input_name].shape
+        
+        self.output_name_type = self.network .outputs[self.output_name]
+        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+        self.output_names_total_entries = len(self.output_names)
+
+        self.output_shape = self.network .outputs[self.output_name].shape
+        self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
+        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
+        modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
+            self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
+
+        return modellayers
 
     def check_model(self):
-        ### TODO: Check for supported layers ###
+        # Check for supported layers
+        log.info("Checking for unsupported layers")
         if "CPU" in self.device:
-            #supported_layers = self.core.query_network(self.exec_network, "CPU")
             supported_layers = self.core.query_network(self.network, "CPU")
             print("--------")
             print("Check for supported layers")
-            print("supported_layers: " + str(supported_layers)) 
-            not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
-            print("not_supported_layers: " + str(not_supported_layers))
-            print("You are lucky, all layers are supported")
-            print("--------")
+            #print("supported_layers: " + str(supported_layers))
+            not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]          
             if len(not_supported_layers) != 0:
+                log.error("Following layers are not supported:", not_supported_layers)
+                print("You are not lucky, not all layers are supported")
                 sys.exit(1)
+        log.info("All layers are supported")
+        print("All layers are supported")
+        print("--------")
 
-    # Start inference and prediction
+    
     def predict(self, frame):
-
+        # Start inference and prediction
         print("--------")
         print("Start predictions head_pose_estimation")
-        #self.width = initial_w
-        #self.height = initial_h
-        requestid = 0
+
         # Pre-process the image
         preprocessed_image = self.preprocess_input(frame)
+
         # Starts synchronous inference
         print("Start syncro inference")
         log.info("Start syncro inference")
+
         outputs = self.exec_network.infer({self.input_name:preprocessed_image})
         print("Output of the inference request: " + str(outputs))
+
+        requestid = 0
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
         head_pose_results = self.head_pose_detection(outputs, frame)
         #head_pose_results = self.preprocess_output(outputs)
+
         print("End predictions")
         print("--------")
         return head_pose_results
@@ -146,13 +139,12 @@ class Head_Pose_Estimation:
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
-        log.info("Start: preprocess image")
+        log.info("Start: preprocess image head pose")
         n, c, h, w = (self.core, self.input_shape)[1]
         preprocessed_image = cv2.resize(frame, (w, h))
         preprocessed_image = preprocessed_image.transpose((2, 0, 1))
         preprocessed_image = preprocessed_image.reshape((n, c, h, w))
         print("The input shape from the head pose is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
-        print("Original image size is W= ({}) x H= ({})".format(str(self.initial_w),str(self.initial_h)))
         print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
         print("End: preprocess image")
         print("--------")
@@ -214,67 +206,47 @@ class Head_Pose_Estimation:
 
         return outputs
 
-    def getinputstream(self, inputtype, video, output_path):
-        # gets the inputtype
-        try:
-            if inputtype == 'video':
-                print("Reading video file:", video)
-                cap = cv2.VideoCapture(video)
-            elif inputtype =='cam':
-                print("Reading webcam")
-                cap = cv2.VideoCapture(0)
-            else:
-                print("Reading image:", video)
-                cap = cv2.imread(video)    
-        except FileNotFoundError:
-            print("Cannot find video file: " + video)
-        except Exception as e:
-            print("Something else went wrong with the video file: ", e)
+    def load_data(self, input_type, input_file):
+
+        print ("Start load_data from InputFeeder")
+        if input_type=='video':
+            cap=cv2.VideoCapture(input_file)
+            print ("Input = video")
+            log.info("Input = video")
+        elif input_type=='cam':
+            cap=cv2.VideoCapture(0)
+            print ("Input = cam")
+            log.info("Input = cam")
+        else:
+            cap=cv2.imread(input_file)
+            print ("Input = image")
+            log.info("Input = image")
             
-        # Capture information about the input video stream
-        self.initial_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.initial_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.video_len = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
-        print("--------")
-        print("Input video Data")
-        print("initial_w: " + str(self.initial_w))
-        print("initial_h: " + str(self.initial_h))
-        print("video_len: " + str(self.video_len))
-        print("fps: " + str(self.fps))
-        print("--------")
-        
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out_video = cv2.VideoWriter(output_path, fourcc, self.fps, (self.initial_w, self.initial_h))
+        return cap
 
-        try:
-            while cap.isOpened():
-                result, frame = cap.read()
-                if not result:
-                    break
-                #image = inference.predict(frame, initial_w, initial_h)
-                image = self.predict(frame)
-                print("The video is writen to the output path")
-                out_video.write(image)
-        except Exception as e:
-            print("Could not run Inference: ", e)
+    def start(self, frame, inputtype):
+          # Start predictions
+        if inputtype == 'video' or 'cam':
+            try:
+                while cap.isOpened():
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
+                    frame = self.predict(frame)
+                    cap.release()
+            except Exception as e:
+                print("Could not run Inference: ", e)
 
-            cap.release()
-            cv2.destroyAllWindows()
-            
-        return
-    
-    #def get_initial_w_h (self, initial_w, initial_h):
-     #   self.initial_w = initial_w
-      #  self.initial_h = initial_h
-       # print("Initialize initial_w in headposeestimation: " + str(initial_w))
-        #print("Initialize initial_h in headposeestimation: " + str(initial_h))
-
-    def get_initial_w_h (self, frame_cropped):
-        self.initial_w = frame_cropped.shape[1]
-        self.initial_h = frame_cropped.shape[0]
-        print("Initialize initial_w in headposeestimation: " + str(self.initial_w))
-        print("Initialize initial_h in headposeestimation: " + str(self.initial_h))
+        if inputtype == 'image':
+            print("Image")
+            #image = '/home/pi/KeyBox/face_test.jpg'
+            #frame=cv2.imread(image)
+            frame = self.predict(frame)
+            path = '/home/pi/KeyBox/Face_cropped image.png'
+            image = cv2.imread(path)
+            cv2.imshow("test", image)
+            cv2.waitKey(0)
+        cv2.destroyAllWindows() 
         
 def build_argparser():
     parser = argparse.ArgumentParser()
@@ -285,6 +257,7 @@ def build_argparser():
     parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype', default='video')
+    parser.add_argument('--version', default='2020')
 
     return parser
 
@@ -296,7 +269,6 @@ def main():
     video = args.video
     video = ("cropped_image.png")
     output_path=args.output_path
-    #CPU_EXTENSION = "/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so"
     threshold = args.threshold
     inputtype = args.inputtype
 
@@ -306,15 +278,43 @@ def main():
     print("--------")
 
     # Loads the model
-    start_model_load_time = time.time()  # Time to load the model (Start)
+    # Time to load the model (Start)
+    start_model_load_time = time.time()  
     inference.load_model()
-    total_model_load_time = time.time() - start_model_load_time  # Time model needed to load
+    # Time model needed to load
+    total_model_load_time = time.time() - start_model_load_time  
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
 
-    # Get the input video stream
-    inference.getinputstream(inputtype, video, output_path)
+    # Load data (video, cam or image)
+    cap = inference.load_data(inputtype, video)
+    print ("cap:",cap)
+
+    #  Start predictions
+
+    if inputtype == 'video' or 'cam':
+        try:
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                frame = inference.predict(frame)
+            cap.release()
+                
+        except Exception as e:
+            print("Could not run Inference: ", e)
+
+    if inputtype == 'image':
+        print("Image")
+        frame=cv2.imread(video)
+        frame = inference.predict(frame)
+        path = '/home/pi/KeyBox/Face_cropped image.png'
+        image = cv2.imread(path)
+        cv2.imshow("test", image)
+        cv2.waitKey(0) 
+    
+    cv2.destroyAllWindows() 
 
 # Start program
 if __name__ == '__main__':
