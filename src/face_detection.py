@@ -93,7 +93,7 @@ class Facedetection:
         # Initialise the network and save it in the self.network variables
         try:
             self.core = IECore()
-            #self.network = self.core.read_network(model=self.model_structure, weights=self.model_weights)
+            #self.network = self.core.read_network(model=self.model_structure, weights=self.model_weights) #new version
             self.network = IENetwork(model=self.model_structure, weights=self.model_weights)
             #log.info("Model is loaded as: ", self.network)
             self.input_name = next(iter(self.network.inputs))
@@ -155,12 +155,13 @@ class Facedetection:
             print("Check for supported layers")
             #print("supported_layers: " + str(supported_layers))
             not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
-            log.info("All layers are supported")
             print("--------")
             if len(not_supported_layers) != 0:
                 log.error("Following layers are not supported:", not_supported_layers)
                 print("You are not lucky, not all layers are supported")
                 sys.exit(1)
+        log.info("All layers are supported")
+        print("All layers are supported")
 
     def predict(self, frame):
         # Starts predictions face_detection
@@ -180,12 +181,12 @@ class Facedetection:
         requestid = 0
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
-        processed_image, frame_cropped = self.preprocess_output(outputs, frame)
+        processed_image, frame_cropped, coords = self.preprocess_output(outputs, frame)
         cv2.imwrite("cropped_image_02.png", frame_cropped)
         print("End predictions face_detection")
         print("--------")
 
-        return processed_image, frame_cropped
+        return processed_image, frame_cropped, coords
 
     def preprocess_input(self, frame):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
@@ -227,6 +228,7 @@ class Facedetection:
                 self.ymin = int(obj[4])
                 self.xmax = int(obj[5])
                 self.ymax = int(obj[6])
+                
 
         print("End: boundingbox")
         print("--------")
@@ -234,7 +236,8 @@ class Facedetection:
         frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
         cv2.imwrite("Face_cropped image.png", frame_cropped)
         cv2.imwrite("Face_image.png", frame)
-        return frame, frame_cropped
+        
+        return frame, frame_cropped, coords
 
     def load_data(self, input_type, input_file):
 
@@ -342,7 +345,7 @@ def build_argparser():
     parser.add_argument('--extension')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path')
-    parser.add_argument('--threshold', default=0.20)
+    parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype')
     parser.add_argument('--version', default='2020')
 
