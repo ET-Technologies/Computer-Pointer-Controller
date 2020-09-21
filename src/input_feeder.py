@@ -17,14 +17,14 @@ class InputFeeder:
                     or 'cam' to use webcam feed.
         input_file: str, The file that contains the input image or video file. Leave empty for cam input_type.
         '''
-        print ("Start __init__ InputFeeder")
+        #print ("Start __init__ InputFeeder")
         self.input_type=input_type
         if input_type=='video' or input_type=='image':
             self.input_file=input_file
-        print ("End __init__ InputFeeder")
+        #print ("End __init__ InputFeeder")
     
     def load_data(self):
-        print ("Start load_data from InputFeeder")
+        #print ("Start load_data from InputFeeder")
         if self.input_type=='video':
             self.cap=cv2.VideoCapture(self.input_file)
         elif self.input_type=='cam':
@@ -32,13 +32,11 @@ class InputFeeder:
         else:
             self.cap=cv2.imread(self.input_file)
             
-        print ("Input type: ", self.input_type)
-        #print ("Input file: ",self.input_file)
-        print ("Cap: ", self.cap)
-        self.initial_w = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #print ("Cap: ", self.cap)
+        #self.initial_w = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         #print("initial_w: " + str(self.initial_w))
-        print ("End load_data from InputFeeder")
-        return self.cap
+        #print ("End load_data from InputFeeder")
+        #return self.cap
 
     def next_batch(self):
         '''
