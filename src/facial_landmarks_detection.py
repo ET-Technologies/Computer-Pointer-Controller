@@ -9,6 +9,23 @@ python3 facial_landmarks_detection.py --model models/landmarks-regression-retail
 
 '''
 Rapberry Pi
+python3 facial_landmarks_detection.py \
+--model /home/pi/Udacity/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
+--device MYRIAD \
+--video /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4 \
+--output_path demo_output.mp4 \
+--version 2020 \
+--inputtype cam
+
+Rapberry Pi
+python3 facial_landmarks_detection.py \
+--model /home/pi/Udacity/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
+--device MYRIAD \
+--video /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4 \
+--output_path demo_output.mp4 \
+--version 2020 \
+--inputtype image
+
 
 '''
 
@@ -36,6 +53,8 @@ class Facial_Landmarks:
         
         print("--------")
         print("START Facial_Landmarks")
+        print (self.model_weights)
+        print ('device ', device)
         print("--------")
 
     
@@ -53,12 +72,14 @@ class Facial_Landmarks:
             raise ValueError("Could not initialise the network")
         print("--------")
         print("Model is loaded as self.model: " + str(self.network))
+        print (self.extension)
 
         # Add extension
         if self.extension and "CPU" in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
-
+            print ("Load extension")
+        
         # Check supported layers
         self.check_model()
         # Load the network into an executable network
@@ -322,7 +343,7 @@ def main():
     device = args.device
     extension = args.extension
     video = args.video
-    #video = ("cropped_image.png")
+    video = ("cropped_image.png")
     #video = ("face_full_image.png")
     output_path = args.output_path
     threshold = args.threshold
@@ -330,7 +351,7 @@ def main():
     version = args.version
 
     # Load class Facial_Landmarks
-    inference = Facial_Landmarks(model_name, threshold, device, extension)
+    inference = Facial_Landmarks(model_name, threshold, device, extension, version)
     print("Load class Facial_Landmarks = OK")
     print("--------")
 
@@ -343,6 +364,9 @@ def main():
     print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
+    
+    # Load data (video, cam or image)
+    cap = inference.load_data(inputtype, video)
 
     #  Start predictions
 
@@ -357,11 +381,13 @@ def main():
                 
         except Exception as e:
             print("Could not run Inference: ", e)
-    elif inputtype == 'image':
+            
+    if inputtype == 'image':
         print("Image")
         frame=cv2.imread(video)
         frame = inference.predict(frame)
-        path = '/home/pi/KeyBox/Face_cropped image.png'
+        path = '/home/pi/Udacity/Computer-Pointer-Controller-master/src/landmark_image.png'
+        #path = '/home/pi/Udacity/Computer-Pointer-Controller-master/src/landmark_image.png'
         image = cv2.imread(path)
         cv2.imshow("test", image)
         cv2.waitKey(0) 
@@ -372,7 +398,7 @@ def build_argparser():
     # Collect all the necessary input values
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
-    parser.add_argument('--device', default='CPU')
+    parser.add_argument('--device')
     parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='results/')
