@@ -29,19 +29,16 @@ import math
 class Gaze_Estimation:
 
     # Load all relevant variables into the class
-    def __init__(self, model_name, device, extension, version):
+    def __init__(self, model_name, threshold, device, extension, version):
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
         self.extension = extension
+        self.threshold = threshold
         self.version = version
 
         print("--------")
         print("START Gaze_Estimation")
-        print("model_weights: " + str(self.model_weights))
-        print("model_structure: " + str(self.model_structure))
-        print("device: " + str(self.device))
-        print("extensions: " + str(self.extension))
         print("--------")
 
     # Loads the model
@@ -49,90 +46,76 @@ class Gaze_Estimation:
 
         # Initialise the network and save it in the self.model variables
         try:
-            log.info("Reading model ...")
-            self.network = IENetwork(self.model_structure, self.model_weights)
-            # self.model = core.read_network(self.model_structure, self.model_weights) # new openvino version
-            modelisloaded = True
+            self.core = IECore()
+            #self.network = self.core.read_network(model=self.model_structure, weights=self.model_weights) #new version
+            self.network = IENetwork(model=self.model_structure, weights=self.model_weights)
+            #log.info("Model is loaded as: ", self.network)
+            self.input_name = next(iter(self.network.inputs))
         except Exception as e:
-            modelisloaded = False
+            log.error("Could not initialise the network")
             raise ValueError("Could not initialise the network")
         print("--------")
-        print("Model is loaded as self.model: " + str(self.network))
+        print("Model is loaded as self.network : " + str(self.network))
 
-        if modelisloaded == True:
-
-            # Get the input layer
-            self.input_name = next(iter(self.network .inputs))
-            # Gets all input_names
-            self.input_name_all = [i for i in self.network .inputs.keys()]
-            self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
-            self.input_name_first_entry = self.input_name_all[0]
-        
-            self.input_shape = self.network .inputs[self.input_name].shape
-            self.input_shape_n = self.input_shape[0]
-            self.input_shape_c = self.input_shape[1]
-            #self.input_shape_w = self.input_shape[2]
-            #self.input_shape_h = self.input_shape[3]
-        
-            self.output_name = next(iter(self.network .outputs))
-            self.output_name_type = self.network .outputs[self.output_name]
-            self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
-            self.output_names_total_entries = len(self.output_names)
-
-            self.output_shape = self.network .outputs[self.output_name].shape
-            self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-
-            print("--------")
-            print("input_name: " + str(self.input_name))
-            print("input_name_all: " + str(self.input_name_all))
-            print("input_name_all_total: " + str(self.input_name_all_02))
-            print("input_name_first_entry: " + str(self.input_name_first_entry))
-            print("--------")
-
-            print("input_shape: " + str(self.input_shape))
-            print("input_shape_n: " + str(self.input_shape_n))
-            print("input_shape_c: " + str(self.input_shape_c))
-            #print("input_shape_w: " + str(self.input_shape_w))
-            #print("input_shape_h: " + str(self.input_shape_h))
-            print("--------")
-
-            print("output_name: " + str(self.output_name))
-            print("output_name type: " + str(self.output_name_type))
-            print("output_names: " + str(self.output_names))
-            print("output_names_total_entries: " + str(self.output_names_total_entries))
-            print("--------")
-
-            print("output_shape: " + str(self.output_shape))
-            print("output_shape_second_entry: " + str(self.output_shape_second_entry))
-            print("--------")
-
-        self.core = IECore()
-
-        # Adds Extension
-        if "CPU" in self.device and (self.version == 2019):
+        # Add extension
+        if self.extension and "CPU" in self.device:
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
 
+        # Check supported layers
+        self.check_model()
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
+        log.info("Exec_network is loaded as:" + str(self.exec_network))
         print("Exec_network is loaded as:" + str(self.exec_network))
         print("--------")
-        self.check_model()
+
+        model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
+        modellayers = self.getmodellayers()
+
+        return model_data, modellayers
+
+    def getmodellayers(self):
+        # Get all necessary model values. 
+        self.input_name = next(iter(self.network.inputs))
+        self.output_name = next(iter(self.network .outputs))
+
+        # Gets all input_names. Just for information.
+        self.input_name_all = [i for i in self.network.inputs.keys()]
+        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+        self.input_name_first_entry = self.input_name_all[0]
+        
+        self.input_shape = self.network .inputs[self.input_name].shape
+        
+        self.output_name_type = self.network .outputs[self.output_name]
+        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+        self.output_names_total_entries = len(self.output_names)
+
+        self.output_shape = self.network .outputs[self.output_name].shape
+        self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
+        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
+        modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
+            self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
+
+        return modellayers
 
     def check_model(self):
-        ### TODO: Check for supported layers ###
+
+        # Check for supported layers
+        log.info("Checking for unsupported layers")
         if "CPU" in self.device:
-            #supported_layers = self.core.query_network(self.exec_network, "CPU")
             supported_layers = self.core.query_network(self.network, "CPU")
             print("--------")
             print("Check for supported layers")
-            print("supported_layers: " + str(supported_layers)) 
+            #print("supported_layers: " + str(supported_layers))
             not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
-            print("not_supported_layers: " + str(not_supported_layers))
-            print("You are lucky, all layers are supported")
             print("--------")
             if len(not_supported_layers) != 0:
+                log.error("Following layers are not supported:", not_supported_layers)
+                print("You are not lucky, not all layers are supported")
                 sys.exit(1)
+        log.info("All layers are supported")
+        print("All layers are supported")
 
     # Start inference and prediction
     def predict(self, left_eye, right_eye, head_pose_angles):
@@ -167,8 +150,8 @@ class Gaze_Estimation:
         print("--------")
         print("Start: preprocess image Gaze_Estimation")
         log.info("Start: preprocess image")
-        n = self.input_shape_n
-        c = self.input_shape_c
+        n = 1
+        c = 3
         h = 60
         w = 60
         print("The input shape from the gaze estimation is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
