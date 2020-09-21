@@ -28,7 +28,7 @@ source /opt/intel/openvino/bin/setupvars.sh
 python3 computer_pointer.py \
 --video /home/thomas/Github/Computer-Pointer-Controller-master/bin/demo.mp4 \
 --output_path /home/thomas/Github/Computer-Pointer-Controller-master/bin/demo.mp4/demo_output.mp4 \
--fd_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/face-detection-adas-0001 \
+-fd_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP32/face-detection-adas-binary-0001 \
 -fl_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/landmarks-regression-retail-0009 \
 -hp_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/head-pose-estimation-adas-0001 \
 -ga_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/gaze-estimation-adas-0002 \
@@ -36,7 +36,7 @@ python3 computer_pointer.py \
 --input_type video \
 --device CPU \
 --version 2020
-
+/home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP32/face-detection-adas-binary-0001
 
 python3 computer_pointer.py \
 --video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
@@ -52,6 +52,7 @@ import time
 import argparse
 import cv2
 import logging as log
+import time
 
 import openvino
 
@@ -85,37 +86,52 @@ def main():
     print ("Openvino version: "+ str(openvino_version))
         
     # Load class Facedetection
+    
     facedetection = Facedetection(model_name=args.fd_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
+    
     print("Load class Facedetection = OK")
     print("--------")
+    start_load_time_face = time.time()
     # Load model Facedetection
     facedetection.load_model()
     print("Load model facedetection = Finished")
     print("--------")
+    total_model_load_time_face = (time.time() - start_load_time_face)*1000
+    log.info('Facedetection load time: ' + str(round(total_model_load_time_face, 3)))
+    print('Facedetection load time: ', str(total_model_load_time_face))
     
     # Load facial landmark
     faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
     print("Load class Facial_Landmarks = OK")
     print("--------")
+    start_load_time_facial = time.time()
     faciallandmarks.load_model()
     print("Load model Facial_Landmarks = Finished")
     print("--------")
+    total_model_load_time_facial = (time.time() - start_load_time_facial)*1000
+    log.info('Facial_Landmarks load time: ' + str(round(total_model_load_time_facial, 3)))
     
     # Load head_pose_estimation
     headposeestimation = Head_Pose_Estimation(model_name=args.hp_model, device=args.device, extension=args.extension, version=args.version, threshold=args.threshold)
     print("Load class head_pose_estimation = OK")
     print("--------")
+    start_load_time_headpose = time.time()
     headposeestimation.load_model()
     print("Load model head_pose_estimation = Finished")
     print("--------")
+    total_model_load_time_headpose = (time.time() - start_load_time_headpose)*1000
+    log.info('Headpose load time: ' + str(round(total_model_load_time_headpose, 3)))
     
     # Load gaze_estimation
     gazeestimation = Gaze_Estimation(model_name=args.ga_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
     print("Load class gaze_estimation = OK")
     print("--------")
+    start_load_time_gaze = time.time()
     gazeestimation.load_model()
     print("Load model gaze_estimation = Finished")
     print("--------")
+    total_model_load_time_gaze = (time.time() - start_load_time_gaze)*1000
+    log.info('Gaze load time: ' + str(round(total_model_load_time_gaze, 3)))
 
     log.info('All models are loaded!')
     
@@ -134,7 +150,7 @@ def main():
     for batch in feed.next_batch():
         if batch is None:
             break
-        cv2.imshow('Batch', batch)
+        #cv2.imshow('Batch', batch)
         # facedetection
         print("Start facedetection (computer_pointer.py)")
         print("Cap is feeded to the face detection!")
@@ -144,7 +160,7 @@ def main():
             print("No face detected")
             continue
         
-        cv2.imshow('Face', face_image)
+        #cv2.imshow('Face', face_image)
         print("The video from the face detection is writen to the output path")
         #out_video.write(face_image)
         print("End facedetection (computer_pointer.py)")
