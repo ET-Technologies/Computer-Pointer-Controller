@@ -104,7 +104,7 @@ class Facedetection:
         print("Model is loaded as self.network : " + str(self.network))
 
         # Add extension
-        if self.extension and "CPU" in self.device:
+        if "CPU" in self.device and (self.version == 2019):
             log.info("Add extension: ({})".format(str(self.extension)))
             self.core.add_extension(self.extension, self.device)
 
