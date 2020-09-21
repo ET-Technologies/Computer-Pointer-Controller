@@ -16,12 +16,14 @@ source /opt/intel/openvino/bin/setupvars.sh
 python3 computer_pointer.py \
 --video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo.mp4 \
 --output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
--fd_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-adas-0001 \
+-fd_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-adas-binary-0001 \
 -fl_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
 -hp_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
 -ga_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
---version 2020
+--threshold 0.4 \
 --input_type video \
+--version 2020
+
 
 python3 computer_pointer.py \
 --video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
@@ -63,6 +65,7 @@ def main():
     input_type = args.input_type
     input_file = args.video
     output_path = args.output_path
+    threshold = args.threshold
     
     # Get Openvinoversion
     openvino_version = (openvino.__file__)
@@ -86,7 +89,7 @@ def main():
     print("--------")
     
     # Load head_pose_estimation
-    headposeestimation = Head_Pose_Estimation(model_name=args.hp_model, device=args.device, extension=args.extension, version=args.version)
+    headposeestimation = Head_Pose_Estimation(model_name=args.hp_model, device=args.device, extension=args.extension, version=args.version, threshold=args.threshold)
     print("Load class head_pose_estimation = OK")
     print("--------")
     headposeestimation.load_model()
@@ -94,34 +97,43 @@ def main():
     print("--------")
     
     # Load gaze_estimation
-    gazeestimation = Gaze_Estimation(model_name=args.ga_model, device=args.device, extension=args.extension, version=args.version)
+    gazeestimation = Gaze_Estimation(model_name=args.ga_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
     print("Load class gaze_estimation = OK")
     print("--------")
     gazeestimation.load_model()
     print("Load model gaze_estimation = Finished")
     print("--------")
+
+    log.info('All models are loaded!')
     
     ##############
     feed = InputFeeder(input_type, input_file)
+    log.info('Input Feeder is loaded')
     feed.load_data()
-    initial_w = int(feed.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    initial_h = int(feed.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = int(feed.cap.get(cv2.CAP_PROP_FPS))
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
-    facedetection.get_initial_w_h (initial_w, initial_h)
-    #headposeestimation.get_initial_w_h (initial_w, initial_h)
+
+    # Output video
+    #initial_w = int(feed.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #initial_h = int(feed.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    #fps = int(feed.cap.get(cv2.CAP_PROP_FPS))
+    #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    #out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
+
     for batch in feed.next_batch():
         if batch is None:
             break
-
+        cv2.imshow('Batch', batch)
         # facedetection
         print("Start facedetection (computer_pointer.py)")
         print("Cap is feeded to the face detection!")
         face_batch = batch.copy()
-        face_image, face_cropped = facedetection.predict(face_batch)
+        face_image, face_cropped, coords= facedetection.predict(face_batch)
+        if not coords:
+            print("No face detected")
+            continue
+        
+        cv2.imshow('Face', face_image)
         print("The video from the face detection is writen to the output path")
-        out_video.write(face_image)
+        #out_video.write(face_image)
         print("End facedetection (computer_pointer.py)")
 
         # faciallandmark
@@ -130,14 +142,14 @@ def main():
         else:
             print("Start faciallandmark (computer_pointer.py)")
             print("The cropped face image is feeded to the faciallandmarks detection.")
-            faciallandmarks.get_initial_w_h(face_cropped)
+            #faciallandmarks.get_initial_w_h(face_cropped)
             left_eye_image, right_eye_image = faciallandmarks.predict(face_cropped)
             print("End faciallandmarks (computer_pointer.py)")
 
             # headposeestimation
             print("Start headposeestimation (computer_pointer.py)")
             print("The cropped face image is feeded to the headposeestimation.")
-            headposeestimation.get_initial_w_h(face_cropped)
+            #headposeestimation.get_initial_w_h(face_cropped)
             head_pose_angles = headposeestimation.predict(face_cropped)
             print("Head pose angeles: ", head_pose_angles)
             print("End faciallheadposeestimationandmarks (computer_pointer.py)")
@@ -153,7 +165,7 @@ def main():
             log.info("Gaze results: ({})".format(str(gaze_result)))
 
             # mouse controller
-            mousecontroller = MouseController('high', 'fast')
+            mousecontroller = MouseController('medium', 'fast')
             mousecontroller.move(tmpX, tmpY)
 
     input_feed.close()
@@ -227,10 +239,10 @@ def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=False)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
+    parser.add_argument('--extension')
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default='demo_output.mp4')
-    parser.add_argument('--threshold', default=0.10)
+    parser.add_argument('--threshold', type=float, default=0.6)
     parser.add_argument("-fd_model", default='models/face-detection-retail-0004', required=False)
     parser.add_argument("-fl_model", default='models/landmarks-regression-retail-0009', required=False)
     parser.add_argument("-hp_model", default='models/head-pose-estimation-adas-0001', required=False)
