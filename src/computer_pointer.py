@@ -147,58 +147,62 @@ def main():
     #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     #out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
 
-    for batch in feed.next_batch():
-        if batch is None:
-            break
-        #cv2.imshow('Batch', batch)
-        # facedetection
-        print("Start facedetection (computer_pointer.py)")
-        print("Cap is feeded to the face detection!")
-        face_batch = batch.copy()
-        face_image, face_cropped, coords= facedetection.predict(face_batch)
-        if not coords:
-            print("No face detected")
-            continue
-        
-        #cv2.imshow('Face', face_image)
-        print("The video from the face detection is writen to the output path")
-        #out_video.write(face_image)
-        print("End facedetection (computer_pointer.py)")
+    try:
+        for batch in feed.next_batch():
+            if batch is None:
+                break
+            #cv2.imshow('Batch', batch)
+            # facedetection
+            print("Start facedetection (computer_pointer.py)")
+            print("Cap is feeded to the face detection!")
+            face_batch = batch.copy()
+            face_image, face_cropped, coords= facedetection.predict(face_batch)
+            if not coords:
+                print("No face detected")
+                continue
+            
+            #cv2.imshow('Face', face_image)
+            print("The video from the face detection is writen to the output path")
+            #out_video.write(face_image)
+            print("End facedetection (computer_pointer.py)")
 
-        # faciallandmark
-        if (face_cropped is None) or (len(face_cropped)==0):
-            print("No Face above threshold detected")
-        else:
-            print("Start faciallandmark (computer_pointer.py)")
-            print("The cropped face image is feeded to the faciallandmarks detection.")
-            #faciallandmarks.get_initial_w_h(face_cropped)
-            left_eye_image, right_eye_image = faciallandmarks.predict(face_cropped)
-            print("End faciallandmarks (computer_pointer.py)")
+            # faciallandmark
+            if (face_cropped is None) or (len(face_cropped)==0):
+                print("No Face above threshold detected")
+            else:
+                print("Start faciallandmark (computer_pointer.py)")
+                print("The cropped face image is feeded to the faciallandmarks detection.")
+                #faciallandmarks.get_initial_w_h(face_cropped)
+                left_eye_image, right_eye_image = faciallandmarks.predict(face_cropped)
+                print("End faciallandmarks (computer_pointer.py)")
 
-            # headposeestimation
-            print("Start headposeestimation (computer_pointer.py)")
-            print("The cropped face image is feeded to the headposeestimation.")
-            #headposeestimation.get_initial_w_h(face_cropped)
-            head_pose_angles = headposeestimation.predict(face_cropped)
-            print("Head pose angeles: ", head_pose_angles)
-            print("End faciallheadposeestimationandmarks (computer_pointer.py)")
+                # headposeestimation
+                print("Start headposeestimation (computer_pointer.py)")
+                print("The cropped face image is feeded to the headposeestimation.")
+                #headposeestimation.get_initial_w_h(face_cropped)
+                head_pose_angles = headposeestimation.predict(face_cropped)
+                print("Head pose angeles: ", head_pose_angles)
+                print("End faciallheadposeestimationandmarks (computer_pointer.py)")
 
-            # gazeestimation
-            print("Start gazeestimation (computer_pointer.py)")
-            # print ("Head pose angles", head_pose_angles)
-            # print ("Head pose left_eye_image", left_eye_image)
-            gaze_result, tmpX, tmpY, gaze_vector02 = gazeestimation.predict(left_eye_image, right_eye_image,
-                                                                            head_pose_angles)
-            print("End gazeestimation (computer_pointer.py)")
-            print(gaze_result)
-            log.info("Gaze results: ({})".format(str(gaze_result)))
+                # gazeestimation
+                print("Start gazeestimation (computer_pointer.py)")
+                # print ("Head pose angles", head_pose_angles)
+                # print ("Head pose left_eye_image", left_eye_image)
+                gaze_result, tmpX, tmpY, gaze_vector02 = gazeestimation.predict(left_eye_image, right_eye_image,
+                                                                                head_pose_angles)
+                print("End gazeestimation (computer_pointer.py)")
+                print(gaze_result)
+                log.info("Gaze results: ({})".format(str(gaze_result)))
 
-            # mouse controller
-            mousecontroller = MouseController('medium', 'fast')
-            mousecontroller.move(tmpX, tmpY)
+                # mouse controller
+                mousecontroller = MouseController('medium', 'fast')
+                mousecontroller.move(tmpX, tmpY)
 
-    input_feed.close()
-    cv2.destroyAllWindows()
+        input_feed.close()
+        cv2.destroyAllWindows()
+    except Exception as e:
+        print ("Could not run Inference: ", e)
+        log.error(e)
 
 
 def old():
