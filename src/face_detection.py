@@ -158,10 +158,10 @@ class Facedetection:
             print("--------")
             if len(not_supported_layers) != 0:
                 log.error("Following layers are not supported:", not_supported_layers)
-                print("You are not lucky, not all layers are supported")
+                #print("You are not lucky, not all layers are supported")
                 sys.exit(1)
         log.info("All layers are supported")
-        print("All layers are supported")
+        #print("All layers are supported")
 
     def predict(self, frame):
         # Starts predictions face_detection
@@ -303,10 +303,11 @@ def main():
     model_data, modellayers = inference.load_model()
     #print("Model data: ", model_data)
     #print("Model layers: ", modellayers)
+    
     # Time model needed to load
     total_model_load_time = time.time() - start_model_load_time  
     print("Load Model = OK")
-    print("Time to load model: " + str(total_model_load_time))
+    #print("Time to load model: " + str(total_model_load_time))
     print("--------")
     
     # Load data (video, cam or image)
