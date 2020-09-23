@@ -1,2 +1,0 @@
-INFO:root:Start computer_pointer.py
-ERROR:root:Could not initialise the network

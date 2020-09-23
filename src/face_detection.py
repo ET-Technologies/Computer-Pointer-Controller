@@ -182,7 +182,7 @@ class Facedetection:
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
         processed_image, frame_cropped, coords = self.preprocess_output(outputs, frame)
-        cv2.imwrite("cropped_image_02.png", frame_cropped)
+        cv2.imwrite("output/cropped_image_02.png", frame_cropped)
         print("End predictions face_detection")
         print("--------")
 
@@ -234,8 +234,8 @@ class Facedetection:
         print("--------")
         frame_cropped = frame.copy()
         frame_cropped = frame_cropped[self.ymin:(self.ymax + 1), self.xmin:(self.xmax + 1)]
-        cv2.imwrite("Face_cropped image.png", frame_cropped)
-        cv2.imwrite("Face_image.png", frame)
+        cv2.imwrite("output/Face_cropped image.png", frame_cropped)
+        cv2.imwrite("output/Face_image.png", frame)
         
         return frame, frame_cropped, coords
 
@@ -355,6 +355,6 @@ def build_argparser():
 
 # Start program
 if __name__ == '__main__':
-    log.basicConfig(filename="logging.txt", level=log.INFO)
+    log.basicConfig(filename="log/logging_facedetection.log", level=log.INFO)
     log.info("Start logging")
     main()

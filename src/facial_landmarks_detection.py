@@ -1,421 +1,194 @@
 '''
-Udacity Workspace
-source /opt/intel/openvino/bin/setupvars.sh
-cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
-Model Downloader python3 downloader.py --name landmarks-regression-retail-0009 --precisions FP32 -o /home/workspace
-
-python3 facial_landmarks_detection.py --model models/landmarks-regression-retail-0009 --device CPU --video demo.mp4 --output_path demo_output.mp4 --inputtype video
+This is a sample class for a model. You may choose to use it as-is or make any changes to it.
+This has been provided just to give you an idea of how to structure your model class.
 '''
-
-'''
-Rapberry Pi
-python3 facial_landmarks_detection.py \
---model /home/pi/Udacity/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
---device MYRIAD \
---video /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4 \
---output_path demo_output.mp4 \
---version 2020 \
---inputtype cam
-
-Rapberry Pi
-python3 facial_landmarks_detection.py \
---model /home/pi/Udacity/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
---device MYRIAD \
---video /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4 \
---output_path demo_output.mp4 \
---version 2020 \
---inputtype image
-
-
-'''
-
-import numpy as np
-import time
-import os
 import cv2
-import argparse
-import sys
-from openvino.inference_engine import IENetwork, IECore
-from input_feeder import InputFeeder
-import face_detection as fd
-import logging as log
+import numpy as np
+from openvino.inference_engine import IECore
+
 
 class Facial_Landmarks:
-
-    # Load all relevant variables into the class
-    def __init__(self, model_name, threshold, device, extension, version):
+    '''
+    Class for the Face Detection Model.
+    '''
+    #(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
+    def __init__(self, model_name, threshold, device, extensions, version):
+        '''
+        TODO: Use this to set your instance variables.
+        '''
+        self.model_name = model_name
+        self.device = device
+        self.extensions = extensions
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
-        self.extension = extension
-        self.device = device
-        self.threshold = threshold
-        self.version = version
-        
-        print("--------")
-        print("START Facial_Landmarks")
-        print (self.model_weights)
-        print ('device ', device)
-        print("--------")
-
-    
-    def load_model(self):
-        # Loads the model
-
-        # Initialise the network and save it in the self.model variables
-        try:
-            self.core = IECore()
-            self.network = IENetwork(self.model_structure, self.model_weights)
-            # self.network = core.read_network(self.model_structure, self.model_weights) # new openvino version
-            self.input_name = next(iter(self.network.inputs))
-        except Exception as e:
-            log.error("Could not initialise the network")
-            raise ValueError("Could not initialise the network")
-        print("--------")
-        print("Model is loaded as self.model: " + str(self.network))
-        print (self.extension)
-
-        # Add extension
-        if self.extension and "CPU" in self.device:
-            log.info("Add extension: ({})".format(str(self.extension)))
-            self.core.add_extension(self.extension, self.device)
-            print ("Load extension")
-        
-        # Check supported layers
-        self.check_model()
-        # Load the network into an executable network
-        self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
-        #log.info("Exec_network is loaded as:" + str(self.exec_network))
-        #print("Exec_network is loaded as:" + str(self.exec_network))
-        #print("--------")
-
-        model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
-        modellayers = self.getmodellayers()
-
-        return model_data, modellayers
-
-    def getmodellayers(self):
-        # Get all necessary model values. 
+        self.plugin = IECore()
+        ## check if read model without problem
+        self.check_model(self.model_structure, self.model_weights)
+        self.exec_net = None
         self.input_name = next(iter(self.network.inputs))
-        self.output_name = next(iter(self.network .outputs))
-
-        # Gets all input_names. Just for information.
-        self.input_name_all = [i for i in self.network.inputs.keys()]
-        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
-        self.input_name_first_entry = self.input_name_all[0]
-        
-        self.input_shape = self.network .inputs[self.input_name].shape
-        
-        self.output_name_type = self.network .outputs[self.output_name]
-        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
-        self.output_names_total_entries = len(self.output_names)
-
-        self.output_shape = self.network .outputs[self.output_name].shape
-        self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
-        modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
-            self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
-
-        return modellayers
-
-    def check_model(self):
-        # Check for supported layers
-        log.info("Checking for unsupported layers")
-        if "CPU" in self.device:
-            supported_layers = self.core.query_network(self.network, "CPU")
-            print("--------")
-            print("Check for supported layers")
-            #print("supported_layers: " + str(supported_layers))
-            not_supported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]          
-            if len(not_supported_layers) != 0:
-                log.error("Following layers are not supported:", not_supported_layers)
-                print("You are not lucky, not all layers are supported")
-                sys.exit(1)
-        log.info("All layers are supported")
-        print("All layers are supported")
-        print("--------")
-
-    # Start inference and prediction
-    def predict(self, face_cropped):
-
-        print("--------")
-        print("Start predictions Facial_Landmarks")
-        
-        # Pre-process the image
-        preprocessed_image = self.preprocess_input(face_cropped)
-        
-        # Starts synchronous inference
-        print("Start syncro inference")
-        log.info("Start syncro inference")
-       
-        outputs = self.exec_network.infer({self.input_name:preprocessed_image})
-        print("Output of the inference request: " + str(outputs))
-        
-        requestid = 0
-        outputs = self.exec_network.requests[requestid].outputs[self.output_name]
-        print("Output of the inference request (self.output_name): " + str(outputs))
-        #landmark_results = self.landmark_detection(outputs, frame)
-        
-        left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.landmark_detection(outputs, face_cropped)
-        print("End predictions")
-        print("--------")
-        return left_eye_frame_cropped, right_eye_frame_cropped
-
-    def preprocess_input(self, frame):
-        # In this function the original image is resized, transposed and reshaped to fit the model requirements.
-        print("--------")
-        print("Start: preprocess image")
-        log.info("Start: preprocess image face")
-        n, c, h, w = (self.core, self.input_shape)[1]
-        preprocessed_image = cv2.resize(frame, (w, h))
-        preprocessed_image = preprocessed_image.transpose((2, 0, 1))
-        preprocessed_image = preprocessed_image.reshape((n, c, h, w))
-        print("The input shape from the facial landmarks is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
-        print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
-        print("End: preprocess image")
-        print("--------")
-
-        return preprocessed_image
-
-    def landmark_detection(self, outputs, frame):
-        print("--------")
-        print("Start: landmark_detection")
-        result_len = len(outputs)
-        print("total number of entries: " + str(result_len))
-        self.initial_w = frame.shape[1]
-        self.initial_h = frame.shape[0]
-        coords = []
-        for obj in outputs[0]:
-            obj= obj[0]
-            c = obj[0]
-            #print("Coordinaten: " + str(c))
-            coords.append(c)
-        print("Coords: " + str(coords))
-
-        self.left_eye_coordinates_x = int(coords[0]*self.initial_w)
-        self.left_eye_coordinates_y = int(coords[1]*self.initial_h)
-        self.right_eye_coordinates_x = int(coords[2]*self.initial_w)
-        self.right_eye_coordinates_y = int(coords[3]*self.initial_h)
-
-        print ("initial_w: ", self.initial_w)
-        print("left_eye_coordinates_x: " + str(self.left_eye_coordinates_x))
-        print("left_eye_coordinates_y: " + str(self.left_eye_coordinates_y))
-
-        #### Not necessary for gaze estimation 
-        self.nose_coordinates_x = int(coords[4] * self.initial_w)
-        self.nose_coordinates_y = int(coords[5] * self.initial_h)
-
-        self.left_mouth_coordinates_x = int(coords[6] * self.initial_w)
-        self.left_mouth_coordinates_y = int(coords[7] * self.initial_h)
-
-        self.right_mouth_coordinates_x = int(coords[8] * self.initial_w)
-        self.right_mouth_coordinates_y = int(coords[9] * self.initial_h)
-        ####
-        
-        # left eye
-        self.left_eye_x_min = self.left_eye_coordinates_x-30
-        self.left_eye_x_max = self.left_eye_coordinates_x+30
-        self.left_eye_y_min = self.left_eye_coordinates_y-30
-        self.left_eye_y_max = self.left_eye_coordinates_y+30
-
-        # right eye 
-        self.right_eye_x_min = self.right_eye_coordinates_x-30
-        self.right_eye_x_max = self.right_eye_coordinates_x+30
-        self.right_eye_y_min = self.right_eye_coordinates_y-30
-        self.right_eye_y_max = self.right_eye_coordinates_y+30
-        
-        print("Rectangle coordinates: ({}) + ({}) + ({}) + ({})".format(str(self.left_eye_x_min),str(self.left_eye_x_max), str(self.left_eye_y_min), str(self.left_eye_y_max)))
-        #log.info("Add extension: ({})".format(str(CPU_EXTENSION)))
-        left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped = self.draw_landmarks(frame)
-
-        return left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped
-
-    def draw_landmarks(self, frame):
-        print("--------")
-        print("Start: draw_landmarks")
-        
-        self.frame_original = frame.copy()
-        left_eye_image = frame.copy()
-        right_eye_image = frame.copy()
-
-        center_left_eye = (self.left_eye_coordinates_x, self.left_eye_coordinates_y)
-        center_right_eye = (self.right_eye_coordinates_x, self.right_eye_coordinates_y)
-        center_nose= (self.nose_coordinates_x, self.nose_coordinates_y)
-        left_mouth_coordinates = (self.left_mouth_coordinates_x, self.left_mouth_coordinates_y)
-        right_mouth_coordinates = (self.right_mouth_coordinates_x, self.right_mouth_coordinates_y)
-
-        #Draws circle around detected eye, nose and mouth
-        image = cv2.circle(frame, center_left_eye, 10, (255,0,0), 2)
-        image = cv2.circle(frame, center_right_eye, 10, (255, 0, 0), 2)
-        image = cv2.circle(frame, center_nose, 10, (255, 0, 0), 2)
-        image = cv2.circle(frame, left_mouth_coordinates, 10, (255, 0, 0), 2)
-        image = cv2.circle(frame, right_mouth_coordinates, 10, (255, 0, 0), 2)
-        self.image_path = ("landmark_image.png")
-        cv2.imwrite(self.image_path, image)
-        
-        #Draws rectangle around eyes
-        left_eye = cv2.rectangle(left_eye_image, (self.left_eye_x_min, self.left_eye_y_min), (self.left_eye_x_max, self.left_eye_y_max), (255,0,0), 2)
-        right_eye = cv2.rectangle(right_eye_image, (self.right_eye_x_min, self.right_eye_y_min), (self.right_eye_x_max, self.right_eye_y_max), (255,0,0), 2)
-        self.left_eye_image_rectangle_path = ("left_eye_image.png")
-        self.right_eye_image_rectangle_path = ("right_eye_image.png")
-        cv2.imwrite(self.left_eye_image_rectangle_path, left_eye)
-        cv2.imwrite(self.right_eye_image_rectangle_path, right_eye)
-        
-        left_eye_frame_cropped, right_eye_frame_cropped = self.preprocess_output(self.frame_original)
-        
-        print("End: draw_landmarks")
-        print("--------")
-        return left_eye, right_eye, left_eye_frame_cropped, right_eye_frame_cropped
-    
-    def preprocess_output(self, frame):
-        # crop image to fit the next model
-        print("--------")
-        print("Start: preprocess_output")
-        print("Coordinates for cropped left eye are xmin x ymin x xmax x ymax: " + str(
-            self.left_eye_x_min) + " x " + str(self.left_eye_y_min) + " x " + str(self.left_eye_x_max) + " x " + str(self.left_eye_y_max))
-        print("Coordinates for cropped right eye are xmin x ymin x xmax x ymax: " + str(
-            self.right_eye_x_min) + " x " + str(self.right_eye_y_min) + " x " + str(self.right_eye_x_max) + " x " + str(self.right_eye_y_max))
-        left_eye_frame_cropped = None
-        right_eye_frame_cropped = None
-
-        left_eye_frame_cropped = frame[self.left_eye_y_min:(self.left_eye_y_max + 1), self.left_eye_x_min:(self.left_eye_x_max + 1)]
-        right_eye_frame_cropped = frame[self.right_eye_y_min:(self.right_eye_y_max + 1), self.right_eye_x_min:(self.right_eye_x_max + 1)]
-
-        # reshape image for gaze estimation
-        w = left_eye_frame_cropped.shape[1]
-        h = left_eye_frame_cropped.shape[0]
-        c = left_eye_frame_cropped.shape[2]
-        print ('left eye: w, h, c' ,w, h, c)
-        w = right_eye_frame_cropped.shape[1]
-        h = right_eye_frame_cropped.shape[0]
-        c = right_eye_frame_cropped.shape[2]
-        
-        print ('right eye: w, h, c' ,w, h, c)
-        print ("Reshape image")
-        left_eye_frame_cropped = cv2.resize(left_eye_frame_cropped, (60, 60))
-        left_eye_frame_cropped = left_eye_frame_cropped.transpose((2, 0, 1))
-        left_eye_frame_cropped = left_eye_frame_cropped.reshape((1, 2, 60, 60))
-
-        cv2.imwrite("left_eye_frame_cropped.png", left_eye_frame_cropped)
-        cv2.imwrite("right_eye_frame_cropped.png", right_eye_frame_cropped)
-        print("--------")
-        print("End: preprocess_output")
-        return left_eye_frame_cropped, right_eye_frame_cropped
-
-    def load_data(self, input_type, input_file):
-
-        print ("Start load_data from InputFeeder")
-        if input_type=='video':
-            cap=cv2.VideoCapture(input_file)
-            print ("Input = video")
-            log.info("Input = video")
-        elif input_type=='cam':
-            cap=cv2.VideoCapture(0)
-            print ("Input = cam")
-            log.info("Input = cam")
-        else:
-            cap=cv2.imread(input_file)
-            print ("Input = image")
-            log.info("Input = image")
-
-    def start(self, frame, inputtype):
-          # Start predictions
-        if inputtype == 'video' or 'cam':
-            try:
-                while cap.isOpened():
-                    ret, frame = cap.read()
-                    if not ret:
-                        break
-                    frame = self.predict(frame)
-                    cap.release()
-            except Exception as e:
-                print("Could not run Inference: ", e)
-
-        if inputtype == 'image':
-            print("Image")
-            #image = '/home/pi/KeyBox/face_test.jpg'
-            #frame=cv2.imread(image)
-            frame = self.predict(frame)
-            path = '/home/pi/KeyBox/Face_cropped image.png'
-            image = cv2.imread(path)
-            cv2.imshow("test", image)
-            cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        self.input_shape = self.network.inputs[self.input_name].shape
+        self.output_names = next(iter(self.network.outputs))
+        self.output_shape = self.network.outputs[self.output_names].shape
 
 
-def main():
-    args = build_argparser().parse_args()
-    model_name = args.model
-    device = args.device
-    extension = args.extension
-    video = args.video
-    video = ("cropped_image.png")
-    #video = ("face_full_image.png")
-    output_path = args.output_path
-    threshold = args.threshold
-    inputtype = args.inputtype
-    version = args.version
+## check supported layer and performence counts reference: 
+# https://gist.github.com/justinshenk/9917891c0433f33967f6e8cd8fcaa49a
+    def load_model(self):
+        '''
+        TODO: You will need to complete this method.
+        This method is for loading the model to the device specified by the user.
+        If your model requires any Plugins, this is where you can load them.
+        '''
+        supported_layers = self.plugin.query_network(network=self.network, device_name=self.device)
+        layers_unsupported = [ul for ul in self.network.layers.keys() if ul not in supported_layers]
 
-    # Load class Facial_Landmarks
-    inference = Facial_Landmarks(model_name, threshold, device, extension, version)
-    print("Load class Facial_Landmarks = OK")
-    print("--------")
 
-    # Loads the model
-    # Time to load the model (Start)
-    start_model_load_time = time.time()  
-    model_data, modellayers = inference.load_model()
-    # Time model needed to load
-    total_model_load_time = time.time() - start_model_load_time  
-    print("Load Model = OK")
-    print("Time to load model: " + str(total_model_load_time))
-    print("--------")
-    
-    # Load data (video, cam or image)
-    cap = inference.load_data(inputtype, video)
-
-    #  Start predictions
-
-    if inputtype == 'video' or 'cam':
-        try:
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if not ret:
-                    break
-                frame = inference.predict(frame)
-            cap.release()
-                
-        except Exception as e:
-            print("Could not run Inference: ", e)
+        if len(layers_unsupported)!=0 and self.device=='CPU':
+            print("unsupported layers found: {}".format(layers_unsupported))
             
-    if inputtype == 'image':
-        print("Image")
-        frame=cv2.imread(video)
-        frame = inference.predict(frame)
-        path = '/home/pi/Udacity/Computer-Pointer-Controller-master/src/landmark_image.png'
-        #path = '/home/pi/Udacity/Computer-Pointer-Controller-master/src/landmark_image.png'
-        image = cv2.imread(path)
-        cv2.imshow("test", image)
-        cv2.waitKey(0) 
+            if self.extensions!=None:
+                print("Adding cpu_extension now")
+                self.plugin.add_extension(self.extensions, self.device)
+                supported_layers = self.plugin.query_network(network=self.network, device_name=self.device)
+                layers_unsupported = [ul for ul in self.network.layers.keys() if ul not in supported_layers]
+                
+                if len(layers_unsupported)!=0:
+                    print("Please try again! unsupported layers found after adding the extensions.  device {}:\n{}".format(self.device, ', '.join(layers_unsupported)))
+                    print("Please try to specify cpu extensions library path in sample's command line parameters using -l "
+                      "or --cpu_extension command line argument")
+                    exit(1)
+                print("Problem is resolved after adding the extension!")
+                
+            else:
+                print("Please give the right path of cpu extension!")
+                exit(1)
 
-    cv2.destroyAllWindows()
-    
-def build_argparser():
-    # Collect all the necessary input values
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model', required=True)
-    parser.add_argument('--device')
-    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
-    parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default='results/')
-    parser.add_argument('--threshold', default=0.60)
-    parser.add_argument('--inputtype', default='video')
-    parser.add_argument('--version', default='2020')
-
-    return parser
+        self.exec_net = self.plugin.load_network(network=self.network, device_name=self.device, num_requests=1)
 
 
-if __name__ == '__main__':
-    # Start program
-    log.basicConfig(filename="logging_landmarks.txt", level=log.INFO)
-    log.info("Start logging")
-    main()
+    def predict(self, image):
+        '''
+        TODO: You will need to complete this method.
+        This method is meant for running predictions on the input image.
+        '''
+        processed_input = self.preprocess_input(image.copy())
+        outputs = self.exec_net.infer({self.input_name:processed_input})
+
+        #if perf_flag:
+        #    self.performance()
+
+        coords = self.preprocess_output(outputs)
+
+        # print(image.shape)
+        h, w = image.shape[0], image.shape[1]
+
+        coords = coords* np.array([w, h, w, h])
+        # print(coords) # [ 39.50625494 130.00975445 146.11010522 126.54997483]        
+        coords = coords.astype(np.int32) #(lefteye_x, lefteye_y, righteye_x, righteye_y)
+        # print(coords) # [ 39 130 146 126]
+
+        ## left eye moving range
+        leye_xmin, leye_ymin=coords[0]-20, coords[1]-20
+        leye_xmax, leye_ymax=coords[0]+20, coords[1]+20
+        ## right eye moving range
+        reye_xmin, reye_ymin=coords[2]-20, coords[3]-20
+        reye_xmax, reye_ymax=coords[2]+20, coords[3]+20
+
+        ## draw left and right eye
+        # cv2.rectangle(image,(leye_xmin,leye_ymin),(leye_xmax,leye_ymax),(0,255,0), 1)        
+        # cv2.rectangle(image,(reye_xmin,reye_ymin),(reye_xmax,reye_ymax),(0,255,0), 1)
+        # cv2.imshow("Left Right Eyes",image)
+
+        ## leye_ymin:leye_ymax, leye_xmin:leye_xmax --> left eye heigh, width
+        left_eye_box = image[leye_ymin:leye_ymax, leye_xmin:leye_xmax]
+        ## reye_ymin:reye_ymax, reye_xmin:reye_xmax --> right eye heigh, width
+        right_eye_box = image[reye_ymin:reye_ymax, reye_xmin:reye_xmax]
+        # print(left_eye_box.shape, right_eye_box.shape) # left eye and right eye image
+
+        ## [left eye box, right eye box] 
+        eyes_coords = [[leye_xmin,leye_ymin,leye_xmax,leye_ymax], [reye_xmin,reye_ymin,reye_xmax,reye_ymax]]
+
+        return left_eye_box, right_eye_box #, eyes_coords
+
+
+    def check_model(self, model_structure, model_weights):
+        # raise NotImplementedError
+        try:
+            # Reads a network from the IR files and creates an IENetwork, load IR files into their related class, architecture with XML and weights with binary file
+            self.network = self.plugin.read_network(model=model_structure, weights=model_weights)
+        except Exception as e:
+            raise ValueError("Error occurred during facial_landmarks_detection network initialization.")
+
+
+## check supported layer and performence counts reference: 
+# https://gist.github.com/justinshenk/9917891c0433f33967f6e8cd8fcaa49a
+    def performance(self):
+        perf_counts = self.exec_net.requests[0].get_perf_counts()
+        # print('\n', perf_counts)
+        print("\n## Facial landmarks detection model performance:")
+        print("{:<70} {:<15} {:<15} {:<15} {:<10}".format('name', 'layer_type', 'exet_type', 'status', 'real_time, us'))
+
+        for layer, stats in perf_counts.items():            
+            print("{:<70} {:<15} {:<15} {:<15} {:<10}".format(layer, stats['layer_type'], stats['exec_type'], 
+                                                              stats['status'], stats['real_time']))
+
+
+    def preprocess_input(self, image):
+        '''
+        Before feeding the data into the model for inference,
+        you might have to preprocess it. This function is where you can do that.
+        '''
+        # print(image.shape)
+        # print(image[2][1])
+        # cv2.imshow('image',image)
+        ## convert RGB to BGR 
+        image_cvt = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # print(image_cvt.shape) # (374, 238, 3)
+        # cv2.imshow('cvt',image_cvt)
+        # print('====',image_cvt[2][1])
+        # print(self.input_shape) # [1, 3, 48, 48]
+        H, W = self.input_shape[2], self.input_shape[3]
+        # print(H, W) # (48, 48)
+
+        image_resized = cv2.resize(image_cvt, (W, H))
+        # print(image_resized.shape) # (48, 48, 3)
+        ## (optional)
+        # image_processed = np.transpose(np.expand_dims(image_resized, axis=0), (0,3,1,2))
+        image = image_resized.transpose((2,0,1))
+        # print(image.shape) # (3, 48, 48)
+        # add 1 dim at very start, then channels then H, W
+        image_processed = image.reshape(1, 3, self.input_shape[2], self.input_shape[3])
+        # print(image_processed.shape) # (1, 3, 48, 48)
+
+        return image_processed
+
+
+    def preprocess_output(self, outputs):
+        '''
+        Before feeding the output of this model to the next model,
+        you might have to preprocess the output. This function is where you can do that.
+
+        The net outputs a blob with the shape: [1, 10], containing a row-vector of 10 floating point values 
+        for five landmarks coordinates in the form (x0, y0, x1, y1, ..., x5, y5). 
+        All the coordinates are normalized to be in range [0,1].
+        '''
+        # print(output)
+        # print(outputs[self.output_names].shape) # (1, 10, 1, 1)
+        # print(outputs[self.output_names][0].shape) # (10, 1, 1)
+        # print(outputs[self.output_names][0])        
+        # print('-----', outputs[self.output_names][0][0])
+
+        ## here only need left eye and right eye
+        outs = outputs[self.output_names][0]
+        # print(outs.shape)
+        # print(outs[0][0][0])
+        # print(outs[0].tolist()) # [[0.37333157658576965]]
+        # print(outs[0].tolist()[0][0]) # [[0.37333157658576965]]        
+        # print(type(outs)) # numpy.ndarry
+
+        leye_x, leye_y = outs[0][0][0], outs[1][0][0]
+        reye_x, reye_y = outs[2][0][0], outs[3][0][0]
+        coords_lr = (leye_x, leye_y, reye_x, reye_y)
+        # print(coords_lr)
+
+        return coords_lr
