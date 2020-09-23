@@ -1,51 +1,21 @@
 '''
-Udacity Workspace
-Model Downloader python3 downloader.py --name face-detection-retail-0004 --precisions FP32 -o /home/workspace
-python3 computer_pointer.py --video demo.mp4 --input_type video --output_path demo_output.mp4
-'''
-
-'''
-Raspberry
-python3 computer_pointer.py \
--fd_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001 \
--fl_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
--hp_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
--ga_model /home/pi/Udacity/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
---video /home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4 \
---input_type video \
---output_path output/demo_output.mp4 \
---threshold 0.4 \
---device MYRIAD \
---version 2020
-
-/home/pi/Udacity/Computer-Pointer-Controller-master/bin/demo.mp4
-'''
-
-'''
 Linux
 source /opt/intel/openvino/bin/setupvars.sh
 
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
 --output_path output/demo_output.mp4 \
--fd_model models/2020.4.1/FP32-INT1/face-detection-adas-binary-0001 \
--fl_model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
--hp_model models/2020.4.1/FP16-INT8/head-pose-estimation-adas-0001 \
--ga_model models/2020.4.1/FP16-INT8/gaze-estimation-adas-0002 \
+--fd_model models/2020.4.1/FP32-INT1/face-detection-adas-binary-0001 \
+--fl_model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
+--hp_model models/2020.4.1/FP16-INT8/head-pose-estimation-adas-0001 \
+--ga_model models/2020.4.1/FP16-INT8/gaze-estimation-adas-0002 \
 --threshold 0.4 \
 --input_type video \
 --device CPU \
 --version 2020
-/home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP32/face-detection-adas-binary-0001
 
-python3 computer_pointer.py \
---video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
---output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
--fd_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-adas-0001 \
--fl_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/landmarks-regression-retail-0009 \
--hp_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/head-pose-estimation-adas-0001 \
--ga_model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/gaze-estimation-adas-0002 \
---version 2020
+Raspberry
+-- device MYRIAD
 '''
 
 import time
@@ -214,14 +184,14 @@ def main():
 def build_argparser():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-fd_model", default='models/face-detection-retail-0004', required=False)
-    parser.add_argument("-fl_model", default='models/landmarks-regression-retail-0009', required=False)
-    parser.add_argument("-hp_model", default='models/head-pose-estimation-adas-0001', required=False)
-    parser.add_argument("-ga_model", default='models/gaze-estimation-adas-0002', required=False)
+    parser.add_argument("--fd_model", required=True)
+    parser.add_argument("--fl_model", required=True)
+    parser.add_argument("--hp_model", required=True)
+    parser.add_argument("--ga_model", required=True)
     parser.add_argument('--device', default = 'CPU')
     parser.add_argument('--extension', default= None)
     parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default='demo_output.mp4')
+    parser.add_argument('--output_path', required=False)
     parser.add_argument('--threshold', type=float, default=0.6)
     parser.add_argument('--input_type', required=False)
     parser.add_argument('--version', default='2020', required=False)

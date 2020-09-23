@@ -1,20 +1,16 @@
-# source /opt/intel/openvino/bin/setupvars.sh
-# cd /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src
-# python3 head_pose_estimation.py --model /home/thomas/PycharmProjects/models/head-pose-estimation-adas-0001 --video demo.mp4
-
-#intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
-
 '''
-# Udacity Workspace
-# source /opt/intel/openvino/bin/setupvars.sh
-# cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
-# Model Downloader python3 downloader.py --name gaze-estimation-adas-0002 --precisions FP32 -o /home/workspace
-# python3 gaze_estimation.py --model models/gaze-estimation-adas-0002 --video demo.mp4
-'''
+Linux:
+source /opt/intel/openvino/bin/setupvars.sh
 
-'''
-Windows
-python3 gaze_estimation.py
+python3 src/gaze_estimation.py \
+--model models/2020.4.1/FP16/gaze-estimation-adas-0002 \
+--device CPU \
+--extension None \
+--video bin/demo.mp4 \
+--output_path output/demo_output.mp4 \
+--threshold 0.6 \
+--input_type video \
+--version 2020
 '''
 import numpy as np
 import os
@@ -268,16 +264,16 @@ class Gaze_Estimation:
 
 def build_argparser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', default='./models/gaze-estimation-adas-0002')
+    parser.add_argument('--model', default=None, required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
-    parser.add_argument('--video', default='demo.mp4')
+    parser.add_argument('--extension', default=None)
+    parser.add_argument('--video', default='video')
     parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype', default='video')
-    parser.add_argument('--left_eye_image', default='left_eye_frame_cropped.png')
-    parser.add_argument('--right_eye_image', default='right_eye_frame_cropped.png')
-    parser.add_argument('--head_pose_angles', default = None)
+    #parser.add_argument('--left_eye_image', default=None)
+    #parser.add_argument('--right_eye_image', default='right_eye_frame_cropped.png')
+    #parser.add_argument('--head_pose_angles', default = None)
     return parser
 
 def main():

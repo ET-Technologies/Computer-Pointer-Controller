@@ -1,65 +1,16 @@
 '''
-Udacity Workspace
-Video:
-python3 face_detection_v1.py \
---model models/face-detection-retail-0004 \
---extension /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so \
---video demo.mp4 \
---output_path demo_output.mp4 \
---inputtype video
-
-Image:
-python3 face_detection_v1.py \
---model models/face-detection-retail-0004 \
---extension /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so \
---video face.png \
---output_path demo_output.mp4
-'''
-
-'''
 Linux:
 source /opt/intel/openvino/bin/setupvars.sh
 
-Webcam:
-
-python3 face_detection.py --model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
---video /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo.mp4 \
---output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
---inputtype cam \
+python3 src/computer_pointer.py \
+--model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
+--device CPU \
+--extension None \
+--video bin/demo.mp4 \
+--output_path output/demo_output.mp4 \
+--threshold 0.6 \
+--input_type video \
 --version 2020
-
-Video:
-python3 face_detection_v1.py --model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
---video demo.mp4 \
---output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/demo_output.mp4 \
---inputtype video \
---version 2019
-
-Image:
-python3 face_detection_v1.py --model /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/models/face-detection-retail-0004 \
---video face.jpg \
---output_path /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src/face.jpg \
---version 2019
-'''
-'''
-Raspberry
-python3 face_detection.py  \
---model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001  \
---device MYRIAD \
---extension None \
---video /home/pi/Udacity/Computer-Pointer-Controller-master/src/demo.mp4 \
---output_path ./output/demo_output.mp4 \
---inputtype video \
---version 2019
-
-python3 face_detection.py  \
---model /home/pi/Udacity/Computer-Pointer-Controller-master/models/face-detection-adas-0001  \
---device MYRIAD \
---extension None \
---video /home/pi/KeyBox/face_test.jpeg \
---output_path ./output/demo_output.mp4 \
---inputtype image \
---version 2019
 '''
 
 import numpy as np
@@ -93,7 +44,7 @@ class Facedetection:
         # Initialise the network and save it in the self.network variables
         try:
             self.core = IECore()
-            #self.network = self.core.read_network(model=self.model_structure, weights=self.model_weights) #new version
+            #self.network = self.core.read_network(self.model_structure, self.model_weights) #new version
             self.network = IENetwork(model=self.model_structure, weights=self.model_weights)
             #log.info("Model is loaded as: ", self.network)
             self.input_name = next(iter(self.network.inputs))
@@ -131,13 +82,13 @@ class Facedetection:
         self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
         self.input_name_first_entry = self.input_name_all[0]
         
-        self.input_shape = self.network .inputs[self.input_name].shape
+        self.input_shape = self.network.inputs[self.input_name].shape
         
-        self.output_name_type = self.network .outputs[self.output_name]
+        self.output_name_type = self.network.outputs[self.output_name]
         self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
         self.output_names_total_entries = len(self.output_names)
 
-        self.output_shape = self.network .outputs[self.output_name].shape
+        self.output_shape = self.network.outputs[self.output_name].shape
         self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
         #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
         modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
@@ -208,6 +159,7 @@ class Facedetection:
     def preprocess_output(self, outputs, frame):
         
         coords = []
+        coords_02 = []
         print("--------")
         print("Start: preprocess_output")
         print("Bounding box input: " + str(outputs))
@@ -223,11 +175,14 @@ class Facedetection:
                 obj[6] = int(obj[6] * self.initial_h)
                 coords.append([obj[3], obj[4], obj[5], obj[6]])
                 cv2.rectangle(frame, (obj[3], obj[4]), (obj[5], obj[6]), (0, 55, 255), 1)
+                cv2.rectangle(frame, ((obj[3] + 10), (obj[4]+10)), ((obj[5]+10), (obj[6])+10), (0, 55, 255), 2)
                 print("Bounding box output coordinates of frame: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
                 self.xmin = int(obj[3])
                 self.ymin = int(obj[4])
                 self.xmax = int(obj[5])
                 self.ymax = int(obj[6])
+                coords_02.append([self.xmin, self.ymin, self.xmax, self.ymax])
+                print("Bounding box output coordinates of frame: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
                 
 
         print("End: boundingbox")
@@ -341,13 +296,13 @@ def main():
 
 def build_argparser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model')
+    parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension')
+    parser.add_argument('--extension', default=None)
     parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path')
+    parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
-    parser.add_argument('--inputtype')
+    parser.add_argument('--input_type', default=video)
     parser.add_argument('--version', default='2020')
 
     return parser

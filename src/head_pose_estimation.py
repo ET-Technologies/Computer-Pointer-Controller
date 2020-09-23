@@ -1,13 +1,16 @@
-# source /opt/intel/openvino/bin/setupvars.sh
-# cd /home/thomas/PycharmProjects/Intel/Computer-Pointer-Controller-master/src
-# python3 head_pose_estimation.py --model /home/thomas/PycharmProjects/models/head-pose-estimation-adas-0001 --video demo.mp4
-
-#intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
 '''
-Udacity Workspace
-cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader
-Model Downloader python3 downloader.py --name head-pose-estimation-adas-0001 --precisions FP32 -o /home/workspace
-python3 head_pose_estimation.py --model models/head-pose-estimation-adas-0001 --video demo.mp4
+Linux:
+source /opt/intel/openvino/bin/setupvars.sh
+
+python3 src/head_pose_estimation.py \
+--model models/2020.4.1/FP16/head-pose-estimation-adas-0001 \
+--device CPU \
+--extension None \
+--video bin/demo.mp4 \
+--output_path output/demo_output.mp4 \
+--threshold 0.6 \
+--input_type video \
+--version 2020
 '''
 import numpy as np
 import time
@@ -252,7 +255,7 @@ def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True)
     parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default='/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so')
+    parser.add_argument('--extension', default=None)
     parser.add_argument('--video', default=None)
     parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
