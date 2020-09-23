@@ -59,9 +59,9 @@ class Head_Pose_Estimation:
         self.check_model()
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
-        log.info("Exec_network is loaded as:" + str(self.exec_network))
-        print("Exec_network is loaded as:" + str(self.exec_network))
-        print("--------")
+        #log.info("Exec_network is loaded as:" + str(self.exec_network))
+        #print("Exec_network is loaded as:" + str(self.exec_network))
+        #print("--------")
 
         model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
         modellayers = self.getmodellayers()

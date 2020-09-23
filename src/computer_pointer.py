@@ -25,13 +25,13 @@ python3 computer_pointer.py \
 Linux
 source /opt/intel/openvino/bin/setupvars.sh
 
-python3 computer_pointer.py \
---video /home/thomas/Github/Computer-Pointer-Controller-master/bin/demo.mp4 \
---output_path /home/thomas/Github/Computer-Pointer-Controller-master/bin/demo.mp4/demo_output.mp4 \
--fd_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP32/face-detection-adas-binary-0001 \
--fl_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/landmarks-regression-retail-0009 \
--hp_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/head-pose-estimation-adas-0001 \
--ga_model /home/thomas/Github/Computer-Pointer-Controller-master/models/2020.4.1/FP16/gaze-estimation-adas-0002 \
+python3 src/computer_pointer.py \
+--video bin/demo.mp4 \
+--output_path bin/demo.mp4/demo_output.mp4 \
+-fd_model models/2020.4.1/FP32-INT1/face-detection-adas-binary-0001 \
+-fl_model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
+-hp_model models/2020.4.1/FP16-INT8/head-pose-estimation-adas-0001 \
+-ga_model models/2020.4.1/FP16-INT8/gaze-estimation-adas-0002 \
 --threshold 0.4 \
 --input_type video \
 --device CPU \
@@ -98,7 +98,7 @@ def main():
     print("--------")
     total_model_load_time_face = (time.time() - start_load_time_face)*1000
     log.info('Facedetection load time: ' + str(round(total_model_load_time_face, 3)))
-    print('Facedetection load time: ', str(total_model_load_time_face))
+    #print('Facedetection load time: ', str(total_model_load_time_face))
     
     # Load facial landmark
     faciallandmarks = Facial_Landmarks(model_name=args.fl_model, threshold=args.threshold, device=args.device, extension=args.extension, version=args.version)
@@ -131,8 +131,10 @@ def main():
     print("Load model gaze_estimation = Finished")
     print("--------")
     total_model_load_time_gaze = (time.time() - start_load_time_gaze)*1000
+    total_model_load_time = (time.time() - start_load_time_face)*1000
+    
     log.info('Gaze load time: ' + str(round(total_model_load_time_gaze, 3)))
-
+    log.info('Total model load time: ' + str(round(total_model_load_time, 3)))
     log.info('All models are loaded!')
     
     ##############
@@ -151,6 +153,7 @@ def main():
         for batch in feed.next_batch():
             if batch is None:
                 break
+            #wait = cv2.waitKey(60)
             #cv2.imshow('Batch', batch)
             # facedetection
             print("Start facedetection (computer_pointer.py)")
@@ -193,7 +196,8 @@ def main():
                 print("End gazeestimation (computer_pointer.py)")
                 print(gaze_result)
                 log.info("Gaze results: ({})".format(str(gaze_result)))
-
+                cv2.imshow('Test', face_cropped)
+                cv2.waitKey(28)
                 # mouse controller
                 mousecontroller = MouseController('medium', 'fast')
                 mousecontroller.move(tmpX, tmpY)

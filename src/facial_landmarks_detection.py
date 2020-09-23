@@ -84,9 +84,9 @@ class Facial_Landmarks:
         self.check_model()
         # Load the network into an executable network
         self.exec_network = self.core.load_network(network=self.network, device_name=self.device, num_requests=1)
-        log.info("Exec_network is loaded as:" + str(self.exec_network))
-        print("Exec_network is loaded as:" + str(self.exec_network))
-        print("--------")
+        #log.info("Exec_network is loaded as:" + str(self.exec_network))
+        #print("Exec_network is loaded as:" + str(self.exec_network))
+        #print("--------")
 
         model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
         modellayers = self.getmodellayers()
@@ -187,7 +187,7 @@ class Facial_Landmarks:
         for obj in outputs[0]:
             obj= obj[0]
             c = obj[0]
-            print("Coordinaten: " + str(c))
+            #print("Coordinaten: " + str(c))
             coords.append(c)
         print("Coords: " + str(coords))
 
@@ -242,6 +242,8 @@ class Facial_Landmarks:
         center_nose= (self.nose_coordinates_x, self.nose_coordinates_y)
         left_mouth_coordinates = (self.left_mouth_coordinates_x, self.left_mouth_coordinates_y)
         right_mouth_coordinates = (self.right_mouth_coordinates_x, self.right_mouth_coordinates_y)
+
+        #Draws circle around detected eye, nose and mouth
         image = cv2.circle(frame, center_left_eye, 10, (255,0,0), 2)
         image = cv2.circle(frame, center_right_eye, 10, (255, 0, 0), 2)
         image = cv2.circle(frame, center_nose, 10, (255, 0, 0), 2)
@@ -250,10 +252,7 @@ class Facial_Landmarks:
         self.image_path = ("landmark_image.png")
         cv2.imwrite(self.image_path, image)
         
-        #Draw rectangle
-        
-        #image_rectangle = cv2.rectangle(frame_rectangle, start_point, end_point, color, thickness)
-        #image_rectangle = cv2.rectangle(frame_rectangle, start_point, end_point, color, thickness)
+        #Draws rectangle around eyes
         left_eye = cv2.rectangle(left_eye_image, (self.left_eye_x_min, self.left_eye_y_min), (self.left_eye_x_max, self.left_eye_y_max), (255,0,0), 2)
         right_eye = cv2.rectangle(right_eye_image, (self.right_eye_x_min, self.right_eye_y_min), (self.right_eye_x_max, self.right_eye_y_max), (255,0,0), 2)
         self.left_eye_image_rectangle_path = ("left_eye_image.png")
@@ -277,6 +276,7 @@ class Facial_Landmarks:
             self.right_eye_x_min) + " x " + str(self.right_eye_y_min) + " x " + str(self.right_eye_x_max) + " x " + str(self.right_eye_y_max))
         left_eye_frame_cropped = None
         right_eye_frame_cropped = None
+
         left_eye_frame_cropped = frame[self.left_eye_y_min:(self.left_eye_y_max + 1), self.left_eye_x_min:(self.left_eye_x_max + 1)]
         right_eye_frame_cropped = frame[self.right_eye_y_min:(self.right_eye_y_max + 1), self.right_eye_x_min:(self.right_eye_x_max + 1)]
 
@@ -284,11 +284,16 @@ class Facial_Landmarks:
         w = left_eye_frame_cropped.shape[1]
         h = left_eye_frame_cropped.shape[0]
         c = left_eye_frame_cropped.shape[2]
-        print (w, h, c)
+        print ('left eye: w, h, c' ,w, h, c)
+        w = right_eye_frame_cropped.shape[1]
+        h = right_eye_frame_cropped.shape[0]
+        c = right_eye_frame_cropped.shape[2]
+        
+        print ('right eye: w, h, c' ,w, h, c)
         print ("Reshape image")
-       # left_eye_frame_cropped = cv2.resize(left_eye_frame_cropped, (60, 60))
-       # left_eye_frame_cropped = left_eye_frame_cropped.transpose((2, 0, 1))
-       # left_eye_frame_cropped = left_eye_frame_cropped.reshape((1, 2, 60, 60))
+        left_eye_frame_cropped = cv2.resize(left_eye_frame_cropped, (60, 60))
+        left_eye_frame_cropped = left_eye_frame_cropped.transpose((2, 0, 1))
+        left_eye_frame_cropped = left_eye_frame_cropped.reshape((1, 2, 60, 60))
 
         cv2.imwrite("left_eye_frame_cropped.png", left_eye_frame_cropped)
         cv2.imwrite("right_eye_frame_cropped.png", right_eye_frame_cropped)
