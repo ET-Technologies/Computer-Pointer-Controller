@@ -57,6 +57,7 @@ parser.add_argument("--fd_model", required=True)
 ### Model load time
 |Model|Type|Size|Load time|
 | ------ | ------ | ------ |------ |------ |
+|face-detection-adas-binary-0001|FP32-INT1|1.86 MB|402.233 ms|50.7061845165188 ms|
 
 ### Total time to load all models
 
