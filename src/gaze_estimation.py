@@ -22,8 +22,9 @@ from openvino.inference_engine import IENetwork, IECore
 import logging as log
 import math
 
-class Gaze_Estimation:
+# I used following resources: https://knowledge.udacity.com/questions/254779
 
+class Gaze_Estimation:
     # Load all relevant variables into the class
     def __init__(self, model_name, threshold, device, extension, version):
         self.model_weights = model_name + '.bin'
@@ -37,8 +38,9 @@ class Gaze_Estimation:
         print("START Gaze_Estimation")
         print("--------")
 
-    # Loads the model
+    
     def load_model(self):
+        # Loads the model
 
         # Initialise the network and save it in the self.model variables
         try:
@@ -75,13 +77,12 @@ class Gaze_Estimation:
         # Get all necessary model values. 
         self.input_name = next(iter(self.network.inputs))
         self.output_name = next(iter(self.network .outputs))
+        self.input_shape = self.network .inputs[self.input_name].shape
 
         # Gets all input_names. Just for information.
         self.input_name_all = [i for i in self.network.inputs.keys()]
         self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
         self.input_name_first_entry = self.input_name_all[0]
-        
-        self.input_shape = self.network .inputs[self.input_name].shape
         
         self.output_name_type = self.network .outputs[self.output_name]
         self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
@@ -108,13 +109,14 @@ class Gaze_Estimation:
             print("--------")
             if len(not_supported_layers) != 0:
                 log.error("Following layers are not supported:", not_supported_layers)
-                print("You are not lucky, not all layers are supported")
+                #print("Sorry, not all layers are supported")
                 sys.exit(1)
         log.info("All layers are supported")
-        print("All layers are supported")
+        #print("All layers are supported")
 
-    # Start inference and prediction
+    
     def predict(self, left_eye, right_eye, head_pose_angles):
+        # Start inference and prediction
 
         print("--------")
         print("Start predictions Gaze_Estimation")
@@ -127,6 +129,7 @@ class Gaze_Estimation:
         # Starts synchronous inference
         print("Start syncro inference")
         log.info("Start syncro inference")
+        
         outputs = self.exec_network.infer({'left_eye_image': left_eye_preprocess_image, 'head_pose_angles': head_pose_angles, 'right_eye_image': right_eye_preprocess_image})
         print("Output of the inference request: " + str(outputs))
         
@@ -144,12 +147,9 @@ class Gaze_Estimation:
     def preprocess_input(self, left_eye, right_eye):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
-        print("Start: preprocess image Gaze_Estimation")
-        log.info("Start: preprocess image")
-        n = 1
-        c = 3
-        h = 60
-        w = 60
+        print("Start preprocess image Gaze_Estimation")
+        log.info("Start preprocess image Gaze_Estimation")
+        n, c, h, w = 1, 3, 60, 60
         print("The input shape from the gaze estimation is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
         
         left_eye_image = left_eye.copy()
@@ -161,38 +161,34 @@ class Gaze_Estimation:
         #left_eye_preprocess_image = left_eye.transpose((2, 0, 1))
         #left_eye_preprocess_image = left_eye.reshape((n, c, h, w))
         
-        #right_eye_image = right_eye.copy()
+        right_eye_image = right_eye.copy()
         right_eye_preprocess_image = cv2.resize(right_eye, (w, h))
         right_eye_preprocess_image = np.transpose(np.expand_dims(right_eye_preprocess_image, axis=0), (0, 3, 1, 2))
         #right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
         #right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
         
-        #print("Original image size is (W x H): " + str(self.width) + "x" + str(self.height))
-        print("left_eye_preprocess_image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
-        print("right_eye_preprocess_image is now [BxCxHxW]: " + str(right_eye_preprocess_image.shape))
-        print("End: preprocess image")
+        #print("left_eye_preprocess_image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
+        #print("right_eye_preprocess_image is now [BxCxHxW]: " + str(right_eye_preprocess_image.shape))
+        print("End preprocess image")
+        log.info("End preprocess image")
         print("--------")
         
         return left_eye_preprocess_image, right_eye_preprocess_image
 
     def gaze_estimation(self, outputs, head_pose_angles):
         print("--------")
-        print("Start: gaze_estimation")
+        print("Start gaze_estimation")
+        log.info("Start gaze_estimation")
         result_len = len(outputs)
         print("total number of entries: " + str(result_len))
-        #output_name: gaze_vector
+
         gazes =[]
         gaze_vector = self.exec_network.requests[0].outputs['gaze_vector']
         print("Output of the inference request (self.gaze_vector): " + str(gaze_vector))
-        #gaze_vector = int(gaze_vector)
+
         print("gaze_vector: " + str(gaze_vector))
-        #gazes.append([gaze_vector])
 
-        #print("gaze_vector: " + str(gazes))
-        print("End: gaze_estimation")
-        print("--------")
-
-        # like https://knowledge.udacity.com/questions/254779
+        # With help from: https://knowledge.udacity.com/questions/254779
 
         gaze_vector02 = outputs[0]
         print ("gaze_vector02", gaze_vector02)
@@ -204,6 +200,10 @@ class Gaze_Estimation:
         tmpX = gaze_vector02[0] * cs + gaze_vector02[1] * sn
         tmpY = -gaze_vector02[0] * sn + gaze_vector02[1] * cs
         print (tmpX, tmpY, gaze_vector02)
+
+        print("End gaze_estimation")
+        log.info("End gaze_estimation")
+        print("--------")
 
         return gaze_vector, tmpX, tmpY, gaze_vector02
 
@@ -217,7 +217,8 @@ class Gaze_Estimation:
         '''
 
         print("--------")
-        print("Start: head_pose_estimation")
+        print("Start preprocess_output gaze estimation")
+        log.info("Start preprocess_output gaze estimation")
         outputs = []
         outputs2 = []
         
@@ -233,16 +234,16 @@ class Gaze_Estimation:
         outputs2.append(image['angle_r_fc'][0][0])
         angle_r_fc = (image['angle_r_fc'][0][0])
         
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("angle_y_fc: " +str(angle_y_fc))
-        print ("angle_p_fc: " +str(angle_p_fc))
-        print ("angle_r_fc: " +str(angle_r_fc))
+        #print ("outputs: " +str(outputs))
+        #print ("outputs2: " +str(outputs2))
+        #print ("outputs2: " +str(outputs2))
+        #print ("outputs: " +str(outputs))
+        #print ("outputs2: " +str(outputs2))
+        #print ("outputs: " +str(outputs))
+        #print ("outputs2: " +str(outputs2))
+        #print ("angle_y_fc: " +str(angle_y_fc))
+        #print ("angle_p_fc: " +str(angle_p_fc))
+        #print ("angle_r_fc: " +str(angle_r_fc))
 
         return outputs
     
@@ -271,9 +272,7 @@ def build_argparser():
     parser.add_argument('--output_path', default=None)
     parser.add_argument('--threshold', default=0.60)
     parser.add_argument('--inputtype', default='video')
-    #parser.add_argument('--left_eye_image', default=None)
-    #parser.add_argument('--right_eye_image', default='right_eye_frame_cropped.png')
-    #parser.add_argument('--head_pose_angles', default = None)
+
     return parser
 
 def main():
@@ -289,8 +288,6 @@ def main():
     head_pose_angles  = args.head_pose_angles 
     output_path=args.output_path
     head_pose_angles = [2,5,10]
-    #left_eye_image = ('cropped_image.png')
-    #right_eye = ('left_eye_frame_cropped.png')
 
     # Load class Gaze_Estimation
     inference = Gaze_Estimation(model_name, device, extension)
@@ -315,6 +312,6 @@ def main():
 
 
 if __name__ == '__main__':
-    log.basicConfig(filename="logging_gaze.txt", level=log.INFO)
+    log.basicConfig(filename="log/logging_gaze.txt", level=log.DEBUG)
     log.info("Start logging")
     main()

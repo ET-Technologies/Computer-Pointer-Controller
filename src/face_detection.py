@@ -40,6 +40,7 @@ class Facedetection:
         print("--------")
 
     def load_model(self):
+        # Loads the model
 
         # Initialise the network and save it in the self.network variables
         try:
@@ -67,7 +68,7 @@ class Facedetection:
         #print("Exec_network is loaded as:" + str(self.exec_network))
         #print("--------")
         
-        model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold, self.core, self.network]
+        model_data = [self.model_weights, self.model_structure, self.device, self.extension, self.threshold]
         modellayers = self.getmodellayers()
 
         return model_data, modellayers
@@ -76,14 +77,13 @@ class Facedetection:
         # Get all necessary model values. 
         self.input_name = next(iter(self.network.inputs))
         self.output_name = next(iter(self.network .outputs))
+        self.input_shape = self.network.inputs[self.input_name].shape
 
         # Gets all input_names. Just for information.
         self.input_name_all = [i for i in self.network.inputs.keys()]
         self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
         self.input_name_first_entry = self.input_name_all[0]
-        
-        self.input_shape = self.network.inputs[self.input_name].shape
-        
+
         self.output_name_type = self.network.outputs[self.output_name]
         self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
         self.output_names_total_entries = len(self.output_names)
@@ -109,7 +109,7 @@ class Facedetection:
             print("--------")
             if len(not_supported_layers) != 0:
                 log.error("Following layers are not supported:", not_supported_layers)
-                #print("You are not lucky, not all layers are supported")
+                #print("Sorry, not all layers are supported")
                 sys.exit(1)
         log.info("All layers are supported")
         #print("All layers are supported")
@@ -124,7 +124,7 @@ class Facedetection:
 
         # Starts synchronous inference
         print("Start syncro inference")
-        log.info("Start syncro inference")
+        log.info("Start syncro inference face detection")
 
         outputs = self.exec_network.infer({self.input_name: preprocessed_image})
         print("Output of the inference request: " + str(outputs))
@@ -142,15 +142,17 @@ class Facedetection:
     def preprocess_input(self, frame):
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
-        print("Start: preprocess image")
-        log.info("Start: preprocess image")
+        print("Start preprocess image")
+        log.info("Start preprocess image face detection")
         n, c, h, w = (self.core, self.input_shape)[1]
         print (w,h)
         preprocessed_image = cv2.resize(frame, (w, h))
         preprocessed_image = preprocessed_image.transpose((2, 0, 1))
         preprocessed_image = preprocessed_image.reshape((n, c, h, w))
         print("The input shape from the face detection is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
+        log.info("The input shape from the face detection is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
         print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
+        log.info("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
         print("End: preprocess image")
         print("--------")
 
@@ -162,6 +164,7 @@ class Facedetection:
         coords_02 = []
         print("--------")
         print("Start: preprocess_output")
+        log.info("Start preprocess_output face_detection")
         print("Bounding box input: " + str(outputs))
         self.initial_w = frame.shape[1]
         self.initial_h = frame.shape[0]
@@ -174,16 +177,30 @@ class Facedetection:
                 obj[5] = int(obj[5] * self.initial_w)
                 obj[6] = int(obj[6] * self.initial_h)
                 coords.append([obj[3], obj[4], obj[5], obj[6]])
-                cv2.rectangle(frame, (obj[3], obj[4]), (obj[5], obj[6]), (0, 55, 255), 1)
-                cv2.rectangle(frame, ((obj[3] + 10), (obj[4]+10)), ((obj[5]+10), (obj[6])+10), (0, 55, 255), 2)
-                print("Bounding box output coordinates of frame: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
+                print("Bounding box coordinates face detection: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
+                log.info("Bounding box coordinates face detection: " + str(obj[3]) + " x " + str(obj[4]) + " x " + str(obj[5]) + " x " + str(obj[6]))
                 self.xmin = int(obj[3])
                 self.ymin = int(obj[4])
                 self.xmax = int(obj[5])
                 self.ymax = int(obj[6])
-                coords_02.append([self.xmin, self.ymin, self.xmax, self.ymax])
-                print("Bounding box output coordinates of frame: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
-                
+                cv2.rectangle(frame, ((self.xmin + 10), (self.ymin +10)), ((self.xmax -10), (self.ymax-10)), (0, 0, 0), 1)
+               
+                # draw line (just for fun)
+                cv2.line(frame, (self.xmin,self.ymin), (self.xmin, self.ymin+20),(0, 0, 0), 3)
+                cv2.line(frame, (self.xmin,self.ymin), (self.xmin+20, self.ymin),(0, 0, 0), 3)
+
+                cv2.line(frame, (self.xmax,self.ymax), (self.xmax, self.ymax-20),(0, 0, 0), 3)
+                cv2.line(frame, (self.xmax,self.ymax), (self.xmax-20, self.ymax),(0, 0, 0), 3)
+
+                cv2.line(frame, (self.xmax,self.ymin), (self.xmax, self.ymin+20),(0, 0, 0), 3)
+                cv2.line(frame, (self.xmax,self.ymin), (self.xmax-20, self.ymin),(0, 0, 0), 3)
+
+                cv2.line(frame, (self.xmin,self.ymax), (self.xmin, self.ymax-20),(0, 0, 0), 3)
+                cv2.line(frame, (self.xmin,self.ymax), (self.xmin+20, self.ymax),(0, 0, 0), 3)
+
+                print("Bounding box coordinates face detection: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
+                log.info("Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: " + str(self.xmin) + " x " + str(self.ymin) + " x " + str(self.xmax) + " x " + str(self.ymax))
+
 
         print("End: boundingbox")
         print("--------")
@@ -236,6 +253,19 @@ class Facedetection:
             cv2.waitKey(0)
         cv2.destroyAllWindows()  
 
+def build_argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', required=True)
+    parser.add_argument('--device', default='CPU')
+    parser.add_argument('--extension', default=None)
+    parser.add_argument('--video', default=None)
+    parser.add_argument('--output_path', default=None)
+    parser.add_argument('--threshold', default=0.60)
+    parser.add_argument('--input_type', default=video)
+    parser.add_argument('--version', default='2020')
+
+    return parser
+
 def main():
     args = build_argparser().parse_args()
     model_name = args.model
@@ -262,7 +292,7 @@ def main():
     # Time model needed to load
     total_model_load_time = time.time() - start_model_load_time  
     print("Load Model = OK")
-    #print("Time to load model: " + str(total_model_load_time))
+    print("Time to load model: " + str(total_model_load_time))
     print("--------")
     
     # Load data (video, cam or image)
@@ -293,20 +323,6 @@ def main():
         cv2.waitKey(0) 
     
     cv2.destroyAllWindows()  
-
-def build_argparser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model', required=True)
-    parser.add_argument('--device', default='CPU')
-    parser.add_argument('--extension', default=None)
-    parser.add_argument('--video', default=None)
-    parser.add_argument('--output_path', default=None)
-    parser.add_argument('--threshold', default=0.60)
-    parser.add_argument('--input_type', default=video)
-    parser.add_argument('--version', default='2020')
-
-    return parser
-
 
 # Start program
 if __name__ == '__main__':

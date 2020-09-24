@@ -78,6 +78,7 @@ class Facial_Landmarks:
         #    self.performance()
 
         coords = self.preprocess_output(outputs)
+        z = 20
 
         # print(image.shape)
         h, w = image.shape[0], image.shape[1]

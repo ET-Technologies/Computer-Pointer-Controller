@@ -47,6 +47,7 @@ class Head_Pose_Estimation:
             self.network = IENetwork(self.model_structure, self.model_weights)
             # self.network = core.read_network(self.model_structure, self.model_weights) # new openvino version
             self.input_name = next(iter(self.network.inputs))
+            
         except Exception as e:
             log.error("Could not initialise the network")
             raise ValueError("Could not initialise the network")
@@ -109,8 +110,7 @@ class Head_Pose_Estimation:
                 print("You are not lucky, not all layers are supported")
                 sys.exit(1)
         log.info("All layers are supported")
-        print("All layers are supported")
-        print("--------")
+        #print("All layers are supported")
 
     
     def predict(self, frame):
@@ -123,7 +123,7 @@ class Head_Pose_Estimation:
 
         # Starts synchronous inference
         print("Start syncro inference")
-        log.info("Start syncro inference")
+        log.info("Start syncro inference head_pose_estimation")
 
         outputs = self.exec_network.infer({self.input_name:preprocessed_image})
         print("Output of the inference request: " + str(outputs))
@@ -142,13 +142,15 @@ class Head_Pose_Estimation:
         # In this function the original image is resized, transposed and reshaped to fit the model requirements.
         print("--------")
         print("Start: preprocess image")
-        log.info("Start: preprocess image head pose")
+        log.info("Start preprocess image head_pose_estimation")
         n, c, h, w = (self.core, self.input_shape)[1]
         preprocessed_image = cv2.resize(frame, (w, h))
         preprocessed_image = preprocessed_image.transpose((2, 0, 1))
         preprocessed_image = preprocessed_image.reshape((n, c, h, w))
         print("The input shape from the head pose is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
+        log.info("The input shape from the head pose is n= ({})  c= ({})  h= ({})  w= ({})".format(str(n),str(c), str(h), str(w)))
         print("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
+        log.info("Image is now [BxCxHxW]: " + str(preprocessed_image.shape))
         print("End: preprocess image")
         print("--------")
         
@@ -157,6 +159,7 @@ class Head_Pose_Estimation:
     def head_pose_detection(self, outputs,frame):
         print("--------")
         print("Start: head_pose_estimation")
+        log.info("Start head_pose_detection")
         result_len = len(outputs)
         print("total number of entries: " + str(result_len))
         angles =[]
@@ -180,7 +183,8 @@ class Head_Pose_Estimation:
     def preprocess_output(self, image):
 
         print("--------")
-        print("Start: head_pose_estimation")
+        print("Start preprocess_output head_pose_estimation")
+        log.info("Start preprocess_output head_pose_estimation")
         outputs = []
         outputs2 = []
         
@@ -196,16 +200,20 @@ class Head_Pose_Estimation:
         outputs2.append(image['angle_r_fc'][0][0])
         angle_r_fc = (image['angle_r_fc'][0][0])
         
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("outputs: " +str(outputs))
-        print ("outputs2: " +str(outputs2))
-        print ("angle_y_fc: " +str(angle_y_fc))
-        print ("angle_p_fc: " +str(angle_p_fc))
-        print ("angle_r_fc: " +str(angle_r_fc))
+        #print ("outputs: " +str(outputs))
+        #print ("outputs2: " +str(outputs2))
+        #print ("outputs2: " +str(outputs2))
+        #print ("outputs: " +str(outputs))
+        #print ("outputs2: " +str(outputs2))
+        #print ("outputs: " +str(outputs))
+        #print ("outputs2: " +str(outputs2))
+        #print ("angle_y_fc: " +str(angle_y_fc))
+        #print ("angle_p_fc: " +str(angle_p_fc))
+        #print ("angle_r_fc: " +str(angle_r_fc))
+
+        print("End preprocess_output head_pose_estimation")
+        log.info("End preprocess_output head_pose_estimation")
+        print("--------")
 
         return outputs
 
@@ -277,7 +285,7 @@ def main():
 
     # Load class Head_Pose_Estimation
     inference = Head_Pose_Estimation(model_name, device, extension)
-    print("Load Model = OK")
+    print("Load class Head_Pose_Estimation")
     print("--------")
 
     # Loads the model
@@ -286,7 +294,7 @@ def main():
     inference.load_model()
     # Time model needed to load
     total_model_load_time = time.time() - start_model_load_time  
-    print("Load Model = OK")
+    print("Load Model Head_Pose_Estimation")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
 
@@ -321,6 +329,6 @@ def main():
 
 # Start program
 if __name__ == '__main__':
-    log.basicConfig(filename="logging_head_pose.txt", level=log.INFO)
+    log.basicConfig(filename="log/logging_head_pose.txt", level=log.INFO)
     log.info("Start logging")
     main()

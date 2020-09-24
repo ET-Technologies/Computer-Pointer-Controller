@@ -36,7 +36,7 @@ from mouse_controller import MouseController
 
 
 '''
-Used following resources:
+I used following resources:
 https://knowledge.udacity.com/questions/254779 output gaze estimation
 https://knowledge.udacity.com/questions/171017
 https://knowledge.udacity.com/questions/257811 (move mouse)
@@ -199,6 +199,6 @@ def build_argparser():
     return parser
 
 if __name__ == '__main__':
-    log.basicConfig(filename="log/logging_basic.log", level=log.INFO)
+    log.basicConfig(filename="log/logging_basic.log", level=log.DEBUG)
     log.info("Start computer_pointer.py")
     main()
