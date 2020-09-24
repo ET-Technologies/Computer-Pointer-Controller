@@ -4,6 +4,40 @@
 ## Project Set Up and Installation
 *TODO:* Explain the setup procedures to run your project. For instance, this can include your project directory structure, the models you need to download and where to place them etc. Also include details about how to install the dependencies your project requires.
 
+For this project the Intel OpenVino toolkit is required (version >= 2020.1).
+
+### Following model are needed:
+- face-detection
+- land
+- head
+- gaze
+
+<pre>
+├── bin
+│   └── demo.mp4
+├── log
+│   ├── logging_basic.log
+├── models
+│   └── model_source
+│       └── model_name
+│           └── model_precision
+│               ├── model_name.bin
+│               └── model_name.xml
+├── README.md
+├── requirements.txt
+├── src
+    ├── face_detection.py
+    ├── facial_landmarks_detection.py
+    ├── gaze_estimation.py
+    ├── head_pose_estimation.py
+    ├── input_feeder.py
+    ├── main_computer_pointer_controller.py
+    ├── model.py
+    └── mouse_controller.py
+</pre>
+
+
+
 ## Demo
 *TODO:* Explain how to run a basic demo of your model.
 
@@ -11,6 +45,7 @@
 
 **2. Arguments to run the program with**
 -**FP16**, **CPU** input **video**
+<pre>
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
 --output_path output/demo_output.mp4 \
@@ -22,9 +57,11 @@ python3 src/computer_pointer.py \
 --input_type video \
 --device CPU \
 --version 2020
+<pre>
 
-**2. Arguments to run the program with:**
+**2a. Arguments to run the program with**
 -**FP32**, **CPU** input **video**
+<pre>
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
 --output_path output/demo_output.mp4 \
@@ -36,7 +73,7 @@ python3 src/computer_pointer.py \
 --input_type video \
 --device CPU \
 --version 2020
-
+<pre>
 ## Documentation
 *TODO:* Include any documentation that users might need to better understand your project code. For instance, this is a good place to explain the command line arguments that your project supports.
 parser.add_argument("--fd_model", required=True)
