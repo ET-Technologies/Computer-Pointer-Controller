@@ -50,7 +50,6 @@ class Facial_Landmarks:
         self.output_shape = self.network.outputs[self.output_names].shape
 
     def load_model(self):
-        # Loads the model
         
         supported_layers = self.plugin.query_network(network=self.network, device_name=self.device)
         layers_unsupported = [ul for ul in self.network.layers.keys() if ul not in supported_layers]
