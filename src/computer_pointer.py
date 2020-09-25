@@ -27,7 +27,9 @@ import time
 import openvino
 
 from face_detection import Facedetection
-from facial_landmarks_detection import Facial_Landmarks
+#from facial_landmarks_detection import Facial_Landmarks
+
+from facial_landmarks_detection_copy import Facial_Landmarks
 from head_pose_estimation import Head_Pose_Estimation
 from gaze_estimation import Gaze_Estimation
 

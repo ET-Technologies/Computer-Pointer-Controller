@@ -1003,3 +1003,1263 @@ INFO:root:Start gaze_estimation
 INFO:root:End gaze_estimation
 INFO:root:Gaze results: ([[ 0.32407308 -0.09970652 -0.9258934 ]])
 ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 242.193
+INFO:root:Facial_Landmarks load time: 89.983
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 161.731
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 189.102
+INFO:root:Total model load time: 731.94
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 799.0 x 87.0 x 1049.0 x 420.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 799 x 87 x 1049 x 420
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 112.731
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 112.89
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.538
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 87.514
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 153.894
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 181.752
+INFO:root:Total model load time: 537.303
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.538
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 92.291
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.973
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 183.571
+INFO:root:Total model load time: 546.942
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.115
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.281
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.634
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.956
+INFO:root:Total model load time: 541.553
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.436
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 87.359
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 157.284
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 188.458
+INFO:root:Total model load time: 547.083
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:name 'output' is not defined
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 112.792
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.672
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.931
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.402
+INFO:root:Total model load time: 541.398
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.183
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.127
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 154.883
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 183.415
+INFO:root:Total model load time: 542.202
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.16
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.629
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 154.043
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 186.557
+INFO:root:Total model load time: 542.969
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start syncro inference facial landmarks
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.461
+INFO:root:Facial_Landmarks load time: 70.754
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.962
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.772
+INFO:root:Total model load time: 542.587
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 799.0 x 87.0 x 1049.0 x 420.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 799 x 87 x 1049 x 420
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 798.0 x 90.0 x 1044.0 x 422.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 798 x 90 x 1044 x 422
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 771.0 x 94.0 x 1016.0 x 427.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 771 x 94 x 1016 x 427
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 759.0 x 95.0 x 1025.0 x 426.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 759 x 95 x 1025 x 426
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.005
+INFO:root:Facial_Landmarks load time: 70.482
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.835
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.712
+INFO:root:Total model load time: 539.652
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.8
+INFO:root:Facial_Landmarks load time: 70.262
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 155.73
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.829
+INFO:root:Total model load time: 539.162
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.344
+INFO:root:Facial_Landmarks load time: 70.899
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 160.4
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 184.603
+INFO:root:Total model load time: 545.897
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:name 'image' is not defined
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 112.987
+INFO:root:Facial_Landmarks load time: 70.665
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 155.837
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.94
+INFO:root:Total model load time: 539.032
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 114.929
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.798
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.79
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.999
+INFO:root:Facial_Landmarks load time: 88.504
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 158.541
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 183.108
+INFO:root:Total model load time: 544.701
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:'NoneType' object has no attribute 'infer'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.852
+INFO:root:Facial_Landmarks load time: 88.344
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.363
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 181.872
+INFO:root:Total model load time: 543.053
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 799.0 x 87.0 x 1049.0 x 420.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 799 x 87 x 1049 x 420
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 798.0 x 90.0 x 1044.0 x 422.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 798 x 90 x 1044 x 422
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 771.0 x 94.0 x 1016.0 x 427.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 771 x 94 x 1016 x 427
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 759.0 x 95.0 x 1025.0 x 426.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 759 x 95 x 1025 x 426
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 755.0 x 95.0 x 1000.0 x 441.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 755 x 95 x 1000 x 441
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 717.0 x 138.0 x 963.0 x 505.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 717 x 138 x 963 x 505
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 697.0 x 155.0 x 947.0 x 521.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 697 x 155 x 947 x 521
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 705.0 x 167.0 x 944.0 x 515.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 705 x 167 x 944 x 515
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.36359236 -0.22449833 -0.90622455]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 116.212
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.457
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.824
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.811
+INFO:root:Total model load time: 544.847
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 799.0 x 87.0 x 1049.0 x 420.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 799 x 87 x 1049 x 420
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 798.0 x 90.0 x 1044.0 x 422.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 798 x 90 x 1044 x 422
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.679
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 86.81
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 157.204
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 183.41
+INFO:root:Total model load time: 543.588
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.303
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 89.035
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 162.007
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 189.134
+INFO:root:Total model load time: 554.416
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.706
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.942
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.788
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.108
+INFO:root:Total model load time: 544.137
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.443
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 89.181
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 162.064
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 189.956
+INFO:root:Total model load time: 557.213
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.6
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 94.342
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 158.051
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.433
+INFO:root:Total model load time: 550.94
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 115.35
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 90.148
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 158.293
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 181.09
+INFO:root:Total model load time: 545.407
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 114.072
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 90.126
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.953
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 185.701
+INFO:root:Total model load time: 547.356
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.418
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.538
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 159.609
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 181.653
+INFO:root:Total model load time: 543.767
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.334
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 89.133
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 157.657
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 183.717
+INFO:root:Total model load time: 544.436
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.987
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 87.13
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 157.367
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.307
+INFO:root:Total model load time: 541.379
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.504
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.608
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 159.361
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 189.456
+INFO:root:Total model load time: 551.441
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 116.203
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 90.795
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 155.952
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 185.091
+INFO:root:Total model load time: 548.536
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 113.491
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 88.244
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 156.734
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 184.674
+INFO:root:Total model load time: 543.64
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+ERROR:root:unhashable type: 'list'
+INFO:root:Start computer_pointer.py
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facedetection load time: 114.007
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Facial_Landmarks load time: 87.363
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Headpose load time: 157.155
+INFO:root:Checking for unsupported layers
+INFO:root:All layers are supported
+INFO:root:Gaze load time: 182.68
+INFO:root:Total model load time: 541.838
+INFO:root:All models are loaded!
+INFO:root:Input Feeder is loaded
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
+INFO:root:Start preprocess image facial detection
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
+INFO:root:Start preprocess image facial detection
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+INFO:root:Start preprocess image face detection
+INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
+INFO:root:Start syncro inference face detection
+INFO:root:Start preprocess_output face_detection
+INFO:root:Bounding box coordinates face detection: 799.0 x 87.0 x 1049.0 x 420.0
+INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 799 x 87 x 1049 x 420
+INFO:root:Start preprocess image facial detection
+INFO:root:Start preprocess image head_pose_estimation
+INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
+INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
+INFO:root:Start syncro inference head_pose_estimation
+INFO:root:Start head_pose_detection
+INFO:root:Start preprocess image Gaze_Estimation
+INFO:root:End preprocess image
+INFO:root:Start syncro inference
+INFO:root:Start gaze_estimation
+INFO:root:End gaze_estimation
+INFO:root:Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
