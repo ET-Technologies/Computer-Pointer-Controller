@@ -1,0 +1,82 @@
+2020-09-28 16:37:18,588 INFO Start time logger
+2020-09-28 16:37:18,717 INFO Facedetection load time: 128.957
+2020-09-28 16:37:18,818 INFO Facial_Landmarks load time: 100.346
+2020-09-28 16:37:18,978 INFO Headpose load time: 160.48
+2020-09-28 16:37:19,162 INFO Gaze load time: 183.755
+2020-09-28 16:37:19,163 INFO Total model load time: 574.249
+2020-09-28 16:37:19,163 INFO ##################
+2020-09-28 16:37:19,387 INFO Average face inference time: 80.89447021484375
+2020-09-28 16:37:19,403 INFO Average facial inference time: 2.0995140075683594
+2020-09-28 16:37:19,408 INFO Average headpose inference time: 4.170656204223633
+2020-09-28 16:37:19,412 INFO Average gaze inference time: 4.280328750610352
+2020-09-28 16:37:19,412 INFO ----
+2020-09-28 16:37:20,821 INFO Average face inference time: 80.01673221588135
+2020-09-28 16:37:20,837 INFO Average facial inference time: 1.8035173416137695
+2020-09-28 16:37:20,840 INFO Average headpose inference time: 3.566741943359375
+2020-09-28 16:37:20,844 INFO Average gaze inference time: 4.3888092041015625
+2020-09-28 16:37:20,845 INFO ----
+2020-09-28 16:37:22,216 INFO Average face inference time: 79.7109603881836
+2020-09-28 16:37:22,229 INFO Average facial inference time: 1.6641616821289062
+2020-09-28 16:37:22,231 INFO Average headpose inference time: 3.0607382456461587
+2020-09-28 16:37:22,235 INFO Average gaze inference time: 3.9877891540527344
+2020-09-28 16:37:22,235 INFO ----
+2020-09-28 16:37:23,616 INFO Average face inference time: 80.61760663986206
+2020-09-28 16:37:23,629 INFO Average facial inference time: 1.6151666641235352
+2020-09-28 16:37:23,631 INFO Average headpose inference time: 2.8093457221984863
+2020-09-28 16:37:23,635 INFO Average gaze inference time: 3.8242340087890625
+2020-09-28 16:37:23,635 INFO ----
+2020-09-28 16:37:25,002 INFO Average face inference time: 79.97794151306152
+2020-09-28 16:37:25,018 INFO Average facial inference time: 1.5468120574951172
+2020-09-28 16:37:25,020 INFO Average headpose inference time: 2.624368667602539
+2020-09-28 16:37:25,023 INFO Average gaze inference time: 3.78875732421875
+2020-09-28 16:37:25,024 INFO ----
+2020-09-28 16:37:26,409 INFO Average face inference time: 79.1005293528239
+2020-09-28 16:37:26,423 INFO Average facial inference time: 1.5200376510620117
+2020-09-28 16:37:26,425 INFO Average headpose inference time: 2.5258461634318032
+2020-09-28 16:37:26,431 INFO Average gaze inference time: 4.029472668965657
+2020-09-28 16:37:26,431 INFO ----
+2020-09-28 16:37:27,792 INFO Average face inference time: 79.87056459699359
+2020-09-28 16:37:27,805 INFO Average facial inference time: 1.5725748879568917
+2020-09-28 16:37:27,808 INFO Average headpose inference time: 2.467836652483259
+2020-09-28 16:37:27,813 INFO Average gaze inference time: 4.248278481619699
+2020-09-28 16:37:27,813 INFO ----
+2020-09-28 16:37:29,185 INFO Average face inference time: 79.49766516685486
+2020-09-28 16:37:29,200 INFO Average facial inference time: 1.5330314636230469
+2020-09-28 16:37:29,202 INFO Average headpose inference time: 2.4206340312957764
+2020-09-28 16:37:29,206 INFO Average gaze inference time: 4.203855991363525
+2020-09-28 16:37:29,206 INFO ----
+2020-09-28 16:37:30,596 INFO Average face inference time: 79.126066631741
+2020-09-28 16:37:30,609 INFO Average facial inference time: 1.5517870585123699
+2020-09-28 16:37:30,613 INFO Average headpose inference time: 2.567397223578559
+2020-09-28 16:37:30,617 INFO Average gaze inference time: 4.1186544630262585
+2020-09-28 16:37:30,617 INFO ----
+2020-09-28 16:37:31,985 INFO Average face inference time: 79.19895648956299
+2020-09-28 16:37:31,999 INFO Average facial inference time: 1.5422582626342773
+2020-09-28 16:37:32,001 INFO Average headpose inference time: 2.518749237060547
+2020-09-28 16:37:32,005 INFO Average gaze inference time: 4.095458984375
+2020-09-28 16:37:32,005 INFO ----
+2020-09-28 16:37:33,374 INFO Average face inference time: 79.10375161604448
+2020-09-28 16:37:33,387 INFO Average facial inference time: 1.5478784387761897
+2020-09-28 16:37:33,390 INFO Average headpose inference time: 2.542864192615856
+2020-09-28 16:37:33,394 INFO Average gaze inference time: 4.103942350907759
+2020-09-28 16:37:33,394 INFO ----
+2020-09-28 16:37:34,767 INFO Average face inference time: 78.97837956746419
+2020-09-28 16:37:34,781 INFO Average facial inference time: 1.5345414479573567
+2020-09-28 16:37:34,783 INFO Average headpose inference time: 2.48563289642334
+2020-09-28 16:37:34,787 INFO Average gaze inference time: 4.052340984344482
+2020-09-28 16:37:34,787 INFO ----
+2020-09-28 16:37:36,159 INFO Average face inference time: 78.91537592961238
+2020-09-28 16:37:36,174 INFO Average facial inference time: 1.5888214111328125
+2020-09-28 16:37:36,177 INFO Average headpose inference time: 2.5124366466815653
+2020-09-28 16:37:36,180 INFO Average gaze inference time: 4.010127140925481
+2020-09-28 16:37:36,180 INFO ----
+2020-09-28 16:37:37,552 INFO Average face inference time: 78.94955362592425
+2020-09-28 16:37:37,566 INFO Average facial inference time: 1.5609775270734514
+2020-09-28 16:37:37,568 INFO Average headpose inference time: 2.461229051862444
+2020-09-28 16:37:37,572 INFO Average gaze inference time: 3.9773668561662947
+2020-09-28 16:37:37,572 INFO ----
+2020-09-28 16:37:38,969 INFO Average face inference time: 79.7640323638916
+2020-09-28 16:37:38,986 INFO Average facial inference time: 1.5557448069254558
+2020-09-28 16:37:38,989 INFO Average headpose inference time: 2.4892489115397134
+2020-09-28 16:37:38,993 INFO Average gaze inference time: 3.9567947387695312
+2020-09-28 16:37:38,993 INFO ----

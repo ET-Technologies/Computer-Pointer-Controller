@@ -9,19 +9,17 @@ python3 src/computer_pointer.py \
 --fl_model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
 --hp_model models/2020.4.1/FP16-INT8/head-pose-estimation-adas-0001 \
 --ga_model models/2020.4.1/FP16-INT8/gaze-estimation-adas-0002 \
---threshold 0.4 \
+--threshold 0.6 \
 --input_type video \
 --device CPU \
 --version 2020
-
-Raspberry
--- device MYRIAD
 '''
 
 import time
 import argparse
 import cv2
 import logging as log
+formatter = log.Formatter('%(asctime)s %(levelname)s %(message)s')
 import time
 
 import openvino
@@ -60,6 +58,18 @@ def main():
     headpose_model = args.hp_model
     gaze_model = args.ga_model
 
+    # Start logger   
+    # Basic logger
+    log = setup_logger('basic_logger', 'log/logging_basic.log')
+    log.info("Start computer_pointer.py")
+    # Time logger
+    log_time = setup_logger('time_logger', "log/logging_time.log")
+    log_time.info("Start time logger")
+    
+    # Basic logging
+    #log.basicConfig(filename="log/logging_basic.log", level=log.DEBUG)
+    #log.info("Start computer_pointer.py")
+
     # Get Openvinoversion
     openvino_version = (openvino.__file__)
     print ("Openvino version: "+ str(openvino_version))
@@ -76,7 +86,7 @@ def main():
     print("Load model facedetection = Finished")
     print("--------")
     total_model_load_time_face = (time.time() - start_load_time_face)*1000
-    log.info('Facedetection load time: ' + str(round(total_model_load_time_face, 3)))
+    log_time.info('Facedetection load time: ' + str(round(total_model_load_time_face, 3)))
     #print('Facedetection load time: ', str(total_model_load_time_face))
     
     # Load facial landmark
@@ -88,7 +98,7 @@ def main():
     print("Load model Facial_Landmarks = Finished")
     print("--------")
     total_model_load_time_facial = (time.time() - start_load_time_facial)*1000
-    log.info('Facial_Landmarks load time: ' + str(round(total_model_load_time_facial, 3)))
+    log_time.info('Facial_Landmarks load time: ' + str(round(total_model_load_time_facial, 3)))
     
     # Load head_pose_estimation
     headposeestimation = Head_Pose_Estimation(headpose_model, device, extension, version, threshold)
@@ -99,7 +109,7 @@ def main():
     print("Load model head_pose_estimation = Finished")
     print("--------")
     total_model_load_time_headpose = (time.time() - start_load_time_headpose)*1000
-    log.info('Headpose load time: ' + str(round(total_model_load_time_headpose, 3)))
+    log_time.info('Headpose load time: ' + str(round(total_model_load_time_headpose, 3)))
     
     # Load gaze_estimation
     gazeestimation = Gaze_Estimation(gaze_model, threshold, device, extension, version)
@@ -112,8 +122,9 @@ def main():
     total_model_load_time_gaze = (time.time() - start_load_time_gaze)*1000
     total_model_load_time = (time.time() - start_load_time_face)*1000
     
-    log.info('Gaze load time: ' + str(round(total_model_load_time_gaze, 3)))
-    log.info('Total model load time: ' + str(round(total_model_load_time, 3)))
+    log_time.info('Gaze load time: ' + str(round(total_model_load_time_gaze, 3)))
+    log_time.info('Total model load time: ' + str(round(total_model_load_time, 3)))
+    log_time.info('##################')
     log.info('All models are loaded!')
     
     feed = InputFeeder(input_type, input_file)
@@ -127,16 +138,34 @@ def main():
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out_video = cv2.VideoWriter(output_path, fourcc, fps, (initial_w, initial_h))
 
+    inference_time_face_total = []
+    inference_time_facial_total = []
+    inference_time_headpose_total = []
+    inference_time_gaze_total = []
+
+    start_inference_time = time.time()
     try:
         for batch in feed.next_batch():
             if batch is None:
                 break
-
+            
+            
             ## facedetection ##
+            ## Inference time
+            
+            start_inference_time_face = time.time()
             print("Start facedetection")
             print("Cap is feeded to the face detection!")
             face_batch = batch.copy()
             face_image, face_cropped, coords= facedetection.predict(face_batch)
+            
+            #Average inference time
+            inference_time_face = (time.time() - start_inference_time_face)*1000
+            inference_time_face_total.append(inference_time_face)
+            len_face = len(inference_time_face_total)
+            avg_inference_time_face = sum(inference_time_face_total)/len_face
+            log_time.info(('Average face inference time: ' + str(avg_inference_time_face)))
+            
             if not coords:
                 print("No face detected")
                 continue
@@ -146,6 +175,8 @@ def main():
             print("End facedetection")
 
             ## faciallandmark ##
+            ## Inference time
+            start_inference_time_facial = time.time()
             if (face_cropped is None) or (len(face_cropped)==0):
                 print("No Face above threshold detected")
             else:
@@ -155,20 +186,49 @@ def main():
                 left_eye_image, right_eye_image = faciallandmarks.predict(face_cropped.copy())
                 print("End faciallandmarks")
 
+                #Average inference time
+                inference_time_facial = (time.time() - start_inference_time_facial)*1000
+                inference_time_facial_total.append(inference_time_facial)
+                len_facial = len(inference_time_facial_total)
+                avg_inference_time_facial = sum(inference_time_facial_total)/len_facial
+                log_time.info(('Average facial inference time: ' + str(avg_inference_time_facial)))
+
                 # headposeestimation
+                ## Inference time
+                
+                start_inference_time_headpose = time.time()
                 print("Start headposeestimation")
                 print("The cropped face image is feeded to the headposeestimation.")
                 head_pose_angles = headposeestimation.predict(face_cropped)
                 #print("Head pose angeles: ", head_pose_angles)
                 print("End faciallheadposeestimationandmarks")
 
+                #Average inference time
+                inference_time_headpose = (time.time() - start_inference_time_headpose)*1000
+                inference_time_headpose_total.append(inference_time_headpose)
+                len_headpose = len(inference_time_headpose_total)
+                avg_inference_time_headpose = sum(inference_time_headpose_total)/len_headpose
+                log_time.info(('Average headpose inference time: ' + str(avg_inference_time_headpose)))
+
                 # gazeestimation
+                ## Inference time
+                
+                start_inference_time_gaze = time.time()
                 print("Start gazeestimation")
                 gaze_result, tmpX, tmpY, gaze_vector02 = gazeestimation.predict(left_eye_image, right_eye_image,
                                                                                 head_pose_angles)
                 print("End gazeestimation")
                 #print('Gaze results:', gaze_result)
                 log.info("Gaze results: ({})".format(str(gaze_result)))
+
+                #Average inference time
+                inference_time_gaze = (time.time() - start_inference_time_gaze)*1000
+                inference_time_gaze_total.append(inference_time_gaze)
+                len_gaze = len(inference_time_gaze_total)
+                avg_inference_time_gaze = sum(inference_time_gaze_total)/len_gaze
+                log_time.info(('Average gaze inference time: ' + str(avg_inference_time_gaze)))
+
+                log_time.info('----')
                 cv2.imshow('Test', face_cropped)
                 cv2.waitKey(28)
                 
@@ -178,11 +238,25 @@ def main():
 
         input_feed.close()
         cv2.destroyAllWindows()
+    #total_model_load_time = (time.time() - start_load_time_face)*1000
+        end_inference_time = (time.time() - start_inference_time)*1000
+        log.info('Total model inference time: ' + str(round(end_inference_time, 3)))
 
     except Exception as e:
         print ("Could not run Inference: ", e)
         log.error(e)
-    
+
+def setup_logger(name, log_file, level=log.INFO):
+
+    handler = log.FileHandler(log_file)        
+    handler.setFormatter(formatter)
+
+    logger = log.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
 def build_argparser():
     parser = argparse.ArgumentParser()
 
@@ -201,6 +275,5 @@ def build_argparser():
     return parser
 
 if __name__ == '__main__':
-    log.basicConfig(filename="log/logging_basic.log", level=log.DEBUG)
-    log.info("Start computer_pointer.py")
+    
     main()
