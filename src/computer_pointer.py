@@ -59,16 +59,12 @@ def main():
     gaze_model = args.ga_model
 
     # Start logger   
-    # Basic logger
+        # Basic logger
     log = setup_logger('basic_logger', 'log/logging_basic.log')
     log.info("Start computer_pointer.py")
-    # Time logger
+        # Time logger
     log_time = setup_logger('time_logger', "log/logging_time.log")
     log_time.info("Start time logger")
-    
-    # Basic logging
-    #log.basicConfig(filename="log/logging_basic.log", level=log.DEBUG)
-    #log.info("Start computer_pointer.py")
 
     # Get Openvinoversion
     openvino_version = (openvino.__file__)
@@ -87,7 +83,6 @@ def main():
     print("--------")
     total_model_load_time_face = (time.time() - start_load_time_face)*1000
     log_time.info('Facedetection load time: ' + str(round(total_model_load_time_face, 3)))
-    #print('Facedetection load time: ', str(total_model_load_time_face))
     
     # Load facial landmark
     faciallandmarks = Facial_Landmarks(facial_model, threshold, device, extension, version)
@@ -142,8 +137,8 @@ def main():
     inference_time_facial_total = []
     inference_time_headpose_total = []
     inference_time_gaze_total = []
-
-    start_inference_time = time.time()
+    inference_time_total = []
+    
     try:
         for batch in feed.next_batch():
             if batch is None:
@@ -151,15 +146,13 @@ def main():
             
             
             ## facedetection ##
-            ## Inference time
-            
+                ## Inference time
             start_inference_time_face = time.time()
             print("Start facedetection")
             print("Cap is feeded to the face detection!")
             face_batch = batch.copy()
             face_image, face_cropped, coords= facedetection.predict(face_batch)
-            
-            #Average inference time
+                ## Average inference time
             inference_time_face = (time.time() - start_inference_time_face)*1000
             inference_time_face_total.append(inference_time_face)
             len_face = len(inference_time_face_total)
@@ -175,18 +168,17 @@ def main():
             print("End facedetection")
 
             ## faciallandmark ##
-            ## Inference time
+                ## Inference time
             start_inference_time_facial = time.time()
             if (face_cropped is None) or (len(face_cropped)==0):
                 print("No Face above threshold detected")
             else:
                 print("Start faciallandmark")
                 print("The cropped face image is feeded to the faciallandmarks detection.")
-                #faciallandmarks.get_initial_w_h(face_cropped)
                 left_eye_image, right_eye_image = faciallandmarks.predict(face_cropped.copy())
                 print("End faciallandmarks")
 
-                #Average inference time
+                ## Average inference time
                 inference_time_facial = (time.time() - start_inference_time_facial)*1000
                 inference_time_facial_total.append(inference_time_facial)
                 len_facial = len(inference_time_facial_total)
@@ -203,7 +195,7 @@ def main():
                 #print("Head pose angeles: ", head_pose_angles)
                 print("End faciallheadposeestimationandmarks")
 
-                #Average inference time
+                ## Average inference time
                 inference_time_headpose = (time.time() - start_inference_time_headpose)*1000
                 inference_time_headpose_total.append(inference_time_headpose)
                 len_headpose = len(inference_time_headpose_total)
@@ -221,15 +213,20 @@ def main():
                 #print('Gaze results:', gaze_result)
                 log.info("Gaze results: ({})".format(str(gaze_result)))
 
-                #Average inference time
+                ## Average inference time
                 inference_time_gaze = (time.time() - start_inference_time_gaze)*1000
                 inference_time_gaze_total.append(inference_time_gaze)
                 len_gaze = len(inference_time_gaze_total)
                 avg_inference_time_gaze = sum(inference_time_gaze_total)/len_gaze
                 log_time.info(('Average gaze inference time: ' + str(avg_inference_time_gaze)))
 
+                ## Total Inference time
+                inference_time_total.append((time.time() - start_inference_time_face)*1000)
+                inference_time_all_models = sum(inference_time_total)
+                log_time.info(('Total inference time: ' + str(inference_time_all_models)))
+
                 log_time.info('----')
-                cv2.imshow('Test', face_cropped)
+                cv2.imshow('Cropped Face', face_cropped)
                 cv2.waitKey(28)
                 
                 # mouse controller
@@ -238,9 +235,6 @@ def main():
 
         input_feed.close()
         cv2.destroyAllWindows()
-    #total_model_load_time = (time.time() - start_load_time_face)*1000
-        end_inference_time = (time.time() - start_inference_time)*1000
-        log.info('Total model inference time: ' + str(round(end_inference_time, 3)))
 
     except Exception as e:
         print ("Could not run Inference: ", e)

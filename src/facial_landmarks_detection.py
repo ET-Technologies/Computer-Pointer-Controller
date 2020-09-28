@@ -132,14 +132,12 @@ class Facial_Landmarks:
         print("Output of the inference request: " + str(outputs))
         print ("finish")
 
-        coords = self.preprocess_output(outputs)
+        coords, coords_nose, coords_lip = self.preprocess_output(outputs)
         z = 20
 
         # print(image.shape)
         h, w = frame.shape[0], frame.shape[1]
-
         coords = coords* np.array([w, h, w, h])
-
         coords = coords.astype(np.int32) #(lefteye_x, lefteye_y, righteye_x, righteye_y)
 
         ## left eye moving range
@@ -158,6 +156,16 @@ class Facial_Landmarks:
 
         ## [left eye box, right eye box] 
         eyes_coords = [[leye_xmin,leye_ymin,leye_xmax,leye_ymax], [reye_xmin,reye_ymin,reye_xmax,reye_ymax]]
+
+        ## Nose
+        coords_nose = coords_nose* np.array([w,h,w,h])
+        coords_nose = coords_nose.astype(np.int32)
+        nose_xmin, nose_ymin = coords_nose [4]-20, coords_nose[5]-20
+        nose_xmax, nose_ymax = coords_nose [4]+20, coords_nose[5]+20
+        nose_bbox = frame[nose_ymin:nose_ymax, nose_xmin:nose_xmax]
+        path = 'output/nose.png'
+        filename = ('nose_bbox'+'.png')
+        cv2.imwrite(filename, path)
 
         return left_eye_box, right_eye_box #, eyes_coords
 
@@ -193,12 +201,13 @@ class Facial_Landmarks:
 
     def preprocess_output(self, outputs):
         '''
-        Before feeding the output of this model to the next model,
-        you might have to preprocess the output. This function is where you can do that.
-
-        The net outputs a blob with the shape: [1, 10], containing a row-vector of 10 floating point values 
-        for five landmarks coordinates in the form (x0, y0, x1, y1, ..., x5, y5). 
-        All the coordinates are normalized to be in range [0,1].
+        https://docs.openvinotoolkit.org/2019_R1/_landmarks_regression_retail_0009_description_landmarks_regression_retail_0009.html
+        The net outputs a blob with the shape: [1, 10], containing a row-vector of 
+        10 floating point values for five landmarks coordinates in the form 
+        (x0, y0, x1, y1, ..., x5, y5). All the coordinates are normalized to be in range [0,1].
+        two eyes, nose, and two lip corners.
+        left_eye = x0, y0, right_eye = x1, y1
+        nose = x2, y2, 
         '''
         print(outputs)
         # print(outputs[self.output_names].shape) # (1, 10, 1, 1)
@@ -215,9 +224,38 @@ class Facial_Landmarks:
         # print(outs[0].tolist()[0][0]) # [[0.37333157658576965]]        
         # print(type(outs)) # numpy.ndarry
 
+        # Eyes
         leye_x, leye_y = outs[0][0][0], outs[1][0][0]
         reye_x, reye_y = outs[2][0][0], outs[3][0][0]
         coords_lr = (leye_x, leye_y, reye_x, reye_y)
-        # print(coords_lr)
 
-        return coords_lr
+        # Nose
+        nose_x, nose_y = outs[4][0][0], outs[5][0][0]
+        coords_nose = (nose_x, nose_y)
+
+        #Lip corners
+        lip_corner_left_x, lip_corner_left_y = outs[7][0][0], outs[7][0][0]
+        lip_corner_right_x, lip_corner_right_y = outs[8][0][0], outs[9][0][0]
+        coords_lip = (lip_corner_left_x, lip_corner_left_y, lip_corner_right_x, lip_corner_right_y)
+
+        return coords_lr, coords_nose, coords_lip
+
+
+def build_argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', required=True)
+    parser.add_argument('--device', default='CPU')
+    parser.add_argument('--extension', default=None)
+    parser.add_argument('--video', default=None)
+    parser.add_argument('--output_path', default=None)
+    parser.add_argument('--threshold', default=0.60)
+    parser.add_argument('--input_type', default=video)
+    parser.add_argument('--version', default='2020')
+
+    return parser
+
+# Start program
+if __name__ == '__main__':
+    log.basicConfig(filename="log/logging_facedetection.log", level=log.INFO)
+    log.info("Start logging")
+    main()
