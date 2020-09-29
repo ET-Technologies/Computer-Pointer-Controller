@@ -79,18 +79,17 @@ class Facedetection:
         self.output_name = next(iter(self.network .outputs))
         self.input_shape = self.network.inputs[self.input_name].shape
 
-        # Gets all input_names. Just for information.
+        # Gets all input and outputs. Just for information.
         self.input_name_all = [i for i in self.network.inputs.keys()]
-        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+        self.input_name_all_02 = self.network .inputs.keys()
         self.input_name_first_entry = self.input_name_all[0]
 
         self.output_name_type = self.network.outputs[self.output_name]
-        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+        self.output_names = [i for i in self.network .outputs.keys()]
         self.output_names_total_entries = len(self.output_names)
 
         self.output_shape = self.network.outputs[self.output_name].shape
         self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
         modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
             self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
 
@@ -112,7 +111,6 @@ class Facedetection:
                 #print("Sorry, not all layers are supported")
                 sys.exit(1)
         log.info("All layers are supported")
-        #print("All layers are supported")
 
     def predict(self, frame):
         # Starts predictions face_detection
@@ -133,7 +131,7 @@ class Facedetection:
         outputs = self.exec_network.requests[requestid].outputs[self.output_name]
         print("Output of the inference request (self.output_name): " + str(outputs))
         processed_image, frame_cropped, coords = self.preprocess_output(outputs, frame)
-        cv2.imwrite("output/cropped_image_02.png", frame_cropped)
+        #cv2.imwrite("output/cropped_image_02.png", frame_cropped)
         print("End predictions face_detection")
         print("--------")
 
@@ -241,6 +239,7 @@ class Facedetection:
                     cap.release()
             except Exception as e:
                 print("Could not run Inference: ", e)
+                log.info("Could not run Inference: ", e)
 
         if inputtype == 'image':
             print("Image")
@@ -280,6 +279,7 @@ def main():
     # Load class Facedetection
     inference = Facedetection(model_name, threshold, device, extension, version)
     print("Load class Facedetection = OK")
+    log.info("Load class Facedetection = OK")
     print("--------")
 
     # Loads the model

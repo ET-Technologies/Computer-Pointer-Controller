@@ -79,18 +79,17 @@ class Gaze_Estimation:
         self.output_name = next(iter(self.network .outputs))
         self.input_shape = self.network .inputs[self.input_name].shape
 
-        # Gets all input_names. Just for information.
+        # Gets all inputs and outputs. Just for information.
         self.input_name_all = [i for i in self.network.inputs.keys()]
-        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+        self.input_name_all_02 = self.network .inputs.keys()
         self.input_name_first_entry = self.input_name_all[0]
         
         self.output_name_type = self.network .outputs[self.output_name]
-        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+        self.output_names = [i for i in self.network .outputs.keys()]
         self.output_names_total_entries = len(self.output_names)
 
         self.output_shape = self.network .outputs[self.output_name].shape
         self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
         modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
             self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
 
@@ -166,9 +165,7 @@ class Gaze_Estimation:
         right_eye_preprocess_image = np.transpose(np.expand_dims(right_eye_preprocess_image, axis=0), (0, 3, 1, 2))
         #right_eye_preprocess_image = right_eye.transpose((2, 0, 1))
         #right_eye_preprocess_image = right_eye.reshape((n, c, h, w))
-        
-        #print("left_eye_preprocess_image is now [BxCxHxW]: " + str(left_eye_preprocess_image.shape))
-        #print("right_eye_preprocess_image is now [BxCxHxW]: " + str(right_eye_preprocess_image.shape))
+ 
         print("End preprocess image")
         log.info("End preprocess image")
         print("--------")
@@ -207,7 +204,7 @@ class Gaze_Estimation:
 
         return gaze_vector, tmpX, tmpY, gaze_vector02
 
-    def preprocess_output(self, image):
+    def preprocess_outputTEST(self, image):
         '''
         https://docs.openvinotoolkit.org/2019_R1/_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html
         The network takes three inputs: square crop of left eye image, square crop of right eye image, and three head pose angles – (yaw, pitch, and roll) 
@@ -287,7 +284,6 @@ def main():
     right_eye = args.right_eye_image
     head_pose_angles  = args.head_pose_angles 
     output_path=args.output_path
-    head_pose_angles = [2,5,10]
 
     # Load class Gaze_Estimation
     inference = Gaze_Estimation(model_name, device, extension)
@@ -298,7 +294,6 @@ def main():
     start_model_load_time = time.time()  # Time to load the model (Start)
     inference.load_model()
     total_model_load_time = time.time() - start_model_load_time  # Time model needed to load
-    print("Load Model = OK")
     print("Time to load model: " + str(total_model_load_time))
     print("--------")
 

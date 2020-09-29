@@ -77,20 +77,19 @@ class Head_Pose_Estimation:
         self.input_name = next(iter(self.network.inputs))
         self.output_name = next(iter(self.network .outputs))
 
-        # Gets all input_names. Just for information.
+        # Gets all inputs and outputs. Just for information.
         self.input_name_all = [i for i in self.network.inputs.keys()]
-        self.input_name_all_02 = self.network .inputs.keys() # gets all output_names
+        self.input_name_all_02 = self.network .inputs.keys()
         self.input_name_first_entry = self.input_name_all[0]
         
         self.input_shape = self.network .inputs[self.input_name].shape
         
         self.output_name_type = self.network .outputs[self.output_name]
-        self.output_names = [i for i in self.network .outputs.keys()]  # gets all output_names
+        self.output_names = [i for i in self.network .outputs.keys()]
         self.output_names_total_entries = len(self.output_names)
 
         self.output_shape = self.network .outputs[self.output_name].shape
         self.output_shape_second_entry = self.network .outputs[self.output_name].shape[1]
-        #model_info = ("model_weights: {}\nmodel_structure: {}\ndevice: {}\nextension: {}\nthreshold: {}\n".format.str(self.model_weights), str(self.model_structure), str(self.device), str(self.extension, str(self.threshold)))
         modellayers = [self.input_name, self.input_name_all, self.input_name_all_02,  self.input_name_first_entry, self.input_shape, self.output_name, self.output_name_type, \
             self.output_names, self.output_names_total_entries, self.output_shape, self.output_shape_second_entry]
 
@@ -180,7 +179,7 @@ class Head_Pose_Estimation:
         print("--------")
         return angles
 
-    def preprocess_output(self, image):
+    def preprocess_outputtest(self, image):
 
         print("--------")
         print("Start preprocess_output head_pose_estimation")
@@ -247,11 +246,10 @@ class Head_Pose_Estimation:
                     cap.release()
             except Exception as e:
                 print("Could not run Inference: ", e)
+                log.info("Could not run Inference: ", e)
 
         if inputtype == 'image':
             print("Image")
-            #image = '/home/pi/KeyBox/face_test.jpg'
-            #frame=cv2.imread(image)
             frame = self.predict(frame)
             path = '/home/pi/KeyBox/Face_cropped image.png'
             image = cv2.imread(path)
@@ -278,7 +276,7 @@ def main():
     device = args.device
     extension = args.extension
     video = args.video
-    video = ("cropped_image.png")
+    #video = ("cropped_image.png")
     output_path=args.output_path
     threshold = args.threshold
     inputtype = args.inputtype

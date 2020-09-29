@@ -72,14 +72,11 @@ def main():
     openvino_version = (openvino.__file__)
     print ("Openvino version: "+ str(openvino_version))
         
-    # Load class Facedetection
-    
+    # Load Facedetection
     facedetection = Facedetection(face_model, threshold, device, extension, version)
-    
     print("Load class Facedetection = OK")
     print("--------")
     start_load_time_face = time.time()
-    # Load model Facedetection
     facedetection.load_model()
     print("Load model facedetection = Finished")
     log.info("Load model facedetection = Finished")
@@ -240,8 +237,9 @@ def main():
                 inference_time_total.append((time.time() - start_inference_time_face)*1000)
                 inference_time_all_models = sum(inference_time_total)
                 log_time.info(('Total inference time: ' + str(inference_time_all_models)))
-
                 log_time.info('----')
+
+                # If show_image is 'yes' then the ouput images are displaed
                 if show_image == 'yes':
                     cv2.imshow('Cropped Face', face_cropped)
                     cv2.imshow('Left eye', left_eye_image)
@@ -284,19 +282,27 @@ def build_argparser():
     fl_model_help = 'Path to the landmark model'
     hp_model_help = 'Path to the head pose model'
     ga_model_help = 'Path to the gaze model'
+    device_help = 'CPU or MYRIAD'
+    extension_help ='Path to the extension if needed.'
+    video_help = 'Path to the input video'
+    output_path_help = 'Path to the output video'
+    threshold_help = 'Threshold for the face detection. Default 60%'
+    input_typ_help ='CAM for a webcamera or video for an inputfile'
+    version_help ='Openvino version 2020 or 2019'
+    show_image_help = 'yes to show ouput image, no to hide image'
     # Create the arguments
     parser.add_argument("--fd_model", help=fd_model_help, required=True)
     parser.add_argument("--fl_model", help=fl_model_help, required=True)
     parser.add_argument("--hp_model", help=hp_model_help, required=True)
     parser.add_argument("--ga_model", help=ga_model_help, required=True)
-    parser.add_argument('--device', default = 'CPU', required=False)
-    parser.add_argument('--extension', default= None, required=False)
-    parser.add_argument('--video', default=None, required=False)
-    parser.add_argument('--output_path', required=False)
-    parser.add_argument('--threshold', type=float, default=0.6, required=False)
-    parser.add_argument('--input_type', required=False)
-    parser.add_argument('--version', default='2020', required=False)
-    parser.add_argument('--show_image', default='no', required=False)
+    parser.add_argument('--device', help=device_help, default = 'CPU', required=False)
+    parser.add_argument('--extension', help=extension_help, default= None, required=False)
+    parser.add_argument('--video', help=video_help, default=None, required=False)
+    parser.add_argument('--output_path', help=output_path_help, required=False)
+    parser.add_argument('--threshold', help=threshold_help, type=float, default=0.6, required=False)
+    parser.add_argument('--input_type', help=input_typ_help, required=False)
+    parser.add_argument('--version', help=version_help, default='2020', required=False)
+    parser.add_argument('--show_image', help=show_image_help, default='no', required=False)
 
     return parser
 
