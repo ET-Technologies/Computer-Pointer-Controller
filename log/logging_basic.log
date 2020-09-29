@@ -1,759 +1,204 @@
-INFO:root:Start computer_pointer.py
-INFO:root:Checking for unsupported layers
-INFO:root:All layers are supported
-INFO:root:Facedetection load time: 128.15
-INFO:root:Checking for unsupported layers
-INFO:root:All layers are supported
-INFO:root:Facial_Landmarks load time: 93.754
-INFO:root:Checking for unsupported layers
-INFO:root:All layers are supported
-INFO:root:Headpose load time: 155.577
-INFO:root:Checking for unsupported layers
-INFO:root:All layers are supported
-INFO:root:Gaze load time: 176.977
-INFO:root:Total model load time: 554.897
-INFO:root:All models are loaded!
-INFO:root:Input Feeder is loaded
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 790.0 x 102.0 x 1036.0 x 469.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 790 x 102 x 1036 x 469
-INFO:root:Face inference time: 76.814
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 803.0 x 85.0 x 1044.0 x 421.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 803 x 85 x 1044 x 421
-INFO:root:Face inference time: 77.605
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 799.0 x 87.0 x 1049.0 x 420.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 799 x 87 x 1049 x 420
-INFO:root:Face inference time: 78.256
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 798.0 x 90.0 x 1044.0 x 422.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 798 x 90 x 1044 x 422
-INFO:root:Face inference time: 76.645
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 771.0 x 94.0 x 1016.0 x 427.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 771 x 94 x 1016 x 427
-INFO:root:Face inference time: 75.665
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 759.0 x 95.0 x 1025.0 x 426.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 759 x 95 x 1025 x 426
-INFO:root:Face inference time: 75.624
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 755.0 x 95.0 x 1000.0 x 441.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 755 x 95 x 1000 x 441
-INFO:root:Face inference time: 76.678
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 717.0 x 138.0 x 963.0 x 505.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 717 x 138 x 963 x 505
-INFO:root:Face inference time: 75.919
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 697.0 x 155.0 x 947.0 x 521.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 697 x 155 x 947 x 521
-INFO:root:Face inference time: 73.318
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 705.0 x 167.0 x 944.0 x 515.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 705 x 167 x 944 x 515
-INFO:root:Face inference time: 79.571
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.36359236 -0.22449833 -0.90622455]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 689.0 x 169.0 x 930.0 x 511.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 689 x 169 x 930 x 511
-INFO:root:Face inference time: 75.145
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.40923408 -0.30031613 -0.8717012 ]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 697.0 x 152.0 x 932.0 x 509.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 697 x 152 x 932 x 509
-INFO:root:Face inference time: 87.22
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.30233717 -0.301759   -0.8917129 ]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 735.0 x 149.0 x 984.0 x 513.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 735 x 149 x 984 x 513
-INFO:root:Face inference time: 78.375
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.35327765 -0.2578471  -0.87706417]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 751.0 x 150.0 x 997.0 x 530.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 751 x 150 x 997 x 530
-INFO:root:Face inference time: 78.715
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.39132166 -0.30959868 -0.85114074]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 751.0 x 147.0 x 1000.0 x 540.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 751 x 147 x 1000 x 540
-INFO:root:Face inference time: 83.903
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.40159336 -0.3076989  -0.85410345]])
-INFO:root:Start preprocess image face detection
-INFO:root:The input shape from the face detection is n= (1)  c= (3)  h= (384)  w= (672)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 384, 672)
-INFO:root:Start syncro inference face detection
-INFO:root:Start preprocess_output face_detection
-INFO:root:Bounding box coordinates face detection: 758.0 x 145.0 x 1006.0 x 510.0
-INFO:root:Bounding box coordinates face detection (int)xmin/ymin/xmax/ymax: 758 x 145 x 1006 x 510
-INFO:root:Face inference time: 84.697
-INFO:root:Start preprocess image facial detection
-INFO:root:Start preprocess image head_pose_estimation
-INFO:root:The input shape from the head pose is n= (1)  c= (3)  h= (60)  w= (60)
-INFO:root:Image is now [BxCxHxW]: (1, 3, 60, 60)
-INFO:root:Start syncro inference head_pose_estimation
-INFO:root:Start head_pose_detection
-INFO:root:Start preprocess image Gaze_Estimation
-INFO:root:End preprocess image
-INFO:root:Start syncro inference
-INFO:root:Start gaze_estimation
-INFO:root:End gaze_estimation
-INFO:root:Gaze results: ([[ 0.26618645 -0.23926991 -0.91922736]])
-ERROR:root:PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:10:07,195 INFO Start computer_pointer.py
-2020-09-28 15:10:07,309 INFO Facedetection load time: 113.257
-2020-09-28 15:10:07,397 INFO Facial_Landmarks load time: 87.224
-2020-09-28 15:10:07,550 INFO Headpose load time: 153.316
-2020-09-28 15:10:07,730 INFO Gaze load time: 179.262
-2020-09-28 15:10:07,730 INFO Total model load time: 533.8
-2020-09-28 15:10:07,730 INFO All models are loaded!
-2020-09-28 15:10:07,730 INFO Input Feeder is loaded
-2020-09-28 15:10:07,967 INFO Face inference time: 98.925
-2020-09-28 15:10:07,967 ERROR type list doesn't define __round__ method
-2020-09-28 15:11:55,379 INFO Start computer_pointer.py
-2020-09-28 15:11:55,580 INFO Facial_Landmarks load time: 87.472
-2020-09-28 15:11:55,732 INFO Headpose load time: 152.042
-2020-09-28 15:11:55,911 INFO Gaze load time: 178.698
-2020-09-28 15:11:55,911 INFO Total model load time: 531.13
-2020-09-28 15:11:55,911 INFO All models are loaded!
-2020-09-28 15:11:55,911 INFO Input Feeder is loaded
-2020-09-28 15:11:56,125 INFO Face inference time: 75.059
-2020-09-28 15:11:56,125 ERROR type list doesn't define __round__ method
-2020-09-28 15:12:44,165 INFO Start computer_pointer.py
-2020-09-28 15:12:44,700 INFO All models are loaded!
-2020-09-28 15:12:44,701 INFO Input Feeder is loaded
-2020-09-28 15:12:44,935 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:12:46,339 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:12:47,706 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:12:49,070 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:12:50,434 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:12:51,817 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 15:12:51,869 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:13:29,549 INFO Start computer_pointer.py
-2020-09-28 15:13:30,091 INFO All models are loaded!
-2020-09-28 15:13:30,091 INFO Input Feeder is loaded
-2020-09-28 15:13:30,304 INFO Total face inference time: [77.22854614257812]
-2020-09-28 15:13:30,327 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:13:31,710 INFO Total face inference time: [74.65195655822754]
-2020-09-28 15:13:31,730 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:13:33,078 INFO Total face inference time: [77.78358459472656]
-2020-09-28 15:13:33,097 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:13:34,473 INFO Total face inference time: [77.7120590209961]
-2020-09-28 15:13:34,492 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:13:34,626 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:14:28,445 INFO Start computer_pointer.py
-2020-09-28 15:14:28,985 INFO All models are loaded!
-2020-09-28 15:14:28,985 INFO Input Feeder is loaded
-2020-09-28 15:14:29,221 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:14:30,623 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:14:31,990 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:14:33,356 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:14:34,759 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:14:35,724 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:15:34,533 INFO Start computer_pointer.py
-2020-09-28 15:15:35,075 INFO All models are loaded!
-2020-09-28 15:15:35,075 INFO Input Feeder is loaded
-2020-09-28 15:15:35,288 ERROR 'float' object has no attribute 'append'
-2020-09-28 15:17:57,325 INFO Start computer_pointer.py
-2020-09-28 15:17:57,859 INFO All models are loaded!
-2020-09-28 15:17:57,859 INFO Input Feeder is loaded
-2020-09-28 15:17:58,098 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:17:59,500 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:18:00,868 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:18:02,235 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:18:03,599 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:18:05,009 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 15:18:05,038 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:23:09,965 INFO Start computer_pointer.py
-2020-09-28 15:23:10,501 INFO All models are loaded!
-2020-09-28 15:23:10,501 INFO Input Feeder is loaded
-2020-09-28 15:23:10,730 ERROR local variable 'inference_time_facial_total' referenced before assignment
-2020-09-28 15:23:35,325 INFO Start computer_pointer.py
-2020-09-28 15:23:35,864 INFO All models are loaded!
-2020-09-28 15:23:35,864 INFO Input Feeder is loaded
-2020-09-28 15:23:36,100 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:23:37,501 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:23:38,868 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:23:40,232 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:23:41,597 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:23:42,975 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 15:23:44,386 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
-2020-09-28 15:23:44,416 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:28:05,386 INFO Start computer_pointer.py
-2020-09-28 15:28:05,955 INFO All models are loaded!
-2020-09-28 15:28:05,955 INFO Input Feeder is loaded
-2020-09-28 15:28:06,178 ERROR 'float' object has no attribute 'append'
-2020-09-28 15:29:02,812 INFO Start computer_pointer.py
-2020-09-28 15:29:03,348 INFO All models are loaded!
-2020-09-28 15:29:03,348 INFO Input Feeder is loaded
-2020-09-28 15:29:03,585 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:29:04,987 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:29:06,353 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:29:07,755 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:29:07,784 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:30:09,142 INFO Start computer_pointer.py
-2020-09-28 15:30:09,714 INFO All models are loaded!
-2020-09-28 15:30:09,714 INFO Input Feeder is loaded
-2020-09-28 15:30:09,958 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:30:11,391 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:30:12,786 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:30:14,175 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:30:15,566 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:30:16,971 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 15:30:18,358 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
-2020-09-28 15:30:19,750 INFO Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
-2020-09-28 15:30:21,160 INFO Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
-2020-09-28 15:30:22,571 INFO Gaze results: ([[ 0.36359236 -0.22449833 -0.90622455]])
-2020-09-28 15:30:23,972 INFO Gaze results: ([[ 0.40923408 -0.30031613 -0.8717012 ]])
-2020-09-28 15:30:25,370 INFO Gaze results: ([[ 0.30233717 -0.301759   -0.8917129 ]])
-2020-09-28 15:30:26,759 INFO Gaze results: ([[ 0.35327765 -0.2578471  -0.87706417]])
-2020-09-28 15:30:27,198 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:31:02,161 INFO Start computer_pointer.py
-2020-09-28 15:31:02,781 INFO All models are loaded!
-2020-09-28 15:31:02,781 INFO Input Feeder is loaded
-2020-09-28 15:31:03,019 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:31:04,454 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:31:05,849 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:31:07,241 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:31:08,633 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:31:10,037 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 15:31:11,421 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
-2020-09-28 15:31:12,810 INFO Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
-2020-09-28 15:31:14,226 INFO Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
-2020-09-28 15:31:15,621 INFO Gaze results: ([[ 0.36359236 -0.22449833 -0.90622455]])
-2020-09-28 15:31:17,038 INFO Gaze results: ([[ 0.40923408 -0.30031613 -0.8717012 ]])
-2020-09-28 15:31:18,434 INFO Gaze results: ([[ 0.30233717 -0.301759   -0.8917129 ]])
-2020-09-28 15:31:19,823 INFO Gaze results: ([[ 0.35327765 -0.2578471  -0.87706417]])
-2020-09-28 15:31:20,772 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:31:48,933 INFO Start computer_pointer.py
-2020-09-28 15:33:10,878 INFO Start computer_pointer.py
-2020-09-28 15:33:28,509 INFO Start computer_pointer.py
-2020-09-28 15:34:07,557 INFO Start computer_pointer.py
-2020-09-28 15:34:08,096 INFO All models are loaded!
-2020-09-28 15:34:08,097 INFO Input Feeder is loaded
-2020-09-28 15:34:08,339 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:34:09,742 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:34:11,239 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:34:11,269 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:46:33,971 INFO Start computer_pointer.py
-2020-09-28 15:46:34,521 INFO All models are loaded!
-2020-09-28 15:46:34,521 INFO Input Feeder is loaded
-2020-09-28 15:46:34,759 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:46:36,180 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:46:37,523 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:46:38,358 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:46:43,863 INFO Start computer_pointer.py
-2020-09-28 15:46:44,411 INFO All models are loaded!
-2020-09-28 15:46:44,411 INFO Input Feeder is loaded
-2020-09-28 15:46:44,652 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:46:46,060 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:46:47,426 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:46:48,287 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:46:57,263 INFO Start computer_pointer.py
-2020-09-28 15:46:57,840 INFO All models are loaded!
-2020-09-28 15:46:57,840 INFO Input Feeder is loaded
-2020-09-28 15:46:58,089 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:46:59,525 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:47:00,924 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:47:02,320 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:47:03,707 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 15:47:05,119 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 15:47:06,517 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
-2020-09-28 15:47:07,918 INFO Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
-2020-09-28 15:47:09,328 INFO Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
-2020-09-28 15:47:10,728 INFO Gaze results: ([[ 0.36359236 -0.22449833 -0.90622455]])
-2020-09-28 15:47:12,120 INFO Gaze results: ([[ 0.40923408 -0.30031613 -0.8717012 ]])
-2020-09-28 15:47:13,528 INFO Gaze results: ([[ 0.30233717 -0.301759   -0.8917129 ]])
-2020-09-28 15:47:13,979 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:48:21,115 INFO Start computer_pointer.py
-2020-09-28 15:48:21,474 INFO All models are loaded!
-2020-09-28 15:48:21,474 INFO Input Feeder is loaded
-2020-09-28 15:48:21,708 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 15:48:23,151 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 15:48:24,543 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 15:48:25,943 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 15:48:27,394 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 15:48:27,784 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 15:49:08,964 INFO Start computer_pointer.py
-2020-09-28 15:49:09,542 INFO All models are loaded!
-2020-09-28 15:49:09,542 INFO Input Feeder is loaded
-2020-09-28 15:49:09,793 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 15:49:11,252 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 15:49:12,659 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 15:49:14,108 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 15:49:14,139 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:03:00,977 INFO Start computer_pointer.py
-2020-09-28 16:03:01,307 INFO All models are loaded!
-2020-09-28 16:03:01,307 INFO Input Feeder is loaded
-2020-09-28 16:03:01,542 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:03:02,946 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:03:04,311 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:03:05,739 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:03:05,769 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:03:59,417 INFO Start computer_pointer.py
-2020-09-28 16:03:59,779 INFO All models are loaded!
-2020-09-28 16:03:59,779 INFO Input Feeder is loaded
-2020-09-28 16:03:59,990 ERROR can only concatenate list (not "float") to list
-2020-09-28 16:04:45,012 INFO Start computer_pointer.py
-2020-09-28 16:04:45,362 INFO All models are loaded!
-2020-09-28 16:04:45,362 INFO Input Feeder is loaded
-2020-09-28 16:04:45,576 ERROR can only concatenate list (not "float") to list
-2020-09-28 16:10:01,224 INFO Start computer_pointer.py
-2020-09-28 16:10:01,553 INFO All models are loaded!
-2020-09-28 16:10:01,553 INFO Input Feeder is loaded
-2020-09-28 16:10:01,765 ERROR name 'inf_face_total' is not defined
-2020-09-28 16:10:28,836 INFO Start computer_pointer.py
-2020-09-28 16:10:29,165 INFO All models are loaded!
-2020-09-28 16:10:29,165 INFO Input Feeder is loaded
-2020-09-28 16:10:29,379 ERROR name 'inf_face_total' is not defined
-2020-09-28 16:10:59,171 INFO Start computer_pointer.py
-2020-09-28 16:10:59,501 INFO All models are loaded!
-2020-09-28 16:10:59,501 INFO Input Feeder is loaded
-2020-09-28 16:10:59,740 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:11:01,152 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:11:02,525 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:11:03,894 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:11:05,379 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:11:05,778 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:11:13,838 INFO Start computer_pointer.py
-2020-09-28 16:11:14,197 INFO All models are loaded!
-2020-09-28 16:11:14,197 INFO Input Feeder is loaded
-2020-09-28 16:11:14,470 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:11:15,908 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:11:17,312 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:11:18,708 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:11:20,098 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:11:21,490 INFO Gaze results: ([[ 0.06081549  0.12097765 -0.9826693 ]])
-2020-09-28 16:11:22,880 INFO Gaze results: ([[ 0.01754168  0.05766193 -0.99610883]])
-2020-09-28 16:11:24,266 INFO Gaze results: ([[ 0.35187063 -0.3626538  -0.8501474 ]])
-2020-09-28 16:11:24,296 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:12:23,536 INFO Start computer_pointer.py
-2020-09-28 16:12:23,864 INFO All models are loaded!
-2020-09-28 16:12:23,864 INFO Input Feeder is loaded
-2020-09-28 16:12:24,100 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:12:25,509 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:12:26,886 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:12:27,651 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:14:32,035 INFO Start computer_pointer.py
-2020-09-28 16:14:32,364 INFO All models are loaded!
-2020-09-28 16:14:32,364 INFO Input Feeder is loaded
-2020-09-28 16:14:32,580 ERROR local variable 'len' referenced before assignment
-2020-09-28 16:14:54,139 INFO Start computer_pointer.py
-2020-09-28 16:14:54,469 INFO All models are loaded!
-2020-09-28 16:14:54,469 INFO Input Feeder is loaded
-2020-09-28 16:14:54,683 ERROR 'int' object is not callable
-2020-09-28 16:15:11,809 INFO Start computer_pointer.py
-2020-09-28 16:15:12,141 INFO All models are loaded!
-2020-09-28 16:15:12,141 INFO Input Feeder is loaded
-2020-09-28 16:15:12,379 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:15:13,783 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:15:15,149 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:15:15,286 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:15:38,690 INFO Start computer_pointer.py
-2020-09-28 16:15:39,052 INFO All models are loaded!
-2020-09-28 16:15:39,052 INFO Input Feeder is loaded
-2020-09-28 16:15:39,288 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:15:40,735 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:15:42,128 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:15:43,517 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:15:44,918 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:15:46,048 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:16:51,924 INFO Start computer_pointer.py
-2020-09-28 16:16:52,261 INFO All models are loaded!
-2020-09-28 16:16:52,261 INFO Input Feeder is loaded
-2020-09-28 16:16:52,496 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:16:53,907 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:16:55,277 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:16:56,650 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:16:56,790 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:17:19,451 INFO Start computer_pointer.py
-2020-09-28 16:17:19,810 INFO All models are loaded!
-2020-09-28 16:17:19,810 INFO Input Feeder is loaded
-2020-09-28 16:17:20,052 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:17:21,491 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:17:22,880 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:17:24,278 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:17:25,665 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:17:27,056 INFO Gaze results: ([[ 0.06081549  0.12097765 -0.9826693 ]])
-2020-09-28 16:17:28,466 INFO Gaze results: ([[ 0.01754168  0.05766193 -0.99610883]])
-2020-09-28 16:17:29,866 INFO Gaze results: ([[ 0.35187063 -0.3626538  -0.8501474 ]])
-2020-09-28 16:17:30,104 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:19:11,760 INFO Start computer_pointer.py
-2020-09-28 16:19:12,117 INFO All models are loaded!
-2020-09-28 16:19:12,118 INFO Input Feeder is loaded
-2020-09-28 16:19:12,367 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:19:13,811 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:19:15,201 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:19:16,597 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:19:17,991 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:19:19,379 INFO Gaze results: ([[ 0.06081549  0.12097765 -0.9826693 ]])
-2020-09-28 16:19:20,769 INFO Gaze results: ([[ 0.01754168  0.05766193 -0.99610883]])
-2020-09-28 16:19:22,167 INFO Gaze results: ([[ 0.35187063 -0.3626538  -0.8501474 ]])
-2020-09-28 16:19:23,567 INFO Gaze results: ([[ 0.23176432 -0.34008133 -0.8912288 ]])
-2020-09-28 16:19:24,950 INFO Gaze results: ([[ 0.36609513 -0.22819848 -0.89600426]])
-2020-09-28 16:19:26,335 INFO Gaze results: ([[ 0.43604642 -0.283031   -0.86622834]])
-2020-09-28 16:19:26,779 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:26:43,876 INFO Start computer_pointer.py
-2020-09-28 16:26:44,207 INFO All models are loaded!
-2020-09-28 16:26:44,207 INFO Input Feeder is loaded
-2020-09-28 16:26:44,447 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:26:45,864 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:26:47,234 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:26:48,601 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:26:49,966 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:26:51,329 INFO Gaze results: ([[ 0.06081549  0.12097765 -0.9826693 ]])
-2020-09-28 16:26:52,693 INFO Gaze results: ([[ 0.01754168  0.05766193 -0.99610883]])
-2020-09-28 16:26:54,084 INFO Gaze results: ([[ 0.35187063 -0.3626538  -0.8501474 ]])
-2020-09-28 16:26:55,452 INFO Gaze results: ([[ 0.23176432 -0.34008133 -0.8912288 ]])
-2020-09-28 16:26:56,886 INFO Gaze results: ([[ 0.36609513 -0.22819848 -0.89600426]])
-2020-09-28 16:26:56,915 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:27:04,322 INFO Start computer_pointer.py
-2020-09-28 16:27:04,690 INFO All models are loaded!
-2020-09-28 16:27:04,690 INFO Input Feeder is loaded
-2020-09-28 16:27:04,933 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:27:06,375 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:27:07,772 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:27:09,163 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:27:10,555 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:27:11,940 INFO Gaze results: ([[ 0.06081549  0.12097765 -0.9826693 ]])
-2020-09-28 16:27:13,348 INFO Gaze results: ([[ 0.01754168  0.05766193 -0.99610883]])
-2020-09-28 16:27:14,737 INFO Gaze results: ([[ 0.35187063 -0.3626538  -0.8501474 ]])
-2020-09-28 16:27:16,137 INFO Gaze results: ([[ 0.23176432 -0.34008133 -0.8912288 ]])
-2020-09-28 16:27:17,535 INFO Gaze results: ([[ 0.36609513 -0.22819848 -0.89600426]])
-2020-09-28 16:27:18,922 INFO Gaze results: ([[ 0.43604642 -0.283031   -0.86622834]])
-2020-09-28 16:27:20,309 INFO Gaze results: ([[ 0.26741725 -0.32197115 -0.88682497]])
-2020-09-28 16:27:21,700 INFO Gaze results: ([[ 0.34869906 -0.240332   -0.8796117 ]])
-2020-09-28 16:27:23,087 INFO Gaze results: ([[ 0.4173461  -0.31417984 -0.8364633 ]])
-2020-09-28 16:27:24,141 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:31:44,194 INFO Start computer_pointer.py
-2020-09-28 16:31:44,526 INFO All models are loaded!
-2020-09-28 16:31:44,526 INFO Input Feeder is loaded
-2020-09-28 16:31:44,757 ERROR unsupported operand type(s) for +: 'int' and 'list'
-2020-09-28 16:32:12,791 INFO Start computer_pointer.py
-2020-09-28 16:32:13,151 INFO All models are loaded!
-2020-09-28 16:32:13,151 INFO Input Feeder is loaded
-2020-09-28 16:32:13,380 ERROR unsupported operand type(s) for +: 'int' and 'list'
-2020-09-28 16:33:29,117 INFO Start computer_pointer.py
-2020-09-28 16:33:29,479 INFO All models are loaded!
-2020-09-28 16:33:29,479 INFO Input Feeder is loaded
-2020-09-28 16:33:29,720 INFO Gaze results: ([[ 0.2136159   0.08575175 -0.9610276 ]])
-2020-09-28 16:33:31,165 INFO Gaze results: ([[-0.37994325  0.05244695 -0.9046119 ]])
-2020-09-28 16:33:32,560 INFO Gaze results: ([[-0.36676434 -0.00136384 -0.91529596]])
-2020-09-28 16:33:33,963 INFO Gaze results: ([[-0.21609978 -0.11911532 -0.91472554]])
-2020-09-28 16:33:35,367 INFO Gaze results: ([[ 0.04644579  0.06876963 -0.98563635]])
-2020-09-28 16:33:36,764 INFO Gaze results: ([[ 0.06081549  0.12097765 -0.9826693 ]])
-2020-09-28 16:33:38,150 INFO Gaze results: ([[ 0.01754168  0.05766193 -0.99610883]])
-2020-09-28 16:33:39,546 INFO Gaze results: ([[ 0.35187063 -0.3626538  -0.8501474 ]])
-2020-09-28 16:33:40,943 INFO Gaze results: ([[ 0.23176432 -0.34008133 -0.8912288 ]])
-2020-09-28 16:33:42,329 INFO Gaze results: ([[ 0.36609513 -0.22819848 -0.89600426]])
-2020-09-28 16:33:43,710 INFO Gaze results: ([[ 0.43604642 -0.283031   -0.86622834]])
-2020-09-28 16:33:45,097 INFO Gaze results: ([[ 0.26741725 -0.32197115 -0.88682497]])
-2020-09-28 16:33:46,485 INFO Gaze results: ([[ 0.34869906 -0.240332   -0.8796117 ]])
-2020-09-28 16:33:47,874 INFO Gaze results: ([[ 0.4173461  -0.31417984 -0.8364633 ]])
-2020-09-28 16:33:49,287 INFO Gaze results: ([[ 0.38949057 -0.29072705 -0.86344725]])
-2020-09-28 16:33:50,682 INFO Gaze results: ([[ 0.2926274  -0.24140593 -0.90969074]])
-2020-09-28 16:33:52,085 INFO Gaze results: ([[-0.00611541 -0.01915345 -0.9750933 ]])
-2020-09-28 16:33:53,489 INFO Gaze results: ([[-0.2317065   0.06890273 -0.9628472 ]])
-2020-09-28 16:33:54,910 INFO Gaze results: ([[-0.21763861  0.03445789 -0.9580086 ]])
-2020-09-28 16:33:56,299 INFO Gaze results: ([[-0.24212463  0.0378277  -0.93920565]])
-2020-09-28 16:33:57,698 INFO Gaze results: ([[-0.19163635  0.04408707 -0.9725069 ]])
-2020-09-28 16:33:59,064 INFO Gaze results: ([[ 0.04261939  0.03921145 -0.96945155]])
-2020-09-28 16:34:00,437 INFO Gaze results: ([[ 0.13337126  0.144004   -0.97703975]])
-2020-09-28 16:34:01,802 INFO Gaze results: ([[ 0.09044124 -0.01476731 -0.9901732 ]])
-2020-09-28 16:34:03,172 INFO Gaze results: ([[-0.50984466 -0.1359127  -0.81579626]])
-2020-09-28 16:34:04,536 INFO Gaze results: ([[-0.28728777 -0.24110277 -0.89269805]])
-2020-09-28 16:34:05,900 INFO Gaze results: ([[ 0.00922178 -0.3030989  -0.952467  ]])
-2020-09-28 16:34:07,265 INFO Gaze results: ([[ 0.2556392  -0.35136053 -0.90618694]])
-2020-09-28 16:34:08,629 INFO Gaze results: ([[ 0.19655502 -0.33376968 -0.91858226]])
-2020-09-28 16:34:10,001 INFO Gaze results: ([[ 0.36611423  0.07830573 -0.872846  ]])
-2020-09-28 16:34:11,370 INFO Gaze results: ([[ 0.33576527  0.14855729 -0.8417606 ]])
-2020-09-28 16:34:12,760 INFO Gaze results: ([[ 0.2901958   0.13623822 -0.92047584]])
-2020-09-28 16:34:14,146 INFO Gaze results: ([[-0.47175184  0.27087933 -0.753432  ]])
-2020-09-28 16:34:15,532 INFO Gaze results: ([[-0.5292138   0.23206902 -0.71992224]])
-2020-09-28 16:34:16,898 INFO Gaze results: ([[-0.5533372   0.24025841 -0.67089415]])
-2020-09-28 16:34:18,262 INFO Gaze results: ([[-0.6393513   0.07099812 -0.71823364]])
-2020-09-28 16:34:19,677 INFO Gaze results: ([[-0.09111968  0.05894132 -0.93910277]])
-2020-09-28 16:34:21,097 INFO Gaze results: ([[ 0.0911503   0.04178969 -0.9842688 ]])
-2020-09-28 16:34:22,482 INFO Gaze results: ([[ 0.1701489   0.08894362 -0.96972716]])
-2020-09-28 16:34:23,870 INFO Gaze results: ([[ 0.14041936  0.06655113 -0.976219  ]])
-2020-09-28 16:34:25,260 INFO Gaze results: ([[ 0.3590116  -0.16348185 -0.9081553 ]])
-2020-09-28 16:34:26,647 INFO Gaze results: ([[ 0.36798748 -0.31009933 -0.86505777]])
-2020-09-28 16:34:28,032 INFO Gaze results: ([[ 0.5201603  -0.21956933 -0.82403564]])
-2020-09-28 16:34:29,420 INFO Gaze results: ([[ 0.63514686 -0.19408187 -0.7315256 ]])
-2020-09-28 16:34:30,843 INFO Gaze results: ([[ 0.66148114  0.09067901 -0.71796083]])
-2020-09-28 16:34:32,285 INFO Gaze results: ([[ 0.58528084  0.08915541 -0.7888953 ]])
-2020-09-28 16:34:33,702 INFO Gaze results: ([[ 0.41547433 -0.00792924 -0.8821282 ]])
-2020-09-28 16:34:35,093 INFO Gaze results: ([[ 0.23779964  0.12198994 -0.95007765]])
-2020-09-28 16:34:36,508 INFO Gaze results: ([[-0.16710728 -0.05301308 -0.98169863]])
-2020-09-28 16:34:37,900 INFO Gaze results: ([[-0.09045608 -0.2947379  -0.95153636]])
-2020-09-28 16:34:39,288 INFO Gaze results: ([[-0.08954496 -0.32725486 -0.9193705 ]])
-2020-09-28 16:34:40,672 INFO Gaze results: ([[ 0.09128259 -0.30158636 -0.94497913]])
-2020-09-28 16:34:42,056 INFO Gaze results: ([[ 0.04654466 -0.27832443 -0.9618497 ]])
-2020-09-28 16:34:43,441 INFO Gaze results: ([[ 0.02287845 -0.3093789  -0.95158565]])
-2020-09-28 16:34:44,826 INFO Gaze results: ([[ 0.32669055 -0.11083572 -0.9225165 ]])
-2020-09-28 16:34:46,222 INFO Gaze results: ([[ 0.18938129  0.15034379 -0.9325952 ]])
-2020-09-28 16:34:47,619 INFO Gaze results: ([[-0.05067305  0.14049965 -0.852443  ]])
-2020-09-28 16:34:49,004 INFO Gaze results: ([[-0.01004869  0.03303272 -0.9605668 ]])
-2020-09-28 16:34:50,390 INFO Gaze results: ([[ 0.04086806 -0.26168576 -0.92303437]])
-2020-09-28 16:34:51,647 ERROR name 'input_feed' is not defined
-2020-09-28 16:37:06,228 INFO Start computer_pointer.py
-2020-09-28 16:37:06,766 INFO All models are loaded!
-2020-09-28 16:37:06,766 INFO Input Feeder is loaded
-2020-09-28 16:37:07,005 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 16:37:08,413 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 16:37:09,846 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 16:37:09,876 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
-2020-09-28 16:37:18,588 INFO Start computer_pointer.py
-2020-09-28 16:37:19,163 INFO All models are loaded!
-2020-09-28 16:37:19,163 INFO Input Feeder is loaded
-2020-09-28 16:37:19,412 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
-2020-09-28 16:37:20,844 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
-2020-09-28 16:37:22,235 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
-2020-09-28 16:37:23,634 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
-2020-09-28 16:37:25,023 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
-2020-09-28 16:37:26,430 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
-2020-09-28 16:37:27,813 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
-2020-09-28 16:37:29,206 INFO Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
-2020-09-28 16:37:30,617 INFO Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
-2020-09-28 16:37:32,005 INFO Gaze results: ([[ 0.36359236 -0.22449833 -0.90622455]])
-2020-09-28 16:37:33,394 INFO Gaze results: ([[ 0.40923408 -0.30031613 -0.8717012 ]])
-2020-09-28 16:37:34,787 INFO Gaze results: ([[ 0.30233717 -0.301759   -0.8917129 ]])
-2020-09-28 16:37:36,180 INFO Gaze results: ([[ 0.35327765 -0.2578471  -0.87706417]])
-2020-09-28 16:37:37,572 INFO Gaze results: ([[ 0.39132166 -0.30959868 -0.85114074]])
-2020-09-28 16:37:38,993 INFO Gaze results: ([[ 0.40159336 -0.3076989  -0.85410345]])
-2020-09-28 16:37:39,943 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+2020-09-29 18:50:54,189 INFO Start computer_pointer.py
+2020-09-29 18:50:54,318 INFO Load model facedetection = Finished
+2020-09-29 18:50:54,421 INFO Load model Facial_Landmarks = Finished
+2020-09-29 18:50:54,590 INFO Load model head_pose_estimation = Finished
+2020-09-29 18:50:54,778 INFO Load model gaze_estimation = Finished
+2020-09-29 18:50:54,779 INFO All models are loaded!
+2020-09-29 18:50:54,779 INFO Input Feeder is loaded
+2020-09-29 18:50:54,921 INFO Start facedetection
+2020-09-29 18:50:55,000 INFO Inference facedetetion is finished
+2020-09-29 18:50:55,017 INFO Start faciallandmark
+2020-09-29 18:50:55,021 INFO End faciallandmarks
+2020-09-29 18:50:55,021 INFO Start headposeestimation
+2020-09-29 18:50:55,025 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:50:55,025 INFO Start gazeestimation
+2020-09-29 18:50:55,032 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+2020-09-29 18:50:55,032 INFO End gazeestimation
+2020-09-29 18:50:55,107 INFO Start mousecontroller
+2020-09-29 18:50:56,383 INFO Start facedetection
+2020-09-29 18:50:56,473 INFO Inference facedetetion is finished
+2020-09-29 18:50:56,487 INFO Start faciallandmark
+2020-09-29 18:50:56,489 INFO End faciallandmarks
+2020-09-29 18:50:56,490 INFO Start headposeestimation
+2020-09-29 18:50:56,492 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:50:56,492 INFO Start gazeestimation
+2020-09-29 18:50:56,495 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+2020-09-29 18:50:56,495 INFO End gazeestimation
+2020-09-29 18:50:56,524 INFO Start mousecontroller
+2020-09-29 18:50:57,794 INFO Start facedetection
+2020-09-29 18:50:57,886 INFO Inference facedetetion is finished
+2020-09-29 18:50:57,901 INFO Start faciallandmark
+2020-09-29 18:50:57,905 INFO End faciallandmarks
+2020-09-29 18:50:57,905 INFO Start headposeestimation
+2020-09-29 18:50:57,910 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:50:57,910 INFO Start gazeestimation
+2020-09-29 18:50:57,915 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+2020-09-29 18:50:57,916 INFO End gazeestimation
+2020-09-29 18:50:57,945 INFO Start mousecontroller
+2020-09-29 18:50:59,220 INFO Start facedetection
+2020-09-29 18:50:59,309 INFO Inference facedetetion is finished
+2020-09-29 18:50:59,324 INFO Start faciallandmark
+2020-09-29 18:50:59,326 INFO End faciallandmarks
+2020-09-29 18:50:59,326 INFO Start headposeestimation
+2020-09-29 18:50:59,329 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:50:59,329 INFO Start gazeestimation
+2020-09-29 18:50:59,333 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
+2020-09-29 18:50:59,333 INFO End gazeestimation
+2020-09-29 18:50:59,362 INFO Start mousecontroller
+2020-09-29 18:51:00,633 INFO Start facedetection
+2020-09-29 18:51:00,722 INFO Inference facedetetion is finished
+2020-09-29 18:51:00,736 INFO Start faciallandmark
+2020-09-29 18:51:00,739 INFO End faciallandmarks
+2020-09-29 18:51:00,740 INFO Start headposeestimation
+2020-09-29 18:51:00,742 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:51:00,742 INFO Start gazeestimation
+2020-09-29 18:51:00,746 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
+2020-09-29 18:51:00,746 INFO End gazeestimation
+2020-09-29 18:51:00,775 INFO Start mousecontroller
+2020-09-29 18:51:02,066 INFO Start facedetection
+2020-09-29 18:51:02,152 INFO Inference facedetetion is finished
+2020-09-29 18:51:02,165 INFO Start faciallandmark
+2020-09-29 18:51:02,167 INFO End faciallandmarks
+2020-09-29 18:51:02,167 INFO Start headposeestimation
+2020-09-29 18:51:02,172 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:51:02,172 INFO Start gazeestimation
+2020-09-29 18:51:02,176 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
+2020-09-29 18:51:02,176 INFO End gazeestimation
+2020-09-29 18:51:02,204 INFO Start mousecontroller
+2020-09-29 18:51:03,474 INFO Start facedetection
+2020-09-29 18:51:03,560 INFO Inference facedetetion is finished
+2020-09-29 18:51:03,573 INFO Start faciallandmark
+2020-09-29 18:51:03,575 INFO End faciallandmarks
+2020-09-29 18:51:03,575 INFO Start headposeestimation
+2020-09-29 18:51:03,577 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:51:03,578 INFO Start gazeestimation
+2020-09-29 18:51:03,582 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
+2020-09-29 18:51:03,582 INFO End gazeestimation
+2020-09-29 18:51:03,611 INFO Start mousecontroller
+2020-09-29 18:51:04,880 INFO Start facedetection
+2020-09-29 18:51:04,965 INFO Inference facedetetion is finished
+2020-09-29 18:51:04,981 INFO Start faciallandmark
+2020-09-29 18:51:04,983 INFO End faciallandmarks
+2020-09-29 18:51:04,983 INFO Start headposeestimation
+2020-09-29 18:51:04,986 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:51:04,986 INFO Start gazeestimation
+2020-09-29 18:51:04,991 INFO Gaze results: ([[ 0.32730028 -0.36166894 -0.86177075]])
+2020-09-29 18:51:04,991 INFO End gazeestimation
+2020-09-29 18:51:05,020 INFO Start mousecontroller
+2020-09-29 18:51:06,309 INFO Start facedetection
+2020-09-29 18:51:06,396 INFO Inference facedetetion is finished
+2020-09-29 18:51:06,410 INFO Start faciallandmark
+2020-09-29 18:51:06,412 INFO End faciallandmarks
+2020-09-29 18:51:06,412 INFO Start headposeestimation
+2020-09-29 18:51:06,415 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:51:06,415 INFO Start gazeestimation
+2020-09-29 18:51:06,420 INFO Gaze results: ([[ 0.1938051  -0.35682926 -0.8961432 ]])
+2020-09-29 18:51:06,421 INFO End gazeestimation
+2020-09-29 18:51:06,450 INFO Start mousecontroller
+2020-09-29 18:51:07,476 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+2020-09-29 18:55:38,714 INFO Start computer_pointer.py
+2020-09-29 18:55:38,833 INFO Load model facedetection = Finished
+2020-09-29 18:55:38,922 INFO Load model Facial_Landmarks = Finished
+2020-09-29 18:55:39,082 INFO Load model head_pose_estimation = Finished
+2020-09-29 18:55:39,274 INFO Load model gaze_estimation = Finished
+2020-09-29 18:55:39,274 INFO All models are loaded!
+2020-09-29 18:55:39,274 INFO Input Feeder is loaded
+2020-09-29 18:55:39,412 INFO Start facedetection
+2020-09-29 18:55:39,489 INFO Inference facedetetion is finished
+2020-09-29 18:55:39,503 INFO Start faciallandmark
+2020-09-29 18:55:39,505 INFO End faciallandmarks
+2020-09-29 18:55:39,506 INFO Start headposeestimation
+2020-09-29 18:55:39,509 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:55:39,509 INFO Start gazeestimation
+2020-09-29 18:55:39,514 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+2020-09-29 18:55:39,514 INFO End gazeestimation
+2020-09-29 18:55:39,584 INFO Start mousecontroller
+2020-09-29 18:55:40,837 INFO Start facedetection
+2020-09-29 18:55:40,915 INFO Inference facedetetion is finished
+2020-09-29 18:55:40,927 INFO Start faciallandmark
+2020-09-29 18:55:40,929 INFO End faciallandmarks
+2020-09-29 18:55:40,929 INFO Start headposeestimation
+2020-09-29 18:55:40,933 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:55:40,933 INFO Start gazeestimation
+2020-09-29 18:55:40,937 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+2020-09-29 18:55:40,937 INFO End gazeestimation
+2020-09-29 18:55:40,966 INFO Start mousecontroller
+2020-09-29 18:55:41,840 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+2020-09-29 18:56:30,358 INFO Start computer_pointer.py
+2020-09-29 18:56:30,474 INFO Load model facedetection = Finished
+2020-09-29 18:56:30,563 INFO Load model Facial_Landmarks = Finished
+2020-09-29 18:56:30,728 INFO Load model head_pose_estimation = Finished
+2020-09-29 18:56:30,915 INFO Load model gaze_estimation = Finished
+2020-09-29 18:56:30,916 INFO All models are loaded!
+2020-09-29 18:56:30,916 INFO Input Feeder is loaded
+2020-09-29 18:56:31,052 INFO Start facedetection
+2020-09-29 18:56:31,131 INFO Inference facedetetion is finished
+2020-09-29 18:56:31,145 INFO Start faciallandmark
+2020-09-29 18:56:31,148 INFO End faciallandmarks
+2020-09-29 18:56:31,148 INFO Start headposeestimation
+2020-09-29 18:56:31,151 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:31,151 INFO Start gazeestimation
+2020-09-29 18:56:31,156 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+2020-09-29 18:56:31,156 INFO End gazeestimation
+2020-09-29 18:56:31,227 INFO Start mousecontroller
+2020-09-29 18:56:32,474 INFO Start facedetection
+2020-09-29 18:56:32,553 INFO Inference facedetetion is finished
+2020-09-29 18:56:32,565 INFO Start faciallandmark
+2020-09-29 18:56:32,566 INFO End faciallandmarks
+2020-09-29 18:56:32,567 INFO Start headposeestimation
+2020-09-29 18:56:32,570 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:32,571 INFO Start gazeestimation
+2020-09-29 18:56:32,574 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+2020-09-29 18:56:32,574 INFO End gazeestimation
+2020-09-29 18:56:32,606 INFO Start mousecontroller
+2020-09-29 18:56:33,847 INFO Start facedetection
+2020-09-29 18:56:33,924 INFO Inference facedetetion is finished
+2020-09-29 18:56:33,934 INFO Start faciallandmark
+2020-09-29 18:56:33,937 INFO End faciallandmarks
+2020-09-29 18:56:33,937 INFO Start headposeestimation
+2020-09-29 18:56:33,939 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:33,940 INFO Start gazeestimation
+2020-09-29 18:56:33,943 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+2020-09-29 18:56:33,943 INFO End gazeestimation
+2020-09-29 18:56:33,972 INFO Start mousecontroller
+2020-09-29 18:56:35,218 INFO Start facedetection
+2020-09-29 18:56:35,291 INFO Inference facedetetion is finished
+2020-09-29 18:56:35,304 INFO Start faciallandmark
+2020-09-29 18:56:35,305 INFO End faciallandmarks
+2020-09-29 18:56:35,306 INFO Start headposeestimation
+2020-09-29 18:56:35,308 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:35,308 INFO Start gazeestimation
+2020-09-29 18:56:35,311 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
+2020-09-29 18:56:35,311 INFO End gazeestimation
+2020-09-29 18:56:35,340 INFO Start mousecontroller
+2020-09-29 18:56:36,580 INFO Start facedetection
+2020-09-29 18:56:36,656 INFO Inference facedetetion is finished
+2020-09-29 18:56:36,668 INFO Start faciallandmark
+2020-09-29 18:56:36,669 INFO End faciallandmarks
+2020-09-29 18:56:36,670 INFO Start headposeestimation
+2020-09-29 18:56:36,672 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:36,672 INFO Start gazeestimation
+2020-09-29 18:56:36,675 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
+2020-09-29 18:56:36,675 INFO End gazeestimation
+2020-09-29 18:56:36,705 INFO Start mousecontroller
+2020-09-29 18:56:37,968 INFO Start facedetection
+2020-09-29 18:56:38,041 INFO Inference facedetetion is finished
+2020-09-29 18:56:38,052 INFO Start faciallandmark
+2020-09-29 18:56:38,054 INFO End faciallandmarks
+2020-09-29 18:56:38,054 INFO Start headposeestimation
+2020-09-29 18:56:38,056 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:38,057 INFO Start gazeestimation
+2020-09-29 18:56:38,060 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
+2020-09-29 18:56:38,060 INFO End gazeestimation
+2020-09-29 18:56:38,089 INFO Start mousecontroller
+2020-09-29 18:56:39,330 INFO Start facedetection
+2020-09-29 18:56:39,408 INFO Inference facedetetion is finished
+2020-09-29 18:56:39,418 INFO Start faciallandmark
+2020-09-29 18:56:39,420 INFO End faciallandmarks
+2020-09-29 18:56:39,420 INFO Start headposeestimation
+2020-09-29 18:56:39,423 INFO End faciallheadposeestimationandmarks
+2020-09-29 18:56:39,423 INFO Start gazeestimation
+2020-09-29 18:56:39,426 INFO Gaze results: ([[ 0.00341297  0.05555428 -0.99683297]])
+2020-09-29 18:56:39,426 INFO End gazeestimation
+2020-09-29 18:56:39,455 INFO Start mousecontroller
+2020-09-29 18:56:39,507 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.

@@ -51,7 +51,7 @@ class Facial_Landmarks:
             #log.info("Model is loaded as: ", self.network)
             self.input_name = next(iter(self.network.inputs))
         except Exception as e:
-            log.error("Could not initialise the network")
+            log.error("Could not initialise the network", e)
             raise ValueError("Could not initialise the network")
         print("--------")
         print("Model is loaded as self.network : " + str(self.network))
@@ -120,83 +120,77 @@ class Facial_Landmarks:
         # Starts predictions face_detection
         print("--------")
         print("Starts predictions for facial landmarks")
+        log.info("Starts predictions for facial landmarks")
 
         # Pre-process the image
         preprocess_input = self.preprocess_input(frame.copy())
 
         # Starts synchronous inference
         print("Start syncro inference facial landmarks")
-        log.info("Start syncro inference facial landmarks")
+        log.info('Start syncro inference facial landmarks')
 
         outputs = self.exec_network.infer({self.input_name:preprocess_input})
-        print("Output of the inference request: " + str(outputs))
-        print ("finish")
-
+        #print("#######################")
+        #print("Output of the inference request: " + str(outputs))
+        #print("#######################")
+        
+        # Gets coordinates for eyes, nose and lip
         coords, coords_nose, coords_lip = self.preprocess_output(outputs)
-        z = 20
-
-        # print(image.shape)
+        print('---------------------')
+        print(f'Coords eyes:{coords}')
         h, w = frame.shape[0], frame.shape[1]
-        coords = coords* np.array([w, h, w, h])
-        coords = coords.astype(np.int32) #(lefteye_x, lefteye_y, righteye_x, righteye_y)
 
-        ## left eye moving range
-        leye_xmin, leye_ymin=coords[0]-20, coords[1]-20
-        leye_xmax, leye_ymax=coords[0]+20, coords[1]+20
-        ## right eye moving range
-        reye_xmin, reye_ymin=coords[2]-20, coords[3]-20
-        reye_xmax, reye_ymax=coords[2]+20, coords[3]+20
-
-
-        ## leye_ymin:leye_ymax, leye_xmin:leye_xmax --> left eye heigh, width
-        left_eye_box = frame[leye_ymin:leye_ymax, leye_xmin:leye_xmax]
-        ## reye_ymin:reye_ymax, reye_xmin:reye_xmax --> right eye heigh, width
-        right_eye_box = frame[reye_ymin:reye_ymax, reye_xmin:reye_xmax]
-        # print(left_eye_box.shape, right_eye_box.shape) # left eye and right eye image
-
-        ## [left eye box, right eye box] 
-        eyes_coords = [[leye_xmin,leye_ymin,leye_xmax,leye_ymax], [reye_xmin,reye_ymin,reye_xmax,reye_ymax]]
+        print(f'h: {h} w: {w}')
+        
+        ## eyes
+        # left eye coordinates
+        left_eye_xmin, left_eye_ymin=int(coords[0]*w-20), int(coords[1]*h-20)
+        left_eye_xmax, left_eye_ymax=int(coords[0]*w+20), int(coords[1]*h+20)
+        # right eye coordinates
+        right_eye_xmin, right_eye_ymin=int(coords[2]*w-20), int(coords[3]*h-20)
+        right_eye_xmax, right_eye_ymax=int(coords[2]*w+20), int(coords[3]*h+20)
+        # left eye image
+        left_eye_image = frame[left_eye_ymin:left_eye_ymax, left_eye_xmin:left_eye_xmax]
+        # right exe image
+        right_eye_image = frame[right_eye_ymin:right_eye_ymax, right_eye_xmin:right_eye_xmax]
 
         ## Nose
-        coords_nose = coords_nose* np.array([w,h,w,h])
-        coords_nose = coords_nose.astype(np.int32)
-        nose_xmin, nose_ymin = coords_nose [4]-20, coords_nose[5]-20
-        nose_xmax, nose_ymax = coords_nose [4]+20, coords_nose[5]+20
-        nose_bbox = frame[nose_ymin:nose_ymax, nose_xmin:nose_xmax]
-        path = 'output/nose.png'
-        filename = ('nose_bbox'+'.png')
-        cv2.imwrite(filename, path)
+        nose_xmin, nose_ymin = int(coords_nose[0]*w -30), int(coords_nose[1]*h -30)
+        nose_xmax, nose_ymax = int(coords_nose[0]*w +30), int(coords_nose[1]*h +30)
+        #nose_coords = [nose_xmin, nose_ymin, nose_xmax, nose_ymax]
+        #print (f'Coords nose: {nose_coords}')
+        nose_image = frame[nose_ymin:nose_ymax, nose_xmin:nose_xmax]
 
-        return left_eye_box, right_eye_box #, eyes_coords
+        ## Lip
+        lip_corner_right_xmin, lip_corner_right_ymin = int(coords_lip[0]*w -30), int(coords_lip[1]*h -30)
+        lip_corner_right_xmax, lip_corner_right_ymax = int(coords_lip[0]*w +30), int(coords_lip[1]*h +30)
+        #lip_corner_right_coords = [lip_corner_right_xmin, lip_corner_right_ymin, lip_corner_right_xmax, lip_corner_right_ymax]
+        #print (f'Coords lip_corner_right_ymax: {lip_corner_right_coords}')
+        lip_corner_right_image = frame[lip_corner_right_ymin:lip_corner_right_ymax, lip_corner_right_xmin:lip_corner_right_xmax]
 
-    def preprocess_input(self, image):
-        '''
-        Before feeding the data into the model for inference,
-        you might have to preprocess it. This function is where you can do that.
-        '''
-        # print(image.shape)
-        # print(image[2][1])
-        # cv2.imshow('image',image)
-        ## convert RGB to BGR 
-        image_cvt = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        # print(image_cvt.shape) # (374, 238, 3)
-        # cv2.imshow('cvt',image_cvt)
-        # print('====',image_cvt[2][1])
-        # print(self.input_shape) # [1, 3, 48, 48]
-        H, W = self.input_shape[2], self.input_shape[3]
-        # print(H, W) # (48, 48)
+        lip_corner_left_xmin, lip_corner_left_ymin = int(coords_lip[2]*w -30), int(coords_lip[3]*h -30)
+        lip_corner_left_xmax, lip_corner_left_ymax = int(coords_lip[2]*w +30), int(coords_lip[3]*h +30)
+        #lip_corner_left_coords = [lip_corner_left_xmin, lip_corner_left_ymin, lip_corner_left_xmax, lip_corner_left_ymax]
+        #print (f'Coords lip_corner_left_ymax: {lip_corner_left_coords}')
+        lip_corner_left_image = frame[lip_corner_left_ymin:lip_corner_left_ymax, lip_corner_left_xmin:lip_corner_left_xmax]
 
-        image_resized = cv2.resize(image_cvt, (W, H))
-        # print(image_resized.shape) # (48, 48, 3)
-        ## (optional)
-        # image_processed = np.transpose(np.expand_dims(image_resized, axis=0), (0,3,1,2))
-        image = image_resized.transpose((2,0,1))
-        # print(image.shape) # (3, 48, 48)
-        # add 1 dim at very start, then channels then H, W
-        image_processed = image.reshape(1, 3, self.input_shape[2], self.input_shape[3])
-        # print(image_processed.shape) # (1, 3, 48, 48)
+        return left_eye_image, right_eye_image, nose_image, lip_corner_left_image, lip_corner_right_image
 
-        return image_processed
+    def preprocess_input(self, frame):
+        # Preprcess input to feed into the model
+
+        ## Itś important convert RGB to BGR 
+        frame_bgr = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        initial_h, initial_w = self.input_shape[2], self.input_shape[3]
+        print(f'h:{initial_h}, w:{initial_w}')
+
+        frame_resized = cv2.resize(frame_bgr, (initial_w, initial_h))
+        frame = frame_resized.transpose((2,0,1))
+        frame_processed = frame.reshape(1, 3, initial_h, initial_w)
+        log.info('Image is preprocessed: facial_landmarks')
+
+
+        return frame_processed
 
 
     def preprocess_output(self, outputs):
@@ -206,37 +200,31 @@ class Facial_Landmarks:
         10 floating point values for five landmarks coordinates in the form 
         (x0, y0, x1, y1, ..., x5, y5). All the coordinates are normalized to be in range [0,1].
         two eyes, nose, and two lip corners.
-        left_eye = x0, y0, right_eye = x1, y1
-        nose = x2, y2, 
         '''
+        print("Start: preprocess_output")
         print(outputs)
-        # print(outputs[self.output_names].shape) # (1, 10, 1, 1)
-        # print(outputs[self.output_names][0].shape) # (10, 1, 1)
-        # print(outputs[self.output_names][0])        
-        # print('-----', outputs[self.output_names][0][0])
 
-        ## here only need left eye and right eye
-        outs = outputs[self.output_names][0]
+        outs = outputs[self.output_name][0]
         print("outs")
-        # print(outs.shape)
-        # print(outs[0][0][0])
-        # print(outs[0].tolist()) # [[0.37333157658576965]]
-        # print(outs[0].tolist()[0][0]) # [[0.37333157658576965]]        
-        # print(type(outs)) # numpy.ndarry
 
         # Eyes
-        leye_x, leye_y = outs[0][0][0], outs[1][0][0]
-        reye_x, reye_y = outs[2][0][0], outs[3][0][0]
-        coords_lr = (leye_x, leye_y, reye_x, reye_y)
+        left_eye_x, left_eye_y = outs[0][0][0], outs[1][0][0]
+        right_eye_x, right_eye_y = outs[2][0][0], outs[3][0][0]
+        coords_lr = (left_eye_x, left_eye_y, right_eye_x, right_eye_y)
+        print('##############')
+        print(f'Coords eyes:{coords_lr}')
 
         # Nose
         nose_x, nose_y = outs[4][0][0], outs[5][0][0]
         coords_nose = (nose_x, nose_y)
-
+        print(f'Coords nose:{coords_nose}')
+        
         #Lip corners
         lip_corner_left_x, lip_corner_left_y = outs[7][0][0], outs[7][0][0]
         lip_corner_right_x, lip_corner_right_y = outs[8][0][0], outs[9][0][0]
         coords_lip = (lip_corner_left_x, lip_corner_left_y, lip_corner_right_x, lip_corner_right_y)
+        print(f'Coords lips:{coords_lip}')
+        print('#########################')
 
         return coords_lr, coords_nose, coords_lip
 
@@ -254,8 +242,8 @@ def build_argparser():
 
     return parser
 
-# Start program
 if __name__ == '__main__':
+    # Start program
     log.basicConfig(filename="log/logging_facedetection.log", level=log.INFO)
     log.info("Start logging")
     main()

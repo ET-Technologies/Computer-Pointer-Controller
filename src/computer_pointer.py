@@ -12,7 +12,8 @@ python3 src/computer_pointer.py \
 --threshold 0.6 \
 --input_type video \
 --device CPU \
---version 2020
+--version 2020 \
+--show_image yes
 '''
 
 import time
@@ -25,9 +26,9 @@ import time
 import openvino
 
 from face_detection import Facedetection
-#from facial_landmarks_detection import Facial_Landmarks
+from facial_landmarks_detection import Facial_Landmarks
 
-from facial_landmarks_detection_copy import Facial_Landmarks
+#from facial_landmarks_detection_copy01 import Facial_Landmarks
 from head_pose_estimation import Head_Pose_Estimation
 from gaze_estimation import Gaze_Estimation
 
@@ -57,6 +58,7 @@ def main():
     facial_model = args.fl_model
     headpose_model = args.hp_model
     gaze_model = args.ga_model
+    show_image = args.show_image
 
     # Start logger   
         # Basic logger
@@ -80,6 +82,7 @@ def main():
     # Load model Facedetection
     facedetection.load_model()
     print("Load model facedetection = Finished")
+    log.info("Load model facedetection = Finished")
     print("--------")
     total_model_load_time_face = (time.time() - start_load_time_face)*1000
     log_time.info('Facedetection load time: ' + str(round(total_model_load_time_face, 3)))
@@ -91,6 +94,7 @@ def main():
     start_load_time_facial = time.time()
     faciallandmarks.load_model()
     print("Load model Facial_Landmarks = Finished")
+    log.info("Load model Facial_Landmarks = Finished")
     print("--------")
     total_model_load_time_facial = (time.time() - start_load_time_facial)*1000
     log_time.info('Facial_Landmarks load time: ' + str(round(total_model_load_time_facial, 3)))
@@ -102,6 +106,7 @@ def main():
     start_load_time_headpose = time.time()
     headposeestimation.load_model()
     print("Load model head_pose_estimation = Finished")
+    log.info("Load model head_pose_estimation = Finished")
     print("--------")
     total_model_load_time_headpose = (time.time() - start_load_time_headpose)*1000
     log_time.info('Headpose load time: ' + str(round(total_model_load_time_headpose, 3)))
@@ -113,6 +118,7 @@ def main():
     start_load_time_gaze = time.time()
     gazeestimation.load_model()
     print("Load model gaze_estimation = Finished")
+    log.info("Load model gaze_estimation = Finished")
     print("--------")
     total_model_load_time_gaze = (time.time() - start_load_time_gaze)*1000
     total_model_load_time = (time.time() - start_load_time_face)*1000
@@ -149,6 +155,7 @@ def main():
                 ## Inference time
             start_inference_time_face = time.time()
             print("Start facedetection")
+            log.info("Start facedetection")
             print("Cap is feeded to the face detection!")
             face_batch = batch.copy()
             face_image, face_cropped, coords= facedetection.predict(face_batch)
@@ -158,9 +165,11 @@ def main():
             len_face = len(inference_time_face_total)
             avg_inference_time_face = sum(inference_time_face_total)/len_face
             log_time.info(('Average face inference time: ' + str(avg_inference_time_face)))
+            log.info('Inference facedetetion is finished')
             
             if not coords:
                 print("No face detected")
+                log.debug("No face detected")
                 continue
             
             print("The video from the face detection is writen to the output path")
@@ -172,11 +181,14 @@ def main():
             start_inference_time_facial = time.time()
             if (face_cropped is None) or (len(face_cropped)==0):
                 print("No Face above threshold detected")
+                log.error("No Face above threshold detected")
             else:
                 print("Start faciallandmark")
+                log.info("Start faciallandmark")
                 print("The cropped face image is feeded to the faciallandmarks detection.")
-                left_eye_image, right_eye_image = faciallandmarks.predict(face_cropped.copy())
+                left_eye_image, right_eye_image, nose_image, lip_corner_left_image, lip_corner_right_image= faciallandmarks.predict(face_cropped.copy())
                 print("End faciallandmarks")
+                log.info("End faciallandmarks")
 
                 ## Average inference time
                 inference_time_facial = (time.time() - start_inference_time_facial)*1000
@@ -190,10 +202,12 @@ def main():
                 
                 start_inference_time_headpose = time.time()
                 print("Start headposeestimation")
+                log.info("Start headposeestimation")
                 print("The cropped face image is feeded to the headposeestimation.")
                 head_pose_angles = headposeestimation.predict(face_cropped)
                 #print("Head pose angeles: ", head_pose_angles)
                 print("End faciallheadposeestimationandmarks")
+                log.info("End faciallheadposeestimationandmarks")
 
                 ## Average inference time
                 inference_time_headpose = (time.time() - start_inference_time_headpose)*1000
@@ -207,11 +221,13 @@ def main():
                 
                 start_inference_time_gaze = time.time()
                 print("Start gazeestimation")
+                log.info("Start gazeestimation")
                 gaze_result, tmpX, tmpY, gaze_vector02 = gazeestimation.predict(left_eye_image, right_eye_image,
                                                                                 head_pose_angles)
                 print("End gazeestimation")
                 #print('Gaze results:', gaze_result)
                 log.info("Gaze results: ({})".format(str(gaze_result)))
+                log.info("End gazeestimation")
 
                 ## Average inference time
                 inference_time_gaze = (time.time() - start_inference_time_gaze)*1000
@@ -226,15 +242,24 @@ def main():
                 log_time.info(('Total inference time: ' + str(inference_time_all_models)))
 
                 log_time.info('----')
-                cv2.imshow('Cropped Face', face_cropped)
-                cv2.waitKey(28)
+                if show_image == 'yes':
+                    cv2.imshow('Cropped Face', face_cropped)
+                    cv2.imshow('Left eye', left_eye_image)
+                    cv2.imshow('right eye', right_eye_image)
+                    cv2.imshow('Nose', nose_image)
+                    cv2.imshow('Lip left', lip_corner_left_image)
+                    cv2.imshow('Lip right', lip_corner_right_image)
+                    
+                    cv2.waitKey(28)
                 
                 # mouse controller
+                log.info('Start mousecontroller')
                 mousecontroller = MouseController('medium', 'fast')
                 mousecontroller.move(tmpX, tmpY)
 
         input_feed.close()
         cv2.destroyAllWindows()
+        log.info('End of program')
 
     except Exception as e:
         print ("Could not run Inference: ", e)
@@ -252,19 +277,26 @@ def setup_logger(name, log_file, level=log.INFO):
     return logger
 
 def build_argparser():
+    # Setup argparser
     parser = argparse.ArgumentParser()
-
-    parser.add_argument("--fd_model", required=True)
-    parser.add_argument("--fl_model", required=True)
-    parser.add_argument("--hp_model", required=True)
-    parser.add_argument("--ga_model", required=True)
-    parser.add_argument('--device', default = 'CPU')
-    parser.add_argument('--extension', default= None)
-    parser.add_argument('--video', default=None)
+    # Help text for argparser
+    fd_model_help = 'Path to the face model'
+    fl_model_help = 'Path to the landmark model'
+    hp_model_help = 'Path to the head pose model'
+    ga_model_help = 'Path to the gaze model'
+    # Create the arguments
+    parser.add_argument("--fd_model", help=fd_model_help, required=True)
+    parser.add_argument("--fl_model", help=fl_model_help, required=True)
+    parser.add_argument("--hp_model", help=hp_model_help, required=True)
+    parser.add_argument("--ga_model", help=ga_model_help, required=True)
+    parser.add_argument('--device', default = 'CPU', required=False)
+    parser.add_argument('--extension', default= None, required=False)
+    parser.add_argument('--video', default=None, required=False)
     parser.add_argument('--output_path', required=False)
-    parser.add_argument('--threshold', type=float, default=0.6)
+    parser.add_argument('--threshold', type=float, default=0.6, required=False)
     parser.add_argument('--input_type', required=False)
     parser.add_argument('--version', default='2020', required=False)
+    parser.add_argument('--show_image', default='no', required=False)
 
     return parser
 
