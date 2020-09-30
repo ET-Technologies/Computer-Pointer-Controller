@@ -129,7 +129,7 @@ Note that the face model only comes with precision FP32. All other models have a
 The following results were obtained when testing with the demo video file:
 
 ## Results
-The shortest model loading time was with FP32 (361) and the longest with INT8 models (582). The total inference time was nearly the same with all three precisions levels.
+I ran the test on Linux with a Core i5 CPU. In my test scenario, the FP32 was the best choice. It had the lowest load time and the total inference time was nearly the same with all levels of precision. However, in general, one could say that the lower the precision, the faster the loading time, the shorter the inference time and the worse the accuracy. This was not the case in my test scenario. However, since I tested the application with the demo video feed, it was unable to test the accuracy.
 
 
 ### Model load time ***FP32***

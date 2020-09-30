@@ -38,9 +38,8 @@ from mouse_controller import MouseController
 
 '''
 I used following resources:
-https://knowledge.udacity.com/questions/254779 output gaze estimation
-https://knowledge.udacity.com/questions/171017
-https://knowledge.udacity.com/questions/257811 (move mouse)
+https://knowledge.udacity.com/questions/254779
+https://knowledge.udacity.com/questions/257811
 '''
 
 def main():

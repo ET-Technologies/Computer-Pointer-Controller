@@ -179,43 +179,6 @@ class Head_Pose_Estimation:
         print("--------")
         return angles
 
-    def preprocess_outputtest(self, image):
-
-        print("--------")
-        print("Start preprocess_output head_pose_estimation")
-        log.info("Start preprocess_output head_pose_estimation")
-        outputs = []
-        outputs2 = []
-        
-        outputs.append(image['angle_y_fc'].tolist()[0][0])
-        outputs2.append(image['angle_y_fc'][0][0])
-        angle_y_fc = (image['angle_y_fc'][0][0])
-        
-        outputs.append(image['angle_p_fc'].tolist()[0][0])
-        outputs2.append(image['angle_p_fc'][0][0])
-        angle_p_fc = (image['angle_p_fc'][0][0])
-        
-        outputs.append(image['angle_r_fc'].tolist()[0][0])
-        outputs2.append(image['angle_r_fc'][0][0])
-        angle_r_fc = (image['angle_r_fc'][0][0])
-        
-        #print ("outputs: " +str(outputs))
-        #print ("outputs2: " +str(outputs2))
-        #print ("outputs2: " +str(outputs2))
-        #print ("outputs: " +str(outputs))
-        #print ("outputs2: " +str(outputs2))
-        #print ("outputs: " +str(outputs))
-        #print ("outputs2: " +str(outputs2))
-        #print ("angle_y_fc: " +str(angle_y_fc))
-        #print ("angle_p_fc: " +str(angle_p_fc))
-        #print ("angle_r_fc: " +str(angle_r_fc))
-
-        print("End preprocess_output head_pose_estimation")
-        log.info("End preprocess_output head_pose_estimation")
-        print("--------")
-
-        return outputs
-
     def load_data(self, input_type, input_file):
 
         print ("Start load_data from InputFeeder")

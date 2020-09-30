@@ -22,7 +22,8 @@ from openvino.inference_engine import IENetwork, IECore
 import logging as log
 import math
 
-# I used following resources: https://knowledge.udacity.com/questions/254779
+# I used following resources: 
+# https://knowledge.udacity.com/questions/254779
 
 class Gaze_Estimation:
     # Load all relevant variables into the class
@@ -185,8 +186,6 @@ class Gaze_Estimation:
 
         print("gaze_vector: " + str(gaze_vector))
 
-        # With help from: https://knowledge.udacity.com/questions/254779
-
         gaze_vector02 = outputs[0]
         print ("gaze_vector02", gaze_vector02)
         roll = gaze_vector02[2]
@@ -203,46 +202,6 @@ class Gaze_Estimation:
         print("--------")
 
         return gaze_vector, tmpX, tmpY, gaze_vector02
-
-    def preprocess_outputTEST(self, image):
-        '''
-        https://docs.openvinotoolkit.org/2019_R1/_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html
-        The network takes three inputs: square crop of left eye image, square crop of right eye image, and three head pose angles – (yaw, pitch, and roll) 
-        (see figure). The network outputs 3-D vector corresponding to the direction of a person’s gaze in a Cartesian coordinate system in which 
-        z-axis is directed from person’s eyes (mid-point between left and right eyes’ centers) to the camera center, y-axis is 
-        vertical, and x-axis is orthogonal to both z,y axes so that (x,y,z) constitute a right-handed coordinate system.
-        '''
-
-        print("--------")
-        print("Start preprocess_output gaze estimation")
-        log.info("Start preprocess_output gaze estimation")
-        outputs = []
-        outputs2 = []
-        
-        outputs.append(image['angle_y_fc'].tolist()[0][0])
-        outputs2.append(image['angle_y_fc'][0][0])
-        angle_y_fc = (image['angle_y_fc'][0][0])
-        
-        outputs.append(image['angle_p_fc'].tolist()[0][0])
-        outputs2.append(image['angle_p_fc'][0][0])
-        angle_p_fc = (image['angle_p_fc'][0][0])
-        
-        outputs.append(image['angle_r_fc'].tolist()[0][0])
-        outputs2.append(image['angle_r_fc'][0][0])
-        angle_r_fc = (image['angle_r_fc'][0][0])
-        
-        #print ("outputs: " +str(outputs))
-        #print ("outputs2: " +str(outputs2))
-        #print ("outputs2: " +str(outputs2))
-        #print ("outputs: " +str(outputs))
-        #print ("outputs2: " +str(outputs2))
-        #print ("outputs: " +str(outputs))
-        #print ("outputs2: " +str(outputs2))
-        #print ("angle_y_fc: " +str(angle_y_fc))
-        #print ("angle_p_fc: " +str(angle_p_fc))
-        #print ("angle_r_fc: " +str(angle_r_fc))
-
-        return outputs
     
     def getinputstream(self, left_eye, right_eye):
         try:
