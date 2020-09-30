@@ -1,6 +1,12 @@
 # Computer Pointer Controller
 
-The computer pointer app is used to navigate the mouse position through the user's gaze. A pipeline of four Openvino models will work together to accomplish this task.
+The computer pointer application is used to control the mouse pointer through the user's gaze. A pipeline of four Openvino models will work together to accomplish this task.
+* Face Detection Model
+* Landmark Detection Model
+* Head Pose Estimation Model
+* Gaze Estimation Model
+
+An input image (video file or webcam feed) is send to the face detection model. From there a cropped face image is send to the landmark model and the head pose model. The landmark model provides the cropped left and right eye image and the head model provides the head pose angels. Both 
 
 ## Project Set Up and Installation
 
@@ -58,14 +64,15 @@ If you want to run the program, following arguments are nessesary:
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
 --output_path output/demo_output.mp4 \
---fd_model models/2020.4.1/FP32-INT1/face-detection-adas-binary-0001 \
---fl_model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
---hp_model models/2020.4.1/FP16-INT8/head-pose-estimation-adas-0001 \
---ga_model models/2020.4.1/FP16-INT8/gaze-estimation-adas-0002 \
+--fd_model models/2020.4.1/FP32/face-detection-adas-binary-0001 \
+--fl_model models/2020.4.1/FP16/landmarks-regression-retail-0009 \
+--hp_model models/2020.4.1/FP16/head-pose-estimation-adas-0001 \
+--ga_model models/2020.4.1/FP16/gaze-estimation-adas-0002 \
 --threshold 0.6 \
 --input_type video \
 --device CPU \
---version 2020
+--version 2020 \
+--show_image yes
 </pre>
 
 **2a. Arguments to run the program** with e.g **FP32**, **CPU** input **video**
@@ -80,21 +87,23 @@ python3 src/computer_pointer.py \
 --threshold 0.6 \
 --input_type video \
 --device CPU \
---version 2020
+--version 2020 \
+--show_image yes
 </pre>
 **2b. Arguments to run the program** with e.g **INT8**, **CPU** input **video**
 <pre>
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
 --output_path output/demo_output.mp4 \
---fd_model models/2020.4.1/FP32-INT1/face-detection-adas-binary-0001 \
+--fd_model models/2020.4.1/FP32/face-detection-adas-binary-0001 \
 --fl_model models/2020.4.1/FP16-INT8/landmarks-regression-retail-0009 \
 --hp_model models/2020.4.1/FP16-INT8/head-pose-estimation-adas-0001 \
 --ga_model models/2020.4.1/FP16-INT8/gaze-estimation-adas-0002 \
 --threshold 0.6 \
 --input_type video \
 --device CPU \
---version 2020
+--version 2020 \
+--show_image yes
 </pre>
 ## Documentation
 
@@ -118,7 +127,7 @@ The project needs some basic input and some optimal input. The models for face r
 The model load time and the inference time can be found in the log protocol.logging_basic.log or logging_time.log
 In my case the program was testet with CPU only, but with different precision levels. FP32, FP16, INT8
 Note that the face model just come with precision FP32. All other models have all three precisions. 
-Following results occurred:
+Following results occurred while testing it with the demo video file:
 
 ## Results
 *TODO:* Discuss the benchmark results and explain why you are getting the results you are getting. For instance, explain why there is difference in inference time for FP32, FP16 and INT8 models.
@@ -126,37 +135,66 @@ The shortest model loading time was with FP32. 357ms FP16 and INT8 had nearly th
 
 ### Model load time ***FP32***
 <pre>
-2020-09-28 15:48:21,231 INFO Facedetection load time: 115.005
-2020-09-28 15:48:21,309 INFO Facial_Landmarks load time: 78.372
-2020-09-28 15:48:21,386 INFO Headpose load time: 76.256
-2020-09-28 15:48:21,474 INFO Gaze load time: 87.544
-2020-09-28 15:48:21,474 INFO Total model load time: 357.765
+INFO Facedetection load time: 126.828
+NFO Facial_Landmarks load time: 75.75
+INFO Headpose load time: 72.87
+INFO Gaze load time: 86.088
+INFO Total model load time: 361.893
 </pre>
 
 ### Model load time ***FP16***
 <pre>
-2020-09-28 15:46:57,388 INFO Facedetection load time: 125.031
-2020-09-28 15:46:57,492 INFO Facial_Landmarks load time: 103.628
-2020-09-28 15:46:57,657 INFO Headpose load time: 164.544
-2020-09-28 15:46:57,840 INFO Gaze load time: 182.565
-2020-09-28 15:46:57,840 INFO Total model load time: 576.545
+INFO Facedetection load time: 134.411
+INFO Facial_Landmarks load time: 82.6
+INFO Headpose load time: 103.659
+INFO Gaze load time: 137.994
+INFO Total model load time: 458.994
 </pre>
 
 ### Model load time ***INT8***
 <pre>
-2020-09-28 15:49:09,093 INFO Facedetection load time: 128.538
-2020-09-28 15:49:09,193 INFO Facial_Landmarks load time: 99.551
-2020-09-28 15:49:09,354 INFO Headpose load time: 160.507
-2020-09-28 15:49:09,541 INFO Gaze load time: 187.431
-2020-09-28 15:49:09,541 INFO Total model load time: 576.638
+INFO Facedetection load time: 118.046
+INFO Facial_Landmarks load time: 104.521
+INFO Headpose load time: 168.995
+INFO Gaze load time: 190.046
+INFO Total model load time: 582.289
 </pre>
 ### Average inference time ***FP32***
 <pre>
-2020-09-28 16:34:50,371 INFO Average face inference time: 79.9724934464794
-2020-09-28 16:34:50,384 INFO Average facial inference time: 1.7137810335320942
-2020-09-28 16:34:50,386 INFO Average headpose inference time: 2.864142595711401
-2020-09-28 16:34:50,390 INFO Average gaze inference time: 4.331091702994653
+INFO Average face inference time: 76.81961786949029
+INFO Average facial inference time: 2.027689400365797
+INFO Average headpose inference time: 3.1615717936370333
+INFO Average gaze inference time: 4.442558450213934
 </pre>
+### Average inference time ***FP16***
+<pre>
+INFO Average face inference time: 77.14002415285272
+INFO Average facial inference time: 2.157453763282905
+INFO Average headpose inference time: 3.1131283711578885
+INFO Average gaze inference time: 4.4506081080032605
+</pre>
+### Average inference time ***INT8***
+<pre>
+INFO Average face inference time: 78.2736277176162
+INFO Average facial inference time: 2.1134837199065646
+INFO Average headpose inference time: 2.7073803594556907
+INFO Average gaze inference time: 4.1432542315984175
+INFO Total inference time: 5925.552606582642
+</pre>
+
+### Total inference time ***FP32***
+<pre>
+INFO Total inference time: 5859.833240509033
+</pre>
+### Total inference time ***FP16***
+<pre>
+INFO Total inference time: 5836.040019989014
+</pre>
+### Total inference time ***INT8***
+<pre>
+INFO Total inference time: 5925.552606582642
+</pre>
+
 ## Stand Out Suggestions
 My intention was to solve two problems. First, to find a solution for the computer pointer as a whole (which was required) and, second, that each model can run on its own. For this reason I have also included parts like argparser, main () for each part (e.g. face_detection.py), which are only needed when this part is executed on its own. I also added an output video portion to record the session.
 
