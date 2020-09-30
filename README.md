@@ -1,22 +1,22 @@
 # Computer Pointer Controller
-
+## Intro
 The computer pointer application is used to control the mouse pointer through the user's gaze. A pipeline of four Openvino models will work together to accomplish this task.
 * Face Detection Model
 * Landmark Detection Model
 * Head Pose Estimation Model
 * Gaze Estimation Model
 
-An input image (video file or webcam feed) is send to the face detection model. From there a cropped face image is send to the landmark model and the head pose model. The landmark model provides the cropped left and right eye image and the head model provides the head pose angels. Both 
+An input image (video file or webcam feed) is send to the face detection model. From there a cropped face image is send to the landmark model and the head pose model. The landmark model provides the cropped left and right eye image and the head model provides the head pose angels. Both inputs wil be feed to the gaze model which has as output a gaze vector which could be feed to the pyautogui which controls the mouse pointer.
 
 ## Project Set Up and Installation
 
-The basic requirement for this program is the Intel OpenVINO toolkit (version >= 2020.1).[link](
-https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_linux.html)
-* Please install OpenVINO and make sure you have python > 3.6
-* Clon following Github repository  [link](https://github.com/ET-Technologies/Computer-Pointer-Controller.git)
-* Check the requirement.txt and if nesseary intall missing dependencies.
+The basic requirement for this program is the Intel OpenVINO toolkit (version >= 2020.1). 
+* Please install [OpenVino](
+https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_linux.html) and make sure you have python > 3.6
+* Clon following Github repository  [Github](https://github.com/ET-Technologies/Computer-Pointer-Controller.git)
+* Check the `requirement.txt` and if nesseary intall missing dependencies.
 * Download missing models if nessesary and load it in the intended folder. (project directory structure)
-* Start the program with the provided arguments. Please keep in mind, to change paths if you have a different directory struture or want to run the script with different arguments.
+* Start the program with the provided `arguments`. Please keep in mind, to change paths if you have a different directory struture or want to run the script with different arguments.
 * Check logging_basic.log problems accure or logging_time.log if you are interessed in loading time respectively inference times.
 
 ### Following model are needed:
@@ -47,17 +47,15 @@ https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_
     ├── gaze_estimation.py
     ├── head_pose_estimation.py
     ├── input_feeder.py
-    ├── main_computer_pointer_controller.py
-    ├── model_original.py
     └── mouse_controller.py
 </pre>
 
 
 
 ## Demo
-If you want to run the program, following arguments are nessesary:
+If you want to run the program, following steps are nessesary:
 
-**1. cd to main folder**
+**1. cd to `src` folder**
 
 **2. Arguments to run the program** with e.g. **FP16**, **CPU** input **video**
 <pre>
@@ -75,7 +73,7 @@ python3 src/computer_pointer.py \
 --show_image yes
 </pre>
 
-**2a. Arguments to run the program** with e.g **FP32**, **CPU** input **video**
+**3. Arguments to run the program** with e.g **FP32**, **CPU** input **video**
 <pre>
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
@@ -90,7 +88,7 @@ python3 src/computer_pointer.py \
 --version 2020 \
 --show_image yes
 </pre>
-**2b. Arguments to run the program** with e.g **INT8**, **CPU** input **video**
+**4. Arguments to run the program** with e.g **INT8**, **CPU** input **video**
 <pre>
 python3 src/computer_pointer.py \
 --video bin/demo.mp4 \
@@ -108,6 +106,7 @@ python3 src/computer_pointer.py \
 ## Documentation
 
 The project needs some basic input and some optimal input. The models for face recognition, head posture, landmark regression, and gaze estimation are required. You can choose your device and the  extension (if not required). 'video' If your input is a video or image, you can determine the path. The 'output_path' determines the path to the output video. The 'threshold' is 60% by default, but you can change it here. The 'input_type' allows you to select video, camera or image depending on the 'video' part. The 'version' determines the OpenVino version. The CPU expansion is no longer required since version 2020. We therefore recommend running the program with the openvino 2020.x version.
+**If you need more help try `python3 src/computer_pointer.py` to get help for the command line arguments**
 <pre>
 --fd_model: 'Path to the face model'
 --fl_model: 'Path to the landmark model'
@@ -125,7 +124,7 @@ The project needs some basic input and some optimal input. The models for face r
 
 ## Benchmarks
 The model load time and the inference time can be found in the log protocol.logging_basic.log or logging_time.log
-In my case the program was testet with CPU only, but with different precision levels. FP32, FP16, INT8
+In my case the program was testet with `CPU` only, but with different precision levels. `FP32, FP16, INT8`
 Note that the face model just come with precision FP32. All other models have all three precisions. 
 Following results occurred while testing it with the demo video file:
 
@@ -136,7 +135,7 @@ The shortest model loading time was with FP32. 357ms FP16 and INT8 had nearly th
 ### Model load time ***FP32***
 <pre>
 INFO Facedetection load time: 126.828
-NFO Facial_Landmarks load time: 75.75
+INFO Facial_Landmarks load time: 75.75
 INFO Headpose load time: 72.87
 INFO Gaze load time: 86.088
 INFO Total model load time: 361.893
@@ -179,25 +178,18 @@ INFO Average face inference time: 78.2736277176162
 INFO Average facial inference time: 2.1134837199065646
 INFO Average headpose inference time: 2.7073803594556907
 INFO Average gaze inference time: 4.1432542315984175
-INFO Total inference time: 5925.552606582642
 </pre>
 
-### Total inference time ***FP32***
-<pre>
-INFO Total inference time: 5859.833240509033
-</pre>
-### Total inference time ***FP16***
-<pre>
-INFO Total inference time: 5836.040019989014
-</pre>
-### Total inference time ***INT8***
-<pre>
-INFO Total inference time: 5925.552606582642
-</pre>
+### Comparison: Total model load time/Inference time
+||Total Model Load time|Total Inference Time|
+| ------ | ------ | ------ |
+|FP32|361.893 |5859 |
+|FP16|458.994 |5836 |
+|FP16-INT8|582.289 |5925 |
 
 ## Stand Out Suggestions
-My intention was to solve two problems. First, to find a solution for the computer pointer as a whole (which was required) and, second, that each model can run on its own. For this reason I have also included parts like argparser, main () for each part (e.g. face_detection.py), which are only needed when this part is executed on its own. I also added an output video portion to record the session.
+My intention was to solve `two problems`. First, to find a solution for the computer pointer as a whole (which was required) and, second, that each model can run on its own. For this reason I have also included parts like argparser, main () for each part (e.g. face_detection.py), which are only needed when this part is executed on its own. I also added an `output video` portion to record the session.
 
 ### Problems
-If you run the program with the demo video as input, you shouldn't have any inference problems. However, if you are running the program with a webcam, the inference may be interrupted due to light or multiple people in the frame.
-You can try changing the threshold or the precision of the model. Even so, it will break from time to time. To solve this problem, one could train better models or, if there are several people on the screen, only keep track of one of them to avoid inference breaks.
+- If you run the program with the demo video as input, you shouldn't have any inference problems. However, if you are running the program with a webcam, the inference may be interrupted due to light or multiple people in the frame.
+- You can try changing the threshold or the precision of the model. Even so, it will break from time to time. To solve this problem, one could train better models or, if there are several people on the screen, only keep track of one of them to avoid inference breaks.

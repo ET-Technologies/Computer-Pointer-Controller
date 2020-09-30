@@ -3122,3 +3122,71 @@
 2020-09-30 10:38:12,109 INFO End gazeestimation
 2020-09-30 10:38:12,138 INFO Start mousecontroller
 2020-09-30 10:38:12,509 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
+2020-09-30 10:55:33,021 INFO Start computer_pointer.py
+2020-09-30 10:55:33,141 INFO Load model facedetection = Finished
+2020-09-30 10:55:33,237 INFO Load model Facial_Landmarks = Finished
+2020-09-30 10:55:33,418 INFO Load model head_pose_estimation = Finished
+2020-09-30 10:55:33,607 INFO Load model gaze_estimation = Finished
+2020-09-30 10:55:33,608 INFO All models are loaded!
+2020-09-30 10:55:33,608 INFO Input Feeder is loaded
+2020-09-30 10:55:33,762 INFO Start facedetection
+2020-09-30 10:55:33,845 INFO Inference facedetetion is finished
+2020-09-30 10:55:33,879 INFO Start faciallandmark
+2020-09-30 10:55:33,889 INFO End faciallandmarks
+2020-09-30 10:55:33,890 INFO Start headposeestimation
+2020-09-30 10:55:33,903 INFO End faciallheadposeestimationandmarks
+2020-09-30 10:55:33,903 INFO Start gazeestimation
+2020-09-30 10:55:33,907 INFO Gaze results: ([[ 0.21396738  0.08642007 -0.9592372 ]])
+2020-09-30 10:55:33,907 INFO End gazeestimation
+2020-09-30 10:55:34,038 INFO Start mousecontroller
+2020-09-30 10:55:35,298 INFO Start facedetection
+2020-09-30 10:55:35,378 INFO Inference facedetetion is finished
+2020-09-30 10:55:35,396 INFO Start faciallandmark
+2020-09-30 10:55:35,397 INFO End faciallandmarks
+2020-09-30 10:55:35,398 INFO Start headposeestimation
+2020-09-30 10:55:35,400 INFO End faciallheadposeestimationandmarks
+2020-09-30 10:55:35,400 INFO Start gazeestimation
+2020-09-30 10:55:35,406 INFO Gaze results: ([[-0.29236394  0.02081073 -0.92950076]])
+2020-09-30 10:55:35,406 INFO End gazeestimation
+2020-09-30 10:55:35,438 INFO Start mousecontroller
+2020-09-30 10:55:36,698 INFO Start facedetection
+2020-09-30 10:55:36,773 INFO Inference facedetetion is finished
+2020-09-30 10:55:36,784 INFO Start faciallandmark
+2020-09-30 10:55:36,786 INFO End faciallandmarks
+2020-09-30 10:55:36,786 INFO Start headposeestimation
+2020-09-30 10:55:36,789 INFO End faciallheadposeestimationandmarks
+2020-09-30 10:55:36,789 INFO Start gazeestimation
+2020-09-30 10:55:36,793 INFO Gaze results: ([[-0.3787974   0.01655421 -0.90581304]])
+2020-09-30 10:55:36,793 INFO End gazeestimation
+2020-09-30 10:55:36,821 INFO Start mousecontroller
+2020-09-30 10:55:38,092 INFO Start facedetection
+2020-09-30 10:55:38,164 INFO Inference facedetetion is finished
+2020-09-30 10:55:38,174 INFO Start faciallandmark
+2020-09-30 10:55:38,176 INFO End faciallandmarks
+2020-09-30 10:55:38,176 INFO Start headposeestimation
+2020-09-30 10:55:38,179 INFO End faciallheadposeestimationandmarks
+2020-09-30 10:55:38,179 INFO Start gazeestimation
+2020-09-30 10:55:38,182 INFO Gaze results: ([[-0.19716479 -0.10450413 -0.92368513]])
+2020-09-30 10:55:38,182 INFO End gazeestimation
+2020-09-30 10:55:38,211 INFO Start mousecontroller
+2020-09-30 10:55:39,481 INFO Start facedetection
+2020-09-30 10:55:39,553 INFO Inference facedetetion is finished
+2020-09-30 10:55:39,565 INFO Start faciallandmark
+2020-09-30 10:55:39,567 INFO End faciallandmarks
+2020-09-30 10:55:39,567 INFO Start headposeestimation
+2020-09-30 10:55:39,571 INFO End faciallheadposeestimationandmarks
+2020-09-30 10:55:39,571 INFO Start gazeestimation
+2020-09-30 10:55:39,575 INFO Gaze results: ([[ 0.03661925  0.09107339 -0.9825271 ]])
+2020-09-30 10:55:39,575 INFO End gazeestimation
+2020-09-30 10:55:39,604 INFO Start mousecontroller
+2020-09-30 10:55:40,893 INFO Start facedetection
+2020-09-30 10:55:40,970 INFO Inference facedetetion is finished
+2020-09-30 10:55:40,984 INFO Start faciallandmark
+2020-09-30 10:55:40,985 INFO End faciallandmarks
+2020-09-30 10:55:40,985 INFO Start headposeestimation
+2020-09-30 10:55:40,987 INFO End faciallheadposeestimationandmarks
+2020-09-30 10:55:40,987 INFO Start gazeestimation
+2020-09-30 10:55:40,993 INFO Gaze results: ([[ 0.08073038  0.08581886 -0.9858738 ]])
+2020-09-30 10:55:40,993 INFO End gazeestimation
+2020-09-30 10:55:41,022 INFO Start mousecontroller
+2020-09-30 10:55:41,653 ERROR PyAutoGUI fail-safe triggered from mouse moving to a corner of the screen. To disable this fail-safe, set pyautogui.FAILSAFE to False. DISABLING FAIL-SAFE IS NOT RECOMMENDED.
