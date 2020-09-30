@@ -1,10 +1,17 @@
 # Computer Pointer Controller
 
+The computer pointer app is used to navigate the mouse position through the user's gaze. A pipeline of four Openvino models will work together to accomplish this task.
 
 ## Project Set Up and Installation
-*TODO:* Explain the setup procedures to run your project. For instance, this can include your project directory structure, the models you need to download and where to place them etc. Also include details about how to install the dependencies your project requires.
 
-For this project the Intel OpenVino toolkit is required (version >= 2020.1).
+The basic requirement for this program is the Intel OpenVINO toolkit (version >= 2020.1).[link](
+https://docs.openvinotoolkit.org/latest/openvino_docs_install_guides_installing_openvino_linux.html)
+* Please install OpenVINO and make sure you have python > 3.6
+* Clon following Github repository  [link](https://github.com/ET-Technologies/Computer-Pointer-Controller.git)
+* Check the requirement.txt and if nesseary intall missing dependencies.
+* Download missing models if nessesary and load it in the intended folder. (project directory structure)
+* Start the program with the provided arguments. Please keep in mind, to change paths if you have a different directory struture or want to run the script with different arguments.
+* Check logging_basic.log problems accure or logging_time.log if you are interessed in loading time respectively inference times.
 
 ### Following model are needed:
 * [face-detection-adas-binary-0001](https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html)
@@ -12,11 +19,14 @@ For this project the Intel OpenVino toolkit is required (version >= 2020.1).
 * [head-pose-estimation-adas-0001](https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html)
 * [gaze-estimation-adas-0002](https://docs.openvinotoolkit.org/latest/_models_intel_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html)
 
+#### project directory structure
 <pre>
 ├── bin
 │   └── demo.mp4
 ├── log
 │   ├── logging_basic.log
+│   ├── logging_time.log
+│ 
 ├── models
 │   └── 2020.4.1
 │       └─── model_precision
@@ -39,7 +49,7 @@ For this project the Intel OpenVino toolkit is required (version >= 2020.1).
 
 
 ## Demo
-If you want to run the program, do the following:
+If you want to run the program, following arguments are nessesary:
 
 **1. cd to main folder**
 
@@ -90,32 +100,29 @@ python3 src/computer_pointer.py \
 
 The project needs some basic input and some optimal input. The models for face recognition, head posture, landmark regression, and gaze estimation are required. You can choose your device and the  extension (if not required). 'video' If your input is a video or image, you can determine the path. The 'output_path' determines the path to the output video. The 'threshold' is 60% by default, but you can change it here. The 'input_type' allows you to select video, camera or image depending on the 'video' part. The 'version' determines the OpenVino version. The CPU expansion is no longer required since version 2020. We therefore recommend running the program with the openvino 2020.x version.
 <pre>
---fd_model: path to the face detection model
---fl_model: path to the landmark regression model
---hp_model: path to the head pose model
+--fd_model: 'Path to the face model'
+--fl_model: 'Path to the landmark model'
+--hp_model: 'Path to the head pose model'
 --ga_model: path to the gaze model
 --device: 'CPU' or 'MYRIAD'
---extension, default= None)
---video, path to the input file
---output_path
---threshold, default=0.6
---input_type, video, cam or image
---version, default='2020'
+--extension: 'Path to the extension if needed.'
+--video: 'Path to the input video if you run it with input_type video'
+--output_path: 'Path to the output video'
+--threshold: 'Threshold for the face detection. Default 60%'
+--input_type: 'CAM for a webcamera or video for an inputfile'
+--version: 'Openvino version 2020 or 2019 (recommendation 2020)'
+--show_image_help: 'yes to show ouput images, no to hide images'
 </pre>
 
 ## Benchmarks
-*TODO:* Include the benchmark results of running your model on multiple hardwares and multiple model precisions. Your benchmarks can include: model loading time, input/output processing time, model inference time etc.
-
-### Model load time
-|Model|Type|Size|Load time|
-| ------ | ------ | ------ |------ |------ |
-|face-detection-adas-binary-0001|FP32-INT1|1.86 MB|402.233 ms|50.7061845165188 ms|
-
-### Total time to load all models
-
+The model load time and the inference time can be found in the log protocol.logging_basic.log or logging_time.log
+In my case the program was testet with CPU only, but with different precision levels. FP32, FP16, INT8
+Note that the face model just come with precision FP32. All other models have all three precisions. 
+Following results occurred:
 
 ## Results
 *TODO:* Discuss the benchmark results and explain why you are getting the results you are getting. For instance, explain why there is difference in inference time for FP32, FP16 and INT8 models.
+The shortest model loading time was with FP32. 357ms FP16 and INT8 had nearly the some loading time.
 
 ### Model load time ***FP32***
 <pre>

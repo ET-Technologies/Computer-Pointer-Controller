@@ -284,11 +284,11 @@ def build_argparser():
     ga_model_help = 'Path to the gaze model'
     device_help = 'CPU or MYRIAD'
     extension_help ='Path to the extension if needed.'
-    video_help = 'Path to the input video'
+    video_help = 'Path to the input video if you run it with input_type video'
     output_path_help = 'Path to the output video'
     threshold_help = 'Threshold for the face detection. Default 60%'
     input_typ_help ='CAM for a webcamera or video for an inputfile'
-    version_help ='Openvino version 2020 or 2019'
+    version_help ='Openvino version 2020 or 2019 (recommendation 2020)'
     show_image_help = 'yes to show ouput image, no to hide image'
     # Create the arguments
     parser.add_argument("--fd_model", help=fd_model_help, required=True)
